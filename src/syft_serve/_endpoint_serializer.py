@@ -126,7 +126,7 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
             except Exception:
                 # Function requires arguments or has side effects
                 # Continue to fallback
-                func_result = None
+                pass
 
         # Fallback: generic endpoint
         return f"""def {func_name}():

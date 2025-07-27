@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>syft-serve - FastAPI Servers Made Simpler</title>
+    <title>syft-serve API - Simple Python API for SyftBox Management</title>
     <link rel="icon" type="image/svg+xml" href="images/syftbox-logo.svg">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -14,11 +14,10 @@
             <div class="nav-wrapper">
                 <div class="logo-group">
                     <img src="images/syftbox-logo.svg" alt="SyftBox" class="syftbox-logo">
-                    <a href="index.html" class="logo">syft-serve</a>
+                    <a href="index.html" class="logo">syft-serve API</a>
                 </div>
                 <div class="nav-links">
-                    <a href="quickstart.html">Quick Start</a>
-                    <a href="server-features.html">Server Features</a>
+                    <a href="https://colab.research.google.com/github/OpenMined/syft-serve/blob/main/examples/syft_serve_quickstart.ipynb" target="_blank">Try in Colab</a>
                     <a href="api/index.html">API</a>
                     <a href="https://github.com/OpenMined/syft-serve" class="github-link">GitHub</a>
                 </div>
@@ -27,67 +26,21 @@
     </header>
 
     <section class="hero" style="min-height: 100vh; display: flex; align-items: center; padding-top: 0; margin-top: -4rem;">
-        <div class="container" style="text-align: center; max-width: 1200px; margin: 0 auto;">
-            <!-- Main Title -->
-            <h1 style="font-size: 4rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem; letter-spacing: -0.02em;">FastAPI Servers Made Simpler</h1>
-            <p style="font-size: 1.3rem; color: #718096; margin-bottom: 4rem; font-weight: 400;">Launch and manage stateless servers with just two functions</p>
+        <div class="container" style="text-align: center; max-width: 600px; margin: 0 auto;">
+            <p style="font-size: 0.9rem; color: #a0aec0; margin: 2rem 0 1rem 0; font-weight: 400; letter-spacing: 0.5px;">syftbox server management made effortless</p>
             
-            <!-- Two-Panel Code Comparison -->
-            <div style="position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; max-width: 1000px; margin-left: auto; margin-right: auto;">
-                <!-- CREATE Panel -->
-                <div>
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🚀</span>
-                        <h3 style="font-size: 1.3rem; font-weight: 600; color: #1a202c; margin: 0;">CREATE servers instantly</h3>
-                    </div>
-                    <div style="background: #2d3748; border-radius: 12px; padding: 1.5rem;">
-                        <pre style="margin: 0; color: #e2e8f0; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; text-align: left;"><code class="language-python"># Define your endpoint
-def hello():
-    return {"message": "Hello World!"}
-
-# Launch a server with one line
-server = syft_serve.create(
-    name="my_api",
-    endpoints={"/hello": hello}
-)
-
-# Your server is running at http://localhost:8000
-print(f"Server ready at {server.url}")</code></pre>
-                    </div>
-                </div>
-
-                <!-- MANAGE Panel -->
-                <div>
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🎯</span>
-                        <h3 style="font-size: 1.3rem; font-weight: 600; color: #1a202c; margin: 0;">MANAGE servers simply</h3>
-                    </div>
-                    <div style="background: #2d3748; border-radius: 12px; padding: 1.5rem;">
-                        <pre style="margin: 0; color: #e2e8f0; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; text-align: left;"><code class="language-python"># View all your servers
-ss.servers  # Nice table with status, endpoints, uptime
-
-# Access by name (no port confusion!)
-my_server = ss.servers["my_api"]
-my_server.stdout.tail(20)  # View recent logs
-
-# Clean shutdown when done
-ss.terminate_all()  # Properly cleans up everything</code></pre>
-                    </div>
-                </div>
-
-                <!-- Plus Sign -->
-                <div style="position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); z-index: 10;">
-                    <div style="background: #48bb78; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);">+</div>
-                </div>
-            </div>
-
             <!-- Install Command -->
             <div class="install-section" style="margin: 2rem 0;">
                 <div class="install-command" style="width: 400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem 1.5rem;">
-                    <code style="font-size: 1rem;">pip install syft-serve</code>
-                    <button class="copy-btn" data-copy="pip install syft-serve">Copy</button>
+                    <code style="font-size: 1rem;">pip install syft-serve-api</code>
+                    <button class="copy-btn" data-copy="pip install syft-serve-api">Copy</button>
                 </div>
-                <p style="font-size: 0.9rem; color: #a0aec0; margin-top: 1rem; font-weight: 400;">Works anywhere Python runs • Zero configuration • Isolated environments</p>
+            </div>
+
+            <!-- Code Example - Hero -->
+            <div style="margin: 3rem 0;">
+                <pre style="background: #2d3748; color: #e2e8f0; padding: 2rem 2rem; border-radius: 12px; font-size: 1.5rem; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; line-height: 1.4; display: inline-block; text-align: left; width: 400px; box-sizing: border-box;"><code class="language-python">import syft_serve as server
+server.start_and_manage_all()</code></pre>
             </div>
         </div>
     </section>
@@ -96,20 +49,20 @@ ss.terminate_all()  # Properly cleans up everything</code></pre>
     <section class="why-syftperm">
         <div class="container">
             <h2>Why We Built This</h2>
-            <p class="section-subtitle">server management should be effortless</p>
+            <p class="section-subtitle">privacy should be effortless</p>
             
             <div class="value-props">
                 <div class="value-prop">
-                    <h3>🚀 Instant Servers</h3>
-                    <p>From Python function to running API in one line. No boilerplate, no config files, no complexity.</p>
+                    <h3>🚫 Privacy is inconvenient</h3>
+                    <p>Privacy tools shouldn't require technical expertise or complex setup. They should just work, seamlessly and automatically.</p>
                 </div>
                 <div class="value-prop">
-                    <h3>📦 Isolated Environments</h3>
-                    <p>Each server gets its own virtual environment. Install pandas in one, tensorflow in another - no conflicts!</p>
+                    <h3>🏢 Data is siloed</h3>
+                    <p>Your data is trapped in corporate platforms. It should be yours to control, share, and use however you choose.</p>
                 </div>
                 <div class="value-prop">
-                    <h3>📝 Named Access</h3>
-                    <p>Access servers by name, not port numbers. No more "which service is on port 8003 again?"</p>
+                    <h3>⛓️ Users aren't free</h3>
+                    <p>People are locked into systems that exploit their data. True freedom means owning and controlling your digital life.</p>
                 </div>
             </div>
         </div>
@@ -119,24 +72,155 @@ ss.terminate_all()  # Properly cleans up everything</code></pre>
     <section class="video-demo">
         <div class="container">
             <h2>See It In Action</h2>
-            <p class="section-subtitle">watch how easy it is to create and manage multiple servers</p>
+            <p class="section-subtitle">privacy can be effortless</p>
             
-            <div class="demo-video-container">
-                <pre><code class="language-python"># Create multiple servers with different purposes
-data_api = ss.create(
-    name="data_api",
-    endpoints={"/analyze": analyze_data},
-    dependencies=["pandas", "numpy"]
-)
-
-ml_api = ss.create(
-    name="ml_api", 
-    endpoints={"/predict": predict},
-    dependencies=["tensorflow", "scikit-learn"]
-)
-
-# Each server runs in isolation with its own dependencies!
-ss.servers  # View all running servers in a nice table</code></pre>
+            <style>
+                .demo-tabs {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+                .tab-pane {
+                    display: none;
+                    background: white;
+                    border: 1px solid #d1d1d6;
+                    border-radius: 0 8px 8px 8px;
+                    padding: 2rem;
+                    margin-top: -1px;
+                }
+                .tab-pane.active {
+                    display: block;
+                }
+                .tab-nav {
+                    display: flex;
+                    gap: 0;
+                    margin-bottom: 0;
+                    border-bottom: 1px solid #d1d1d6;
+                }
+                .tab-btn {
+                    padding: 0.75rem 1.5rem;
+                    background: #f5f5f7;
+                    border: 1px solid #d1d1d6;
+                    border-bottom: none;
+                    border-radius: 8px 8px 0 0;
+                    cursor: pointer;
+                    font-size: 0.95rem;
+                    color: #6e6e73;
+                    position: relative;
+                    margin-right: -1px;
+                    transition: all 0.2s;
+                }
+                .tab-btn:first-child {
+                    border-radius: 8px 0 0 0;
+                }
+                .tab-btn:hover {
+                    background: #e8e8ed;
+                }
+                .tab-btn.active {
+                    background: white;
+                    color: #1d1d1f;
+                    font-weight: 600;
+                    z-index: 1;
+                    border-bottom: 1px solid white;
+                    margin-bottom: -1px;
+                }
+                .video-container h3 {
+                    margin-top: 0;
+                    margin-bottom: 1rem;
+                    font-size: 1.3rem;
+                }
+                .video-container p {
+                    margin-bottom: 1.5rem;
+                    color: #6e6e73;
+                }
+                .video-container {
+                    height: 450px;
+                    width: 100%;
+                    max-width: 800px;
+                    margin: 0 auto;
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: center;
+                    background: white;
+                    border-radius: 8px;
+                    padding: 1rem;
+                    box-sizing: border-box;
+                }
+                
+                /* Full width for Magic tab */
+                #magic .video-container {
+                    max-width: none;
+                    width: 100vw;
+                    margin-left: calc(50% - 50vw);
+                    border-radius: 0;
+                    background: #000;
+                    padding: 0;
+                }
+                
+                #magic .video-container iframe {
+                    width: 100%;
+                    height: 100%;
+                }
+                .video-container video {
+                    border-radius: 8px;
+                    background: #000;
+                    max-height: 400px;
+                    max-width: 100%;
+                    object-fit: contain;
+                }
+            </style>
+            
+            <div class="demo-tabs">
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="jupyter">Jupyter</button>
+                    <button class="tab-btn" data-tab="colab">Colab</button>
+                    <button class="tab-btn" data-tab="terminal">Terminal</button>
+                    <button class="tab-btn" data-tab="magic">Super Jupyter</button>
+                </div>
+                
+                <div class="tab-content">
+                    <div class="tab-pane active" id="jupyter">
+                        <div class="video-container">
+                            <video width="100%" controls preload="metadata" muted loop poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KUGF0aCBkPSJNOCA1VjE5TDE5IDEyTDggNVoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+Cg==">
+                                <source src="videos/jupyter_noaudio_cropped.mp4" type="video/mp4">
+                                <source src="videos/jupyter_noaudio.mp4" type="video/mp4">
+                                <source src="https://raw.githubusercontent.com/OpenMined/syft-serve/main/docs/videos/jupyter_noaudio_cropped.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="colab">
+                        <div class="video-container">
+                            <video width="100%" controls preload="metadata" muted loop poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KUGF0aCBkPSJNOCA1VjE5TDE5IDEyTDggNVoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+Cg==">
+                                <source src="videos/colab_noaudio.mp4" type="video/mp4">
+                                <source src="videos/colab.mp4" type="video/mp4">
+                                <source src="https://raw.githubusercontent.com/OpenMined/syft-serve/main/docs/videos/colab_noaudio.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="terminal">
+                        <div class="video-container">
+                            <video width="100%" controls preload="metadata" muted loop poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KUGF0aCBkPSJNOCA1VjE5TDE5IDEyTDggNVoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+Cg==">
+                                <source src="videos/terminal_noaudio.mp4" type="video/mp4">
+                                <source src="videos/terminal.mp4" type="video/mp4">
+                                <source src="https://raw.githubusercontent.com/OpenMined/syft-serve/main/docs/videos/terminal_noaudio.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="magic">
+                        <div class="video-container">
+                            <iframe id="magic-video" width="100%" height="400" 
+                                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1"
+                                    title="Magic Demo" frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -147,24 +231,21 @@ ss.servers  # View all running servers in a nice table</code></pre>
         <section class="under-the-hood">
             <div class="container">
                 <h2>Under the Hood</h2>
-                <p class="section-subtitle">Here's what syft-serve creates when you launch servers</p>
+                <p class="section-subtitle">Here's what SyftBox server creates when configured</p>
                 
                 <div class="code-showcase">
-                    <pre><code class="language-python"># Each server gets its own isolated environment:
+                    <pre><code class="language-python"># SyftBox creates a complete local environment:
 
-~/.syft_serve/servers/
-  ├── my_api/
-  │   ├── venv/                    # Isolated Python environment
-  │   ├── logs/                    # Server logs (stdout/stderr)
-  │   ├── app.py                   # Generated FastAPI application
-  │   └── pid.txt                  # Process ID for management
-  │
-  └── data_api/
-      ├── venv/                    # Separate environment
-      ├── logs/                    # Separate logs
-      └── ...
+~/.syftbox/
+  ├── config.json          # Authentication and server settings
+  ├── logs/                 # Daemon and application logs
+  └── cache/                # Downloaded binaries and temp files
 
-# Plus automatic port management, process tracking, and clean shutdown</code></pre>
+~/SyftBox/
+  ├── apps/                 # Installed SyftBox applications
+  └── datasites/            # Connected data sources and sites
+
+# Plus the daemon binary at ~/.local/bin/syftbox</code></pre>
                 </div>
             </div>
         </section>
@@ -173,7 +254,7 @@ ss.servers  # View all running servers in a nice table</code></pre>
         <section class="api-preview-dark">
             <div class="container">
                 <h2>The Complete API</h2>
-                <p class="section-subtitle">effortless creation and management of fastapi servers</p>
+                <p class="section-subtitle">effortless setup and teardown of syftbox servers</p>
                 
                 <style>
                     .api-examples {
@@ -194,41 +275,37 @@ ss.servers  # View all running servers in a nice table</code></pre>
                 
                 <div class="api-examples">
                     <div class="api-example">
-                        <h3>Creating Servers</h3>
-                        <pre><code class="language-python">import syft_serve as ss
+                        <h3>Quick Start</h3>
+                        <pre><code class="language-python">import syft_serve as server
 
-# Simple server
-server = ss.create(
-    name="my_api",
-    endpoints={"/hello": hello_func}
-)</code></pre>
+server.start_and_manage_all() # Install and start
+server.install()     # Install only
+server.start()       # Start if already installed</code></pre>
                     </div>
                     
                     <div class="api-example">
-                        <h3>Server Management</h3>
-                        <pre><code class="language-python"># View all servers
-ss.servers
+                        <h3>Status & Control</h3>
+                        <pre><code class="language-python">server.status()
+server.is_installed()
+server.is_running()
 
-# Access by name
-server = ss.servers["my_api"]
-print(server.url)  # http://localhost:8000</code></pre>
+server.stop()
+server.start_if_stopped()</code></pre>
                     </div>
                     
                     <div class="api-example">
-                        <h3>Viewing Logs</h3>
-                        <pre><code class="language-python"># Easy log access
-server.stdout.tail(20)    # Last 20 lines
-server.stderr.head(10)    # First 10 error lines
-server.uptime             # "2m 15s"</code></pre>
+                        <h3>Non-Interactive Mode</h3>
+                        <pre><code class="language-python">session = server.create("email@example.com", interactive=False)
+session.submit_auth("ABC123")
+print(session.is_authenticated)</code></pre>
                     </div>
                     
                     <div class="api-example">
-                        <h3>Clean Shutdown</h3>
-                        <pre><code class="language-python"># Terminate one server
-server.terminate()
+                        <h3>Clean Uninstall</h3>
+                        <pre><code class="language-python"># Removes everything
+server.uninstall()
 
-# Terminate all servers
-ss.terminate_all()</code></pre>
+# Confirms before deleting</code></pre>
                     </div>
                 </div>
             </div>
@@ -239,11 +316,11 @@ ss.terminate_all()</code></pre>
             <div class="container">
                 <div style="max-width: 600px; margin: 0 auto; text-align: center;">
                     <h2 style="font-size: 3rem; font-weight: 600; color: white; margin-bottom: 2rem; letter-spacing: -0.02em;">try it out</h2>
-                    <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem;">experience fastapi servers made simple</p>
-                    <a href="quickstart.html" 
+                    <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem;">experience syftbox server management in google colab</p>
+                    <a href="https://colab.research.google.com/github/OpenMined/syft-serve/blob/main/examples/syft_serve_quickstart.ipynb" 
                        style="display: inline-block; background: white; color: #0a0a0a; padding: 1rem 2rem; border-radius: 980px; text-decoration: none; font-size: 1.1rem; font-weight: 500; transition: all 0.2s; border: none;" 
                        onmouseover="this.style.background='rgba(255,255,255,0.9)'" 
-                       onmouseout="this.style.background='white'">quick start guide</a>
+                       onmouseout="this.style.background='white'">open in colab</a>
                 </div>
             </div>
         </section>
@@ -253,7 +330,7 @@ ss.terminate_all()</code></pre>
             <div class="container">
                 <div class="newsletter-content">
                     <h2>Stay Updated</h2>
-                    <p>Get notified about developer tools like syft-serve</p>
+                    <p>Get notified about SOTA privacy tools like syft-serve API</p>
                     
                     <!-- HubSpot Form -->
                     <div id="hubspot-form-container"></div>
@@ -264,12 +341,77 @@ ss.terminate_all()</code></pre>
         <!-- Footer -->
         <footer class="footer-dark">
             <div class="container">
-                <p>&copy; 2024 OpenMined. Part of the <a href="https://syftbox.org">SyftBox</a> ecosystem.</p>
+                <p>Built with ❤️ by <a href="https://openmined.org">OpenMined</a></p>
             </div>
         </footer>
     </div>
 
     <script src="js/main.js"></script>
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            
+            // Autoplay the default active video (Jupyter tab)
+            setTimeout(() => {
+                const defaultActiveVideo = document.querySelector('.tab-pane.active video');
+                if (defaultActiveVideo) {
+                    defaultActiveVideo.play().catch(e => {
+                        console.log('Autoplay prevented on page load:', e);
+                    });
+                }
+            }, 500); // Small delay to ensure video is loaded
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and panes
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabPanes.forEach(p => p.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding pane
+                    this.classList.add('active');
+                    const targetPane = document.getElementById(targetTab);
+                    targetPane.classList.add('active');
+                    
+                    // Pause all videos first
+                    document.querySelectorAll('video').forEach(video => {
+                        video.pause();
+                    });
+                    
+                    // Pause magic video
+                    const magicIframe = document.getElementById('magic-video');
+                    if (magicIframe) {
+                        magicIframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    }
+                    
+                    // Handle autoplay for each tab
+                    if (targetTab === 'magic') {
+                        // Use postMessage to play the magic video
+                        setTimeout(() => {
+                            const iframe = document.getElementById('magic-video');
+                            if (iframe) {
+                                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                            }
+                        }, 100);
+                    } else {
+                        // Find and autoplay the video in the active tab
+                        const activeVideo = targetPane.querySelector('video');
+                        if (activeVideo) {
+                            setTimeout(() => {
+                                activeVideo.play().catch(e => {
+                                    // Autoplay failed, user needs to interact first
+                                    console.log('Autoplay prevented:', e);
+                                });
+                            }, 100);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
     
     <!-- HubSpot Forms Script -->
     <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>

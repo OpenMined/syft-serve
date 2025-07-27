@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Reference - SyftServe</title>
+    <title>API Reference - syft-installer</title>
     <link rel="icon" type="image/svg+xml" href="../images/syftbox-logo.svg">
     <link rel="stylesheet" href="../css/style.css">
     <style>
@@ -168,13 +168,13 @@
             <div class="nav-wrapper">
                 <div class="logo-group">
                     <img src="../images/syftbox-logo.svg" alt="SyftBox" class="syftbox-logo">
-                    <a href="../index.html" class="logo">SyftServe</a>
+                    <a href="../index.html" class="logo">syft-installer</a>
                 </div>
                 <div class="nav-links">
-                    <a href="../quickstart.html">Quick Start</a>
-                    <a href="../server-features.html">Server Features</a>
+                    <a href="../index.html">Home</a>
+                    <a href="https://colab.research.google.com/github/OpenMined/syft-installer/blob/main/examples/syft_install_quickstart.ipynb" target="_blank">Try in Colab</a>
                     <a href="index.html" class="active">API</a>
-                    <a href="https://github.com/OpenMined/syft-serve" class="github-link">GitHub</a>
+                    <a href="https://github.com/OpenMined/syft-installer" class="github-link">GitHub</a>
                 </div>
             </div>
         </nav>
@@ -184,7 +184,7 @@
     <section class="api-hero">
         <div class="container">
             <h1>API Reference</h1>
-            <p class="hero-subtitle">Complete documentation for all two functions. Yes, really.</p>
+            <p class="hero-subtitle">A Python API for installing and managing the SyftBox daemon — perfect for notebooks and automation</p>
         </div>
     </section>
 
@@ -196,84 +196,326 @@
                 <aside class="api-nav">
                     <h3>Quick Navigation</h3>
                     <ul>
-                        <li><a href="#module-functions">Module Functions</a></li>
-                        <li><a href="#server-object">Server Object</a></li>
-                        <li><a href="#server-collection">Server Collection</a></li>
-                        <li><a href="#environment-info">Environment Info</a></li>
-                        <li><a href="#log-streams">Log Streams</a></li>
+                        <li><a href="#installation-methods">Installation Methods</a></li>
+                        <li><a href="#control-methods">Control Methods</a></li>
+                        <li><a href="#status-methods">Status Methods</a></li>
                     </ul>
                 </aside>
 
                 <!-- Main Content -->
                 <div class="api-main">
-                    <!-- Module Functions -->
-                    <section id="module-functions">
-                        <h2>Module Functions</h2>
+                    <!-- Installation Methods -->
+                    <section id="installation-methods">
+                        <h2>Installation Methods</h2>
                         
                         <div class="api-method">
-                            <div class="method-signature">syft_serve.create(name, endpoints, dependencies=None, force=False)</div>
+                            <div class="method-signature">si.run()</div>
                             <p class="method-description">
-                                Creates and launches a new FastAPI server with the specified endpoints. Each server runs in its own isolated virtual environment.
+                                Install SyftBox (if needed) and start it. This is the primary method for most users.
+                                It will install SyftBox if not already installed, then start the daemon.
                             </p>
                             
                             <div class="params-section">
                                 <div class="section-title">Parameters</div>
                                 <table class="param-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
                                     <tbody>
                                         <tr>
-                                            <td><span class="param-name">name</span></td>
-                                            <td><span class="param-type">str</span></td>
-                                            <td><span class="param-desc">Unique name for the server. Used to access it later via ss.servers["name"]</span></td>
+                                            <td colspan="2"><em>No parameters - uses interactive prompts</em></td>
                                         </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
                                         <tr>
-                                            <td><span class="param-name">endpoints</span></td>
-                                            <td><span class="param-type">Dict[str, Callable]</span></td>
-                                            <td><span class="param-desc">Dictionary mapping URL paths to Python functions. Each function becomes an API endpoint</span></td>
+                                            <td><span class="param-type">None</span></td>
+                                            <td><span class="param-desc">Starts SyftBox daemon in the background</span></td>
                                         </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python">import syft_installer as si
+
+# Install and run SyftBox
+si.run()</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method">
+                            <div class="method-signature">si.install()</div>
+                            <p class="method-description">
+                                Install SyftBox without starting it. Useful for deployment scenarios where you want
+                                to install first and start later.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
                                         <tr>
-                                            <td><span class="param-name">dependencies</span></td>
-                                            <td><span class="param-type">List[str] | None</span></td>
-                                            <td><span class="param-desc">Optional list of pip packages to install in the server's isolated environment</span></td>
+                                            <td colspan="2"><em>No parameters - uses interactive prompts</em></td>
                                         </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
                                         <tr>
-                                            <td><span class="param-name">force</span></td>
+                                            <td><span class="param-type">None</span></td>
+                                            <td><span class="param-desc">Completes installation without starting the daemon</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python"># Just install, don't start
+si.install()
+
+# Start later when ready
+si.run_if_stopped()</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method">
+                            <div class="method-signature">si.install_and_run_if_needed()</div>
+                            <p class="method-description">
+                                Explicit method to install (if needed) and run (if needed) SyftBox. Only installs if not already installed and only starts if not already running
+                                about the two-step process.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><em>No parameters - uses interactive prompts</em></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-type">None</span></td>
+                                            <td><span class="param-desc">Completes installation and starts the daemon</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method">
+                            <div class="method-signature">si.uninstall()</div>
+                            <p class="method-description">
+                                Completely remove SyftBox from the system. This will stop the daemon, remove the binary,
+                                configuration files, and optionally the data directory.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><em>No parameters - prompts for confirmation</em></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-type">None</span></td>
+                                            <td><span class="param-desc">Removes all SyftBox components</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python"># Completely uninstall SyftBox
+si.uninstall()
+# Will prompt: "Are you sure? [y/N]"</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Control Methods -->
+                    <section id="control-methods">
+                        <h2>Control Methods</h2>
+                        
+                        <div class="api-method">
+                            <div class="method-signature">si.run_if_stopped()</div>
+                            <p class="method-description">
+                                Start SyftBox only if it's not already running. Useful for scripts that need to ensure
+                                SyftBox is running without accidentally starting multiple instances.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><em>No parameters</em></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-type">None</span></td>
+                                            <td><span class="param-desc">Starts daemon if not running, otherwise no-op</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python"># Ensure SyftBox is running
+si.run_if_stopped()
+
+# Safe to call multiple times
+for i in range(3):
+    si.run_if_stopped()  # Only starts once</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method">
+                            <div class="method-signature">si.stop()</div>
+                            <p class="method-description">
+                                Stop the SyftBox daemon if it's running. This gracefully shuts down the background process.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><em>No parameters</em></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-type">None</span></td>
+                                            <td><span class="param-desc">Stops the daemon process</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python"># Stop SyftBox
+si.stop()
+
+# Check if it stopped
+if not si.is_running():
+    print("SyftBox stopped successfully")</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Status Methods -->
+                    <section id="status-methods">
+                        <h2>Status Methods</h2>
+                        
+                        <div class="api-method">
+                            <div class="method-signature">si.status()</div>
+                            <p class="method-description">
+                                Display the current status of SyftBox including installation state, running status,
+                                configuration details, and data directory information.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><em>No parameters</em></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-type">None</span></td>
+                                            <td><span class="param-desc">Prints status information to console</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python"># Check SyftBox status
+si.status()
+# Output:
+# ✅ SyftBox Status:
+# Installation: ✅ Installed
+# Status: ✅ Running (PID: 12345)
+# Email: user@example.com
+# Data Dir: /Users/user/SyftBox
+# Server: https://syftbox.openmined.org</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method">
+                            <div class="method-signature">si.is_installed()</div>
+                            <p class="method-description">
+                                Check if SyftBox is installed on the system. Returns True if all necessary components
+                                (binary, configuration) are present.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><em>No parameters</em></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
                                             <td><span class="param-type">bool</span></td>
-                                            <td><span class="param-desc">If True, replaces any existing server with the same name. Default: False</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">Server</span></td>
-                                            <td><span class="param-desc">Server object with properties like url, port, status, and methods like terminate()</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Raises</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">ValueError</span></td>
-                                            <td><span class="param-desc">If a server with the same name already exists and force=False</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="param-type">ServerStartupError</span></td>
-                                            <td><span class="param-desc">If the server fails to start within the timeout period</span></td>
+                                            <td><span class="param-desc">True if SyftBox is installed, False otherwise</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -281,43 +523,18 @@
                             
                             <div class="example-section">
                                 <div class="section-title">Example</div>
-                                <pre><code class="language-python"># Simple server
-def hello():
-    return {"message": "Hello World!"}
-
-server = syft_serve.create(
-    name="hello_api",
-    endpoints={"/hello": hello}
-)
-
-# Server with dependencies
-def analyze_data():
-    import pandas as pd
-    # Your data processing logic here
-    return {"status": "processed"}
-
-data_server = syft_serve.create(
-    name="data_api",
-    endpoints={"/analyze": analyze_data},
-    dependencies=["pandas", "numpy"]
-)
-
-# Multiple endpoints
-api = syft_serve.create(
-    name="full_api",
-    endpoints={
-        "/users": get_users,
-        "/posts": get_posts,
-        "/status": get_status
-    }
-)</code></pre>
+                                <pre><code class="language-python">if si.is_installed():
+    print("SyftBox is ready to use")
+else:
+    print("Need to install SyftBox first")
+    si.install()</code></pre>
                             </div>
                         </div>
-
+                        
                         <div class="api-method">
-                            <div class="method-signature">syft_serve.terminate_all()</div>
+                            <div class="method-signature">si.is_running()</div>
                             <p class="method-description">
-                                Terminates all running servers, including orphaned processes from previous sessions. Properly cleans up all resources and child processes.
+                                Check if the SyftBox daemon is currently running in the background.
                             </p>
                             
                             <div class="params-section">
@@ -336,8 +553,8 @@ api = syft_serve.create(
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td><span class="param-type">None</span></td>
-                                            <td><span class="param-desc">This function doesn't return a value</span></td>
+                                            <td><span class="param-type">bool</span></td>
+                                            <td><span class="param-desc">True if SyftBox daemon is running, False otherwise</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -345,505 +562,15 @@ api = syft_serve.create(
                             
                             <div class="example-section">
                                 <div class="section-title">Example</div>
-                                <pre><code class="language-python"># Clean shutdown of all servers
-syft_serve.terminate_all()
-
-# After termination, the servers list is empty
-print(syft_serve.servers)  # Empty table</code></pre>
+                                <pre><code class="language-python">if si.is_running():
+    print("SyftBox is active")
+else:
+    print("SyftBox is stopped")
+    si.run_if_stopped()</code></pre>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Server Object -->
-                    <section id="server-object">
-                        <h2>Server Object</h2>
-                        <p>The Server object is returned by create() and provides access to server properties and methods.</p>
-                        
-                        <div class="api-method">
-                            <div class="method-signature">server.name</div>
-                            <p class="method-description">
-                                The unique name of the server as specified during creation.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Type</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">str</span></td>
-                                            <td><span class="param-desc">Server name</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">server.url</div>
-                            <p class="method-description">
-                                The full URL where the server is accessible.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Type</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">str</span></td>
-                                            <td><span class="param-desc">Server URL (e.g., "http://localhost:8000")</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">server.port</div>
-                            <p class="method-description">
-                                The port number where the server is listening.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Type</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">int</span></td>
-                                            <td><span class="param-desc">Port number (e.g., 8000)</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">server.status</div>
-                            <p class="method-description">
-                                Current status of the server process.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Type</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">str</span></td>
-                                            <td><span class="param-desc">"running", "terminated", or "unknown"</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">server.pid</div>
-                            <p class="method-description">
-                                Process ID of the server.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Type</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">int | None</span></td>
-                                            <td><span class="param-desc">Process ID or None if not running</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">server.uptime</div>
-                            <p class="method-description">
-                                Human-readable uptime of the server.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Type</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">str</span></td>
-                                            <td><span class="param-desc">"2m 15s", "1h 45m", or "-" if not running</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">server.endpoints</div>
-                            <p class="method-description">
-                                List of endpoint paths defined for this server.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Type</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">List[str]</span></td>
-                                            <td><span class="param-desc">List of endpoint paths (e.g., ["/hello", "/status"])</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">server.terminate()</div>
-                            <p class="method-description">
-                                Terminates this specific server and all its child processes.
-                            </p>
-                            
-                            <div class="params-section">
-                                <div class="section-title">Parameters</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="2"><em>No parameters</em></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">None</span></td>
-                                            <td><span class="param-desc">This method doesn't return a value</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="example-section">
-                                <div class="section-title">Example</div>
-                                <pre><code class="language-python"># Terminate a specific server
-server.terminate()
-
-# The server is no longer in the servers list
-print(server.name in syft_serve.servers)  # False</code></pre>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Server Collection -->
-                    <section id="server-collection">
-                        <h2>Server Collection</h2>
-                        <p>The servers collection provides access to all running servers.</p>
-                        
-                        <div class="api-method">
-                            <div class="method-signature">syft_serve.servers</div>
-                            <p class="method-description">
-                                Global collection of all running servers. Displays as an interactive table in Jupyter notebooks.
-                            </p>
-                            
-                            <div class="example-section">
-                                <div class="section-title">Example</div>
-                                <pre><code class="language-python"># View all servers
-syft_serve.servers
-
-# Output (in Jupyter):
-# Name         Port  Status     Endpoints          Uptime    PID
-# ----------  ------  ---------  ---------------  --------  -----
-# hello_api    8000  ✅ Running  /hello            2m 15s   1234
-# data_api     8001  ✅ Running  /process          45s      5678</code></pre>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">syft_serve.servers[name]</div>
-                            <p class="method-description">
-                                Access a server by its name.
-                            </p>
-                            
-                            <div class="params-section">
-                                <div class="section-title">Parameters</div>
-                                <table class="param-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-name">name</span></td>
-                                            <td><span class="param-type">str</span></td>
-                                            <td><span class="param-desc">Name of the server</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">Server</span></td>
-                                            <td><span class="param-desc">Server object</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Raises</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">KeyError</span></td>
-                                            <td><span class="param-desc">If no server with that name exists</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">syft_serve.servers[index]</div>
-                            <p class="method-description">
-                                Access a server by its index in the collection.
-                            </p>
-                            
-                            <div class="params-section">
-                                <div class="section-title">Parameters</div>
-                                <table class="param-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-name">index</span></td>
-                                            <td><span class="param-type">int</span></td>
-                                            <td><span class="param-desc">Zero-based index</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">Server</span></td>
-                                            <td><span class="param-desc">Server object</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Environment Info -->
-                    <section id="environment-info">
-                        <h2>Environment Info</h2>
-                        
-                        <div class="api-method">
-                            <div class="method-signature">server.env</div>
-                            <p class="method-description">
-                                Access to the server's isolated virtual environment information. Displays as a tree view in Jupyter notebooks.
-                            </p>
-                            
-                            <div class="example-section">
-                                <div class="section-title">Example</div>
-                                <pre><code class="language-python"># View installed packages
-server.env
-
-# Output (in Jupyter):
-# 📦 data_api environment
-# ├── pandas==2.0.0
-# ├── numpy==1.24.3
-# └── python-dateutil==2.8.2</code></pre>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">server.env.list()</div>
-                            <p class="method-description">
-                                Get a list of all installed packages in the server's environment.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">List[str]</span></td>
-                                            <td><span class="param-desc">List of installed packages with versions</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Log Streams -->
-                    <section id="log-streams">
-                        <h2>Log Streams</h2>
-                        <p>Access server logs without hunting for log files.</p>
-                        
-                        <div class="api-method">
-                            <div class="method-signature">server.stdout</div>
-                            <p class="method-description">
-                                Access to the server's standard output stream.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Type</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">LogStream</span></td>
-                                            <td><span class="param-desc">Log stream object with methods for viewing logs</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">server.stderr</div>
-                            <p class="method-description">
-                                Access to the server's standard error stream.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Type</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">LogStream</span></td>
-                                            <td><span class="param-desc">Log stream object with methods for viewing error logs</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">stream.tail(n=10)</div>
-                            <p class="method-description">
-                                Get the last n lines from the log stream.
-                            </p>
-                            
-                            <div class="params-section">
-                                <div class="section-title">Parameters</div>
-                                <table class="param-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-name">n</span></td>
-                                            <td><span class="param-type">int</span></td>
-                                            <td><span class="param-desc">Number of lines to return (default: 10)</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">str</span></td>
-                                            <td><span class="param-desc">Last n lines of the log</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">stream.head(n=10)</div>
-                            <p class="method-description">
-                                Get the first n lines from the log stream.
-                            </p>
-                            
-                            <div class="params-section">
-                                <div class="section-title">Parameters</div>
-                                <table class="param-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-name">n</span></td>
-                                            <td><span class="param-type">int</span></td>
-                                            <td><span class="param-desc">Number of lines to return (default: 10)</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">str</span></td>
-                                            <td><span class="param-desc">First n lines of the log</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="api-method">
-                            <div class="method-signature">stream.lines()</div>
-                            <p class="method-description">
-                                Get all lines from the log stream as a list.
-                            </p>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">List[str]</span></td>
-                                            <td><span class="param-desc">All log lines as a list</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="example-section">
-                                <div class="section-title">Example</div>
-                                <pre><code class="language-python"># View recent logs
-print(server.stdout.tail(20))
-
-# Debug startup issues
-print(server.stdout.head(50))
-
-# Search through all logs
-for line in server.stderr.lines():
-    if "error" in line.lower():
-        print(line)</code></pre>
-                            </div>
-                        </div>
-                    </section>
                 </div>
             </div>
         </div>
@@ -852,7 +579,7 @@ for line in server.stderr.lines():
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2024 OpenMined. Part of the <a href="https://syftbox.org">SyftBox</a> ecosystem.</p>
+            <p>Built with ❤️ by <a href="https://openmined.org">OpenMined</a></p>
         </div>
     </footer>
 

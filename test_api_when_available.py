@@ -14,7 +14,7 @@ def test_public_api():
         public_attrs = [attr for attr in dir(ss) if not attr.startswith('_')]
         print(f"Public attributes: {sorted(public_attrs)}")
         
-        expected_attrs = ['create', 'servers']
+        expected_attrs = ['create', 'servers', 'terminate_all']
         assert sorted(public_attrs) == sorted(expected_attrs), (
             f"Expected {expected_attrs}, got {public_attrs}"
         )
@@ -22,8 +22,8 @@ def test_public_api():
         
         # Test __all__ attribute
         assert hasattr(ss, '__all__'), "Should have __all__ defined"
-        assert sorted(ss.__all__) == sorted(['servers', 'create']), (
-            f"__all__ should be ['servers', 'create'], got {ss.__all__}"
+        assert sorted(ss.__all__) == sorted(['servers', 'create', 'terminate_all']), (
+            f"__all__ should be ['servers', 'create', 'terminate_all'], got {ss.__all__}"
         )
         print("✓ __all__ attribute is correct")
         
@@ -62,7 +62,7 @@ def test_public_api():
         print("✓ Internal modules are properly hidden")
         
         print("\n🎉 All public API tests passed!")
-        print("The public API is clean with only 'create' and 'servers' exposed.")
+        print("The public API is clean with only 'create', 'servers', and 'terminate_all' exposed.")
         
     except ImportError as e:
         print(f"⚠️  Could not import syft_serve: {e}")

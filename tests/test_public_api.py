@@ -23,6 +23,7 @@ class TestPublicAPI:
         expected_attrs = [
             'create',
             'servers',
+            'terminate_all',
         ]
         
         # Sort for consistent comparison
@@ -116,7 +117,7 @@ class TestPublicAPI:
         """Test that __all__ contains exactly what we expect."""
         assert hasattr(ss, '__all__'), "syft_serve module should have __all__ defined"
         
-        expected_all = ['servers', 'create']
+        expected_all = ['servers', 'create', 'terminate_all']
         actual_all = sorted(ss.__all__)
         expected_all = sorted(expected_all)
         
@@ -176,9 +177,10 @@ class TestPublicAPIStructure:
         assert '__all__ = [' in content, "__all__ should be defined"
         assert '"servers"' in content, "__all__ should contain 'servers'"
         assert '"create"' in content, "__all__ should contain 'create'"
+        assert '"terminate_all"' in content, "__all__ should contain 'terminate_all'"
         
         # Check that we're importing from _api (underscore-prefixed module)
-        assert 'from ._api import servers, create' in content, "Should import from _api module"
+        assert 'from ._api import servers, create, terminate_all' in content, "Should import from _api module"
         
         # Check that we're not importing old module names
         bad_imports = ['from .api import', 'from .manager import', 'from .server import']

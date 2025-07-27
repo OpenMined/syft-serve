@@ -115,7 +115,7 @@ header {
 }
 
 nav {
-    padding: var(--space-3) 0;
+    padding: calc(var(--space-3) * 0.8) 0;
 }
 
 .nav-wrapper {
@@ -134,13 +134,13 @@ nav {
 }
 
 .syftbox-logo {
-    height: 36px;
+    height: 29px;
     width: auto;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .logo {
-    font-size: 1.75rem;
+    font-size: 1.4rem;
     font-weight: 800;
     color: var(--color-dark);
     text-decoration: none;
@@ -149,13 +149,14 @@ nav {
 
 .nav-links {
     display: flex;
-    gap: var(--space-5);
+    gap: var(--space-4);
 }
 
 .nav-links a {
     color: var(--color-dark);
     text-decoration: none;
     font-weight: 500;
+    font-size: 0.95rem;
     transition: color 0.2s;
 }
 
@@ -196,31 +197,13 @@ nav {
    Hero Section
    ================================ */
 .hero {
-    padding: var(--space-8) 0 calc(var(--space-8) + 100px) 0;
+    padding: var(--space-20) 0;
     text-align: center;
     background: var(--color-light-gray);
     min-height: calc(100vh - 70px);
     display: flex;
     align-items: center;
     position: relative;
-}
-
-.hero::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: white;
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 100' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C300,50 900,50 1200,0 L1200,100 L0,100 Z' fill='black'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 100' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C300,50 900,50 1200,0 L1200,100 L0,100 Z' fill='black'/%3E%3C/svg%3E");
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    pointer-events: none;
-    z-index: 10;
 }
 
 .hero .container {
@@ -346,23 +329,22 @@ code {
 }
 
 .copy-btn {
-    background: var(--color-secondary);
-    color: white;
-    border: none;
+    background: #e2e8f0;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
     padding: var(--space-1) var(--space-2);
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.2s;
-    font-weight: 600;
+    font-weight: 500;
     position: relative;
     overflow: hidden;
 }
 
 .copy-btn:hover {
-    background: #059669;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #cbd5e0;
+    border-color: #a0aec0;
 }
 
 .copy-btn:active {
@@ -432,7 +414,62 @@ code {
    API Preview Section
    ================================ */
 .api-preview {
-    padding: var(--space-16) 0;
+    padding: var(--space-20) 0;
+    background: var(--color-white);
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+}
+
+/* API Preview Dark */
+.api-preview-dark {
+    padding: var(--space-20) 0;
+    color: white;
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+}
+
+.api-preview-dark h2 {
+    text-align: center;
+    color: white;
+    font-size: 3rem;
+    margin-bottom: var(--space-3);
+}
+
+.api-preview-dark .section-subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.25rem;
+    margin-bottom: var(--space-8);
+}
+
+.api-preview-dark .api-example {
+    background: rgba(255, 255, 255, 0.05);
+    padding: var(--space-4);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.api-preview-dark .api-example h3 {
+    font-size: 1.2rem;
+    margin-bottom: var(--space-2);
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+}
+
+.api-preview-dark .api-example pre {
+    margin: 0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: var(--space-3);
+    border-radius: 8px;
+}
+
+.api-preview-dark .api-example code {
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .api-preview h2 {
@@ -472,8 +509,11 @@ code {
    Why SyftPerm Section
    ================================ */
 .why-syftperm {
-    padding: var(--space-16) 0;
-    background: var(--color-light-gray);
+    padding: var(--space-20) 0;
+    background: var(--color-white);
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
 }
 
 .why-syftperm h2 {
@@ -520,8 +560,11 @@ code {
    Video Demo Section
    ================================ */
 .video-demo {
-    padding: var(--space-10) 0;
-    background: var(--color-white);
+    padding: var(--space-20) 0;
+    background: var(--color-light-gray);
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
 }
 
 .video-demo h2 {
@@ -556,30 +599,92 @@ code {
    Gradient Feature Section
    ================================ */
 .gradient-feature {
-    padding: var(--space-16) 0;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    padding: var(--space-20) 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #fccb90 75%, #d57eeb 100%);
     color: white;
     position: relative;
     overflow: hidden;
+    isolation: isolate;
 }
 
 .gradient-feature::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
-    pointer-events: none;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle 800px at 20% 50%, rgba(255, 255, 255, 0.4) 0%, transparent 40%),
+        radial-gradient(circle 600px at 80% 30%, rgba(255, 192, 203, 0.5) 0%, transparent 40%),
+        radial-gradient(circle 700px at 50% 80%, rgba(255, 218, 185, 0.4) 0%, transparent 45%),
+        radial-gradient(circle 900px at 10% 10%, rgba(230, 230, 250, 0.3) 0%, transparent 50%),
+        radial-gradient(circle 500px at 90% 90%, rgba(176, 224, 230, 0.4) 0%, transparent 40%);
+    filter: blur(40px);
+    transform: rotate(-15deg) translateZ(0);
+    animation: gradientShift 25s ease-in-out infinite;
+    mix-blend-mode: soft-light;
+}
+
+@keyframes gradientShift {
+    0%, 100% { 
+        transform: rotate(-15deg) scale(1) translate(0, 0) translateZ(0);
+        filter: blur(40px) brightness(1.2);
+    }
+    20% { 
+        transform: rotate(-25deg) scale(1.15) translate(-8%, 12%) translateZ(0);
+        filter: blur(60px) brightness(1.3);
+    }
+    40% { 
+        transform: rotate(-5deg) scale(1.1) translate(10%, -8%) translateZ(0);
+        filter: blur(30px) brightness(1.1);
+    }
+    60% { 
+        transform: rotate(-30deg) scale(1.2) translate(-15%, -5%) translateZ(0);
+        filter: blur(50px) brightness(1.4);
+    }
+    80% { 
+        transform: rotate(-10deg) scale(1.05) translate(5%, 10%) translateZ(0);
+        filter: blur(45px) brightness(1.2);
+    }
 }
 
 .gradient-feature::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.1);
-    pointer-events: none;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: 
+        radial-gradient(ellipse 1200px 800px at 30% 20%, rgba(255, 255, 255, 0.3) 0%, transparent 40%),
+        radial-gradient(ellipse 1000px 1400px at 70% 60%, rgba(255, 182, 193, 0.4) 0%, transparent 45%),
+        radial-gradient(ellipse 1500px 900px at 50% 90%, rgba(255, 239, 213, 0.3) 0%, transparent 50%),
+        radial-gradient(circle 600px at 85% 15%, rgba(230, 230, 250, 0.4) 0%, transparent 35%);
+    filter: blur(60px);
+    transform: rotate(35deg) translateZ(0);
+    mix-blend-mode: overlay;
+    animation: gradientShift2 35s ease-in-out infinite reverse;
+    opacity: 0.8;
+}
+
+@keyframes gradientShift2 {
+    0%, 100% { 
+        transform: rotate(35deg) scale(1) translate(0, 0) skew(0deg, 0deg) translateZ(0);
+        filter: blur(60px) hue-rotate(0deg);
+    }
+    25% { 
+        transform: rotate(55deg) scale(0.95) translate(15%, -15%) skew(5deg, -5deg) translateZ(0);
+        filter: blur(80px) hue-rotate(20deg);
+    }
+    50% { 
+        transform: rotate(20deg) scale(1.3) translate(-10%, 20%) skew(-8deg, 3deg) translateZ(0);
+        filter: blur(40px) hue-rotate(-15deg);
+    }
+    75% { 
+        transform: rotate(40deg) scale(1.1) translate(5%, -5%) skew(3deg, -3deg) translateZ(0);
+        filter: blur(70px) hue-rotate(10deg);
+    }
 }
 
 .gradient-feature .container {
@@ -642,16 +747,129 @@ code {
 }
 
 /* ================================
-   Real Example Section
+   Dark Section Wrapper - Contains all dark sections
    ================================ */
-.real-example {
-    background: var(--color-light-gray);
-    padding: var(--space-12) 0;
+.dark-section-wrapper {
+    background: #0a0a0a;
+    position: relative;
+    overflow: hidden;
 }
 
-.real-example h2 {
+/* ================================
+   Under the Hood Section
+   ================================ */
+.under-the-hood {
+    position: relative;
+    padding: var(--space-20) 0;
+    color: white;
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+}
+
+/* Roaming spotlights for entire dark section */
+.dark-section-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle 600px at 20% 10%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+        radial-gradient(circle 500px at 80% 30%, rgba(118, 75, 162, 0.12) 0%, transparent 50%),
+        radial-gradient(circle 450px at 50% 40%, rgba(240, 147, 251, 0.10) 0%, transparent 50%),
+        radial-gradient(circle 700px at 10% 80%, rgba(252, 203, 144, 0.08) 0%, transparent 50%),
+        radial-gradient(circle 400px at 40% 60%, rgba(213, 126, 235, 0.12) 0%, transparent 50%),
+        radial-gradient(circle 550px at 70% 70%, rgba(102, 126, 234, 0.10) 0%, transparent 50%),
+        radial-gradient(circle 500px at 30% 30%, rgba(240, 147, 251, 0.08) 0%, transparent 50%),
+        radial-gradient(circle 600px at 90% 60%, rgba(252, 203, 144, 0.06) 0%, transparent 50%);
+    animation: spotlightRoam 35s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.dark-section-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle 550px at 90% 20%, rgba(213, 126, 235, 0.12) 0%, transparent 50%),
+        radial-gradient(circle 480px at 30% 50%, rgba(102, 126, 234, 0.10) 0%, transparent 50%),
+        radial-gradient(circle 600px at 60% 50%, rgba(240, 147, 251, 0.08) 0%, transparent 50%),
+        radial-gradient(circle 450px at 15% 40%, rgba(252, 203, 144, 0.10) 0%, transparent 50%),
+        radial-gradient(circle 500px at 75% 80%, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
+        radial-gradient(circle 400px at 45% 20%, rgba(240, 147, 251, 0.06) 0%, transparent 50%);
+    animation: spotlightRoam2 30s ease-in-out infinite reverse;
+    pointer-events: none;
+}
+
+@keyframes spotlightRoam {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        transform: translate(-5%, 10%) scale(1.05);
+    }
+    50% {
+        transform: translate(10%, -5%) scale(0.95);
+    }
+    75% {
+        transform: translate(-3%, -10%) scale(1.02);
+    }
+}
+
+@keyframes spotlightRoam2 {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(8%, -15%) scale(1.08);
+    }
+    66% {
+        transform: translate(-12%, 8%) scale(0.92);
+    }
+}
+
+.under-the-hood .container {
+    position: relative;
+    z-index: 1;
+}
+
+.under-the-hood h2 {
     text-align: center;
-    margin-bottom: var(--space-6);
+    color: white;
+    font-size: 3rem;
+    margin-bottom: var(--space-3);
+}
+
+.under-the-hood .section-subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.25rem;
+    margin-bottom: var(--space-8);
+}
+
+.code-showcase {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.code-showcase pre {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: var(--space-6);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.code-showcase code {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    line-height: 1.8;
 }
 
 /* ================================
@@ -762,15 +980,260 @@ code {
 }
 
 /* ================================
-   Newsletter Section
+   Try It Out Section
    ================================ */
-.newsletter-section {
-    padding: var(--space-16) 0;
-    background: #2d3748;
+.try-it-out {
+    padding: var(--space-20) 0;
     color: white;
     text-align: center;
     position: relative;
-    overflow: hidden;
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+}
+
+/* ================================
+   Newsletter Section Dark
+   ================================ */
+.newsletter-section-dark {
+    padding: var(--space-20) 0;
+    color: white;
+    text-align: center;
+    position: relative;
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+}
+
+.newsletter-section-dark h2 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+    letter-spacing: -0.02em;
+    color: white;
+}
+
+.newsletter-section-dark p {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--space-8);
+}
+
+/* HubSpot Form Styling for Dark Theme */
+.newsletter-section-dark .hs-form-field label {
+    display: none !important;
+}
+
+.newsletter-section-dark .hs-form-field input[type="text"],
+.newsletter-section-dark .hs-form-field input[type="email"],
+.newsletter-section-dark .hs-form-field textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font-size: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.newsletter-section-dark .hs-form-field input::placeholder,
+.newsletter-section-dark .hs-form-field textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.newsletter-section-dark .hs-form-field input:focus,
+.newsletter-section-dark .hs-form-field textarea:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.newsletter-section-dark .hs-submit input[type="submit"] {
+    background: white;
+    color: #0a0a0a;
+    border: none;
+    padding: var(--space-2) var(--space-6);
+    border-radius: 980px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+.newsletter-section-dark .hs-submit input[type="submit"]:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+}
+
+.newsletter-section-dark .hs-richtext {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.newsletter-section-dark .hs-richtext p {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: var(--space-2);
+}
+
+.newsletter-section-dark .hs-richtext a {
+    color: white;
+    text-decoration: underline;
+}
+
+.newsletter-section-dark .hs-error-msgs {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-1) 0 0 0;
+}
+
+.newsletter-section-dark .hs-error-msg {
+    color: #ff6b6b;
+    font-size: 0.875rem;
+}
+
+/* Hide unnecessary HubSpot elements */
+.newsletter-section-dark .hs-form-required,
+.newsletter-section-dark .submitted-message {
+    display: none !important;
+}
+
+/* Center and constrain the HubSpot form container */
+.newsletter-section-dark #hubspot-form-container {
+    max-width: 450px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 3rem;
+    backdrop-filter: blur(20px);
+}
+
+.newsletter-section-dark .hs-form {
+    text-align: left;
+}
+
+.newsletter-section-dark .hs-form-field {
+    margin-bottom: var(--space-3);
+}
+
+.newsletter-section-dark .hs-input {
+    font-family: var(--font-sans);
+}
+
+/* Checkbox styling */
+.newsletter-section-dark input[type="checkbox"] {
+    margin-right: var(--space-1);
+}
+
+.newsletter-section-dark .hs-form-booleancheckbox label {
+    display: inline !important;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+}
+
+/* Form layout fixes */
+.newsletter-section-dark .hs-form .hs-submit {
+    text-align: center;
+    margin-top: var(--space-4);
+}
+
+.newsletter-section-dark .legal-consent-container {
+    margin-top: var(--space-3);
+}
+
+.newsletter-section-dark .hs-form-field textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* AGGRESSIVE OVERRIDES FOR HUBSPOT FORM */
+/* Reset all HubSpot default styles */
+.newsletter-section-dark .hs-form fieldset {
+    max-width: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.newsletter-section-dark .hs-form .hs-form-field {
+    margin: 0 0 1rem 0 !important;
+    padding: 0 !important;
+}
+
+.newsletter-section-dark .hs-form .hs-field-desc {
+    display: none !important;
+}
+
+.newsletter-section-dark .hs-form .hs-form-field > label {
+    display: none !important;
+}
+
+/* Remove all default HubSpot spacing */
+.newsletter-section-dark .hs-form .inputs-list {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.newsletter-section-dark .hs-form ul {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+/* Fix the name field layout issue */
+.newsletter-section-dark .hs_firstname,
+.newsletter-section-dark .hs_lastname {
+    display: inline-block !important;
+    width: calc(50% - 0.5rem) !important;
+    vertical-align: top !important;
+}
+
+.newsletter-section-dark .hs_firstname {
+    margin-right: 1rem !important;
+}
+
+.newsletter-section-dark .hs_email,
+.newsletter-section-dark .field.hs-form-field:not(.hs_firstname):not(.hs_lastname) {
+    width: 100% !important;
+    display: block !important;
+}
+
+/* Force all text to be consistent */
+.newsletter-section-dark .hs-form * {
+    font-family: var(--font-sans) !important;
+}
+
+.newsletter-section-dark .hs-richtext p,
+.newsletter-section-dark .hs-richtext span,
+.newsletter-section-dark .hs-richtext em,
+.newsletter-section-dark .hs-richtext i,
+.newsletter-section-dark .hs-richtext strong,
+.newsletter-section-dark .legal-consent-container p,
+.newsletter-section-dark .legal-consent-container span {
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Checkbox text alignment */
+.newsletter-section-dark .hs-form-booleancheckbox-display {
+    display: flex !important;
+    align-items: flex-start !important;
+}
+
+.newsletter-section-dark .hs-form-booleancheckbox-display input {
+    margin-top: 0.25rem !important;
+    margin-right: 0.75rem !important;
+}
+
+.newsletter-section-dark .hs-form-booleancheckbox-display > span {
+    flex: 1 !important;
 }
 
 .newsletter-section::before {
@@ -902,6 +1365,33 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
+}
+
+/* Footer Dark Theme */
+.footer-dark {
+    padding: var(--space-6) 0;
+    background: transparent;
+    color: var(--color-white);
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-dark p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+}
+
+.footer-dark a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.footer-dark a:hover {
+    color: white;
+    text-decoration: none;
 }
 
 /* ================================

@@ -12,15 +12,11 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         exclude:
           # Reduce matrix size by excluding some combinations
           - os: windows-latest
-            python-version: "3.8"
-          - os: windows-latest
             python-version: "3.9"
-          - os: macos-latest
-            python-version: "3.8"
           - os: macos-latest
             python-version: "3.9"
 
@@ -125,11 +121,16 @@ jobs:
     - name: Set up project
       run: uv sync --all-extras
 
-    - name: Run security scan
+    - name: Run security checks
       run: |
-        uv add --dev bandit[toml] safety
+        uv add --dev bandit[toml]
         uv run bandit -r src/
-        uv run safety check
+        
+    - name: Check for vulnerabilities
+      run: |
+        # Use pip-audit as a more reliable alternative to safety
+        uv add --dev pip-audit
+        uv run pip-audit --desc
 
   docs-test:
     runs-on: ubuntu-latest

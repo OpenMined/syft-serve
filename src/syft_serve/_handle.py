@@ -106,41 +106,46 @@ class ServerHandle:
             # The process group ID is the same as the process ID for session leaders
             pgid = process.pid
 
-            try:
-                # Send SIGTERM to entire process group
-                os.killpg(pgid, signal.SIGTERM)
+            if hasattr(os, 'killpg'):
+                # Unix-like systems - use process groups
+                try:
+                    # Send SIGTERM to entire process group
+                    os.killpg(pgid, signal.SIGTERM)
 
-                # Wait for graceful shutdown with timeout
-                start_time = time.time()
-                while process.is_running() and (time.time() - start_time) < timeout:
-                    time.sleep(0.1)
-
-                # Check if main process is still alive
-                if process.is_running():
-                    # Force kill the entire process group
-                    os.killpg(pgid, signal.SIGKILL)
-
-                    # Wait a bit more for SIGKILL to take effect
-                    kill_timeout = 2.0
+                    # Wait for graceful shutdown with timeout
                     start_time = time.time()
-                    while process.is_running() and (time.time() - start_time) < kill_timeout:
+                    while process.is_running() and (time.time() - start_time) < timeout:
                         time.sleep(0.1)
 
-                    # Final check - if still running, try fallback method
+                    # Check if main process is still alive
                     if process.is_running():
-                        self._terminate_process_tree(process)
+                        # Force kill the entire process group
+                        os.killpg(pgid, signal.SIGKILL)
 
-                        # One last check after fallback
-                        time.sleep(0.5)
+                        # Wait a bit more for SIGKILL to take effect
+                        kill_timeout = 2.0
+                        start_time = time.time()
+                        while process.is_running() and (time.time() - start_time) < kill_timeout:
+                            time.sleep(0.1)
+
+                        # Final check - if still running, try fallback method
                         if process.is_running():
-                            raise ServerShutdownError(
-                                f"Failed to kill server process group {pgid} after {timeout + kill_timeout}s"
-                            )
-            except ProcessLookupError:
-                # Process group already dead
-                pass
-            except PermissionError:
-                # Fall back to killing individual processes
+                            self._terminate_process_tree(process)
+
+                            # One last check after fallback
+                            time.sleep(0.5)
+                            if process.is_running():
+                                raise ServerShutdownError(
+                                    f"Failed to kill server process group {pgid} after {timeout + kill_timeout}s"
+                                )
+                except ProcessLookupError:
+                    # Process group already dead
+                    pass
+                except PermissionError:
+                    # Fall back to killing individual processes
+                    self._terminate_process_tree(process)
+            else:
+                # Windows - terminate process tree directly
                 self._terminate_process_tree(process)
 
         except psutil.NoSuchProcess:
@@ -195,11 +200,17 @@ class ServerHandle:
                 )
             else:
                 # Unix-like systems: Use kill -9 on process group
-                try:
-                    # First try to kill the entire process group
-                    os.killpg(pid, signal.SIGKILL)
-                except (ProcessLookupError, PermissionError):
-                    # Fallback to killing just the process
+                if hasattr(os, 'killpg') and hasattr(signal, 'SIGKILL'):
+                    try:
+                        # First try to kill the entire process group
+                        os.killpg(pid, signal.SIGKILL)
+                    except (ProcessLookupError, PermissionError):
+                        # Fallback to killing just the process
+                        subprocess.run(  # nosec B603 B607
+                            ["kill", "-9", str(pid)], capture_output=True, check=False
+                        )
+                else:
+                    # Fallback for systems without killpg
                     subprocess.run(  # nosec B603 B607
                         ["kill", "-9", str(pid)], capture_output=True, check=False
                     )

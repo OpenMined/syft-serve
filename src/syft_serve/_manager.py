@@ -12,15 +12,15 @@ from pathlib import Path
 from typing import List, Dict, Optional, Callable
 import psutil
 
-from .handle import ServerHandle
-from .config import get_config
-from .exceptions import (
+from ._handle import ServerHandle
+from ._config import get_config
+from ._exceptions import (
     ServerNotFoundError, 
     PortInUseError, 
     ServerStartupError,
     ServerAlreadyExistsError
 )
-from .endpoint_serializer import generate_app_code_from_endpoints
+from ._endpoint_serializer import generate_app_code_from_endpoints
 
 
 class ServerManager:
@@ -143,7 +143,7 @@ class ServerManager:
                 print(f"Warning: Failed to terminate tracked server {name}: {e}")
         
         # Then find and terminate any orphaned processes
-        from .process_discovery import terminate_all_syft_serve_processes
+        from ._process_discovery import terminate_all_syft_serve_processes
         
         result = terminate_all_syft_serve_processes()
         if result['discovered'] > 0:

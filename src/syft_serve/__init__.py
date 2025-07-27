@@ -28,15 +28,13 @@ Example:
     print(api.stdout.tail(20))
 """
 
-from .api import servers, create, terminate_all
-from .exceptions import ServerAlreadyExistsError, ServerNotFoundError
+# Import only what we need for the public API
+from ._api import servers, create, terminate_all
 
-__version__ = "0.3.0"
+__version__ = "0.1.0"
 
 __all__ = [
-    "servers",
-    "create", 
+    "servers", 
+    "create",
     "terminate_all",
-    "ServerAlreadyExistsError",
-    "ServerNotFoundError",
 ]

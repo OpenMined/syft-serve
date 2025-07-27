@@ -4,10 +4,10 @@ Simplified high-level API for syft-serve
 
 from typing import Dict, Optional, List, Callable
 
-from .manager import ServerManager
-from .server import Server
-from .server_collection import ServerCollection
-from .exceptions import ServerAlreadyExistsError, ServerNotFoundError
+from ._manager import ServerManager
+from ._server import Server
+from ._server_collection import ServerCollection
+from ._exceptions import ServerAlreadyExistsError, ServerNotFoundError
 
 
 # Global manager instance

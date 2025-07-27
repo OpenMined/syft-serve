@@ -4,7 +4,7 @@ ServerCollection - simplified collection of servers with dict-like access
 
 from typing import List, Optional, Iterator, Union
 
-from .server import Server
+from ._server import Server
 
 
 class ServerCollection:

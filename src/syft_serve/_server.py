@@ -7,9 +7,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from .handle import ServerHandle
-from .log_stream import LogStream
-from .environment import Environment
+from ._handle import ServerHandle
+from ._log_stream import LogStream
+from ._environment import Environment
 
 
 class Server:
@@ -117,7 +117,7 @@ class Server:
     # Helper methods
     def _get_server_dir(self) -> Path:
         """Get the server's environment directory"""
-        from .config import get_config
+        from ._config import get_config
         config = get_config()
         return config.log_dir / "server_envs" / self.name
     

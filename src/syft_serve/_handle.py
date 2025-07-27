@@ -7,8 +7,8 @@ from typing import List, Optional
 import psutil
 import requests
 
-from .config import get_config
-from .exceptions import ServerNotFoundError, ServerShutdownError
+from ._config import get_config
+from ._exceptions import ServerNotFoundError, ServerShutdownError
 
 
 class ServerHandle:

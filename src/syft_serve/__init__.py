@@ -31,7 +31,7 @@ Example:
 # Import only what we need for the public API
 from ._api import servers, create
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 
 __all__ = [
     "servers", 

@@ -115,7 +115,7 @@ header {
 }
 
 nav {
-    padding: calc(var(--space-3) * 0.8) 0;
+    padding: calc(var(--space-2) * 0.7) 0;
 }
 
 .nav-wrapper {
@@ -134,13 +134,13 @@ nav {
 }
 
 .syftbox-logo {
-    height: 29px;
+    height: 20px;
     width: auto;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .logo {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: 800;
     color: var(--color-dark);
     text-decoration: none;
@@ -156,7 +156,7 @@ nav {
     color: var(--color-dark);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     transition: color 0.2s;
 }
 
@@ -357,21 +357,22 @@ code {
 }
 
 .copy-btn::after {
-    content: '✓ Copied!';
+    content: '✓';
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-accent);
-    color: white;
-    font-weight: 600;
-    transform: translateY(100%);
-    transition: transform 0.2s;
+    background: transparent;
+    color: var(--color-secondary);
+    font-weight: 400;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
 .copy-btn.copied::after {
-    transform: translateY(0);
+    opacity: 1;
 }
 
 .install-note {
@@ -548,6 +549,7 @@ code {
     color: var(--color-dark);
     margin-bottom: var(--space-2);
     font-size: 1.3rem;
+    white-space: nowrap;
 }
 
 .value-prop p {

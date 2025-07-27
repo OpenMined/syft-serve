@@ -24,7 +24,8 @@
       "Bash(done)",
       "Bash(chmod:*)",
       "Bash(pip install:*)",
-      "Bash(/usr/bin/python3:*)"
+      "Bash(/usr/bin/python3:*)",
+      "Bash(ffmpeg:*)"
     ],
     "deny": []
   }

@@ -142,9 +142,20 @@ class Server:
         return self._env
     
     # Actions
-    def terminate(self) -> None:
-        """Terminate the server completely"""
-        self._handle.terminate()
+    def terminate(self, timeout: float = 5.0) -> None:
+        """Terminate the server completely
+        
+        Args:
+            timeout: Maximum time to wait for graceful shutdown (default: 5.0 seconds)
+        """
+        self._handle.terminate(timeout=timeout)
+    
+    def force_terminate(self) -> None:
+        """Nuclear option - forcefully kill the server process
+        
+        Uses OS-level commands to ensure termination. Use only when terminate() fails.
+        """
+        self._handle.force_terminate()
     
     # Helper methods
     def _get_server_dir(self) -> Path:

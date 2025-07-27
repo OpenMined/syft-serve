@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>syft-serve API - Simple Python API for SyftBox Management</title>
+    <title>syft-serve - Simple Python API for SyftBox Management</title>
     <link rel="icon" type="image/svg+xml" href="images/syftbox-logo.svg">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -14,7 +14,7 @@
             <div class="nav-wrapper">
                 <div class="logo-group">
                     <img src="images/syftbox-logo.svg" alt="SyftBox" class="syftbox-logo">
-                    <a href="index.html" class="logo">syft-serve API</a>
+                    <a href="index.html" class="logo">syft-serve</a>
                 </div>
                 <div class="nav-links">
                     <a href="https://colab.research.google.com/github/OpenMined/syft-serve/blob/main/tutorial.ipynb" target="_blank">Try in Colab</a>
@@ -25,34 +25,32 @@
         </nav>
     </header>
 
-    <section class="hero" style="min-height: 100vh; display: flex; align-items: center; padding-top: 0; margin-top: -4rem;">
-        <div class="container" style="text-align: center; max-width: 600px; margin: 0 auto;">
-            <p style="font-size: 0.9rem; color: #a0aec0; margin: 2rem 0 1rem 0; font-weight: 400; letter-spacing: 0.5px;">syftbox server management made effortless</p>
+    <section class="hero" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 0;">
+        <div class="container" style="text-align: center; max-width: 600px; margin: 0 auto; transform: translateY(-5%);">
+            <p style="font-size: 0.75rem; color: #a0aec0; margin: 1.2rem 0 0.8rem 0; font-weight: 400; letter-spacing: 0.3px;">syft server management made effortless</p>
             
             <!-- Install Command -->
-            <div class="install-section" style="margin: 2rem 0;">
-                <div class="install-command" style="width: 400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem 1.5rem;">
-                    <code style="font-size: 1rem;">pip install syft-serve-api</code>
-                    <button class="copy-btn" data-copy="pip install syft-serve-api">Copy</button>
+            <div class="install-section" style="margin: 1.5rem 0;">
+                <div class="install-command" style="width: 320px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.7rem 1.2rem;">
+                    <code style="font-size: 0.7rem;">pip install syft-serve</code>
+                    <button class="copy-btn" data-copy="pip install syft-serve" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;">Copy</button>
                 </div>
             </div>
 
             <!-- Code Example - Hero -->
-            <div style="margin: 3rem 0;">
-                <pre style="background: #2d3748; color: #e2e8f0; padding: 2rem 2rem; border-radius: 12px; font-size: 1.2rem; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; line-height: 1.4; display: inline-block; text-align: left; width: 600px; box-sizing: border-box;"><code class="language-python">from syft_widget import DynamicWidget
-import time
+            <div style="margin: 2rem 0;">
+                <pre style="background: #2d3748; color: #e2e8f0; padding: 0.8rem 0.8rem; border-radius: 10px; display: inline-block; text-align: left; width: 320px; box-sizing: border-box; line-height: 1.0 !important;"><code class="language-python" style="font-family: var(--font-mono); font-size: 0.7rem; word-break: break-word;">import syft_serve as ss
+import requests
 
-class LiveClock(DynamicWidget):
-    def get_endpoints(self):
-        @self.endpoint("/api/time")
-        def get_time():
-            return {"time": time.strftime("%H:%M:%S")}
-    
-    def get_template(self):
-        return '<div data-field="time">{time}</div>'
+def hello():
+    return "Hi!"
 
-clock = LiveClock()  # Server starts automatically!
-clock</code></pre>
+server = ss.create("my_api", {"/": hello})
+
+requests.get(server.url).text</code></pre>
+                <div style="margin-top: 0.8rem; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; font-size: 0.7rem; color: #9ca3af; text-align: center;">
+                    "Hi!"
+                </div>
             </div>
         </div>
     </section>
@@ -61,20 +59,20 @@ clock</code></pre>
     <section class="why-syftperm">
         <div class="container">
             <h2>Why We Built This</h2>
-            <p class="section-subtitle">privacy should be effortless</p>
+            <p class="section-subtitle">self-hosting should be effortless</p>
             
             <div class="value-props">
                 <div class="value-prop">
-                    <h3>🚫 Privacy is inconvenient</h3>
-                    <p>Privacy tools shouldn't require technical expertise or complex setup. They should just work, seamlessly and automatically.</p>
+                    <h3>☁️ The cloud isn't yours</h3>
+                    <p>Not your computer, not your control. Cloud providers can change terms, raise prices, or shut down your app anytime.</p>
                 </div>
                 <div class="value-prop">
-                    <h3>🏢 Data is siloed</h3>
-                    <p>Your data is trapped in corporate platforms. It should be yours to control, share, and use however you choose.</p>
+                    <h3>🏠 Yours is inconvenient</h3>
+                    <p>Self-hosting means wrestling with configs, ports, and processes. Complexity keeps you dependent on cloud APIs.</p>
                 </div>
                 <div class="value-prop">
-                    <h3>⛓️ Users aren't free</h3>
-                    <p>People are locked into systems that exploit their data. True freedom means owning and controlling your digital life.</p>
+                    <h3>✨ Convenience is possible</h3>
+                    <p>Self-hosting should be a 1-liner behind the scenes. With syft-serve, your own server is just one function call away.</p>
                 </div>
             </div>
         </div>
@@ -84,11 +82,11 @@ clock</code></pre>
     <section class="video-demo">
         <div class="container">
             <h2>See It In Action</h2>
-            <p class="section-subtitle">privacy can be effortless</p>
+            <p class="section-subtitle">self-hosting can be effortless</p>
             
             <style>
                 .demo-tabs {
-                    max-width: 1200px;
+                    max-width: 1400px;
                     margin: 0 auto;
                 }
                 .tab-pane {
@@ -145,17 +143,16 @@ clock</code></pre>
                     color: #6e6e73;
                 }
                 .video-container {
-                    height: 450px;
+                    height: 600px;
                     width: 100%;
-                    max-width: 800px;
-                    margin: 0 auto;
+                    margin: 0;
                     display: flex;
-                    align-items: flex-start;
+                    align-items: center;
                     justify-content: center;
                     background: white;
-                    border-radius: 8px;
-                    padding: 1rem;
                     box-sizing: border-box;
+                    padding: 0;
+                    overflow: hidden;
                 }
                 
                 /* Full width for Magic tab */
@@ -164,7 +161,7 @@ clock</code></pre>
                     width: 100vw;
                     margin-left: calc(50% - 50vw);
                     border-radius: 0;
-                    background: #000;
+                    background: white;
                     padding: 0;
                 }
                 
@@ -174,10 +171,20 @@ clock</code></pre>
                 }
                 .video-container video {
                     border-radius: 8px;
-                    background: #000;
-                    max-height: 400px;
+                    background: white;
+                    max-height: 100%;
                     max-width: 100%;
+                    width: 100%;
+                    height: 100%;
                     object-fit: contain;
+                }
+                
+                /* Black background for terminal tab */
+                #terminal .video-container {
+                    background: #000;
+                }
+                #terminal .video-container video {
+                    background: #000;
                 }
             </style>
             
@@ -193,9 +200,9 @@ clock</code></pre>
                     <div class="tab-pane active" id="jupyter">
                         <div class="video-container">
                             <video width="100%" controls preload="metadata" muted loop poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KUGF0aCBkPSJNOCA1VjE5TDE5IDEyTDggNVoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+Cg==">
-                                <source src="videos/jupyter_noaudio_cropped.mp4" type="video/mp4">
-                                <source src="videos/jupyter_noaudio.mp4" type="video/mp4">
-                                <source src="https://raw.githubusercontent.com/OpenMined/syft-installer/main/docs/videos/jupyter_noaudio_cropped.mp4" type="video/mp4">
+                                <source src="videos/syft_serve_jupyter.mp4" type="video/mp4">
+                                <source src="videos/syft_serve_jupyter.mov" type="video/quicktime">
+                                <source src="https://raw.githubusercontent.com/OpenMined/syft-serve/main/docs/videos/syft_serve_jupyter.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
@@ -204,9 +211,9 @@ clock</code></pre>
                     <div class="tab-pane" id="colab">
                         <div class="video-container">
                             <video width="100%" controls preload="metadata" muted loop poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KUGF0aCBkPSJNOCA1VjE5TDE5IDEyTDggNVoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+Cg==">
-                                <source src="videos/colab_noaudio.mp4" type="video/mp4">
-                                <source src="videos/colab.mp4" type="video/mp4">
-                                <source src="https://raw.githubusercontent.com/OpenMined/syft-installer/main/docs/videos/colab_noaudio.mp4" type="video/mp4">
+                                <source src="videos/syft_serve_colab.mp4" type="video/mp4">
+                                <source src="/Users/atrask/Desktop/syft_serve_colab.mov" type="video/quicktime">
+                                <source src="https://raw.githubusercontent.com/OpenMined/syft-serve/main/docs/videos/syft_serve_colab.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
@@ -215,9 +222,9 @@ clock</code></pre>
                     <div class="tab-pane" id="terminal">
                         <div class="video-container">
                             <video width="100%" controls preload="metadata" muted loop poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KUGF0aCBkPSJNOCA1VjE5TDE5IDEyTDggNVoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+Cg==">
-                                <source src="videos/terminal_noaudio.mp4" type="video/mp4">
-                                <source src="videos/terminal.mp4" type="video/mp4">
-                                <source src="https://raw.githubusercontent.com/OpenMined/syft-installer/main/docs/videos/terminal_noaudio.mp4" type="video/mp4">
+                                <source src="videos/syft_serve_terminal.mp4" type="video/mp4">
+                                <source src="/Users/atrask/Desktop/syft_serve_teminal.mov" type="video/quicktime">
+                                <source src="https://raw.githubusercontent.com/OpenMined/syft-serve/main/docs/videos/syft_serve_terminal.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
@@ -243,21 +250,21 @@ clock</code></pre>
         <section class="under-the-hood">
             <div class="container">
                 <h2>Under the Hood</h2>
-                <p class="section-subtitle">Here's what SyftBox daemon creates when installed</p>
+                <p class="section-subtitle">Here's what syft-serve does for you</p>
                 
                 <div class="code-showcase">
-                    <pre><code class="language-python"># SyftBox creates a complete local environment:
+                    <pre><code class="language-python"># You write:
+server = ss.create("my_api", {"/predict": my_function})
 
-~/.syftbox/
-  ├── config.json          # Authentication and server settings
-  ├── logs/                 # Daemon and application logs
-  └── cache/                # Downloaded binaries and temp files
+# Behind the scenes:
+# ✓ Spins up isolated Python environment
+# ✓ Installs your dependencies safely  
+# ✓ Generates production-ready FastAPI code
+# ✓ Manages server process lifecycle
+# ✓ Streams logs for easy debugging
+# ✓ Cleans up everything when done
 
-~/SyftBox/
-  ├── apps/                 # Installed SyftBox applications
-  └── datasites/            # Connected data sources and sites
-
-# Plus the daemon binary at ~/.local/bin/syftbox</code></pre>
+# No orphan processes. No port conflicts. No hassle.</code></pre>
                 </div>
             </div>
         </section>
@@ -266,7 +273,7 @@ clock</code></pre>
         <section class="api-preview-dark">
             <div class="container">
                 <h2>The Complete API</h2>
-                <p class="section-subtitle">effortless setup and teardown of syftbox daemon</p>
+                <p class="section-subtitle">Everything you need, nothing you don't</p>
                 
                 <style>
                     .api-examples {
@@ -287,37 +294,66 @@ clock</code></pre>
                 
                 <div class="api-examples">
                     <div class="api-example">
-                        <h3>Quick Start</h3>
-                        <pre><code class="language-python">import syft_installer as si
+                        <h3>Create & Customize</h3>
+                        <pre><code class="language-python">import syft_serve as ss
 
-si.install_and_run_if_needed() # Install and start
-si.install()         # Install only
-si.run()             # Start if already installed</code></pre>
+# Basic usage
+server = ss.create("my_api", {"/hello": hello_func})
+
+# Full control
+server = ss.create(
+    name="my_api",
+    endpoints={"/predict": predict, "/train": train},
+    dependencies=["numpy", "pandas"],
+    port=8080,
+    expiration_seconds=3600,  # Auto-cleanup
+    force=True                # Replace existing
+)</code></pre>
                     </div>
                     
                     <div class="api-example">
-                        <h3>Status & Control</h3>
-                        <pre><code class="language-python">si.status()
-si.is_installed()
-si.is_running()
+                        <h3>Server Management</h3>
+                        <pre><code class="language-python"># List all servers
+servers = ss.list()
 
-si.stop()
-si.run_if_stopped()</code></pre>
+# Get specific server
+server = ss.get("my_api")
+
+# Access server properties
+server.url          # http://localhost:8080
+server.endpoints    # ["/predict", "/train"]
+server.status       # "running"
+server.uptime       # "2h 15m"</code></pre>
                     </div>
                     
                     <div class="api-example">
-                        <h3>Non-Interactive Mode</h3>
-                        <pre><code class="language-python">session = si.install("email@example.com", interactive=False)
-session.submit_otp("ABC123")
-print(session.is_authenticated)</code></pre>
+                        <h3>Logs & Debugging</h3>
+                        <pre><code class="language-python"># Stream logs in real-time
+server.stdout.follow()
+
+# Get recent logs
+server.stdout.tail(20)
+server.stderr.tail(20)
+
+# Check environment
+server.env.packages    # Installed packages
+server.env.python      # Python version</code></pre>
                     </div>
                     
                     <div class="api-example">
-                        <h3>Clean Uninstall</h3>
-                        <pre><code class="language-python"># Removes everything
-si.uninstall()
+                        <h3>Lifecycle Control</h3>
+                        <pre><code class="language-python"># Graceful shutdown
+server.terminate()
 
-# Confirms before deleting</code></pre>
+# Force kill if needed
+server.force_terminate()
+
+# Clean up all servers
+ss.terminate_all()
+
+# Auto-expiring servers
+ss.create("temp_api", endpoints, 
+         expiration_seconds=300)  # 5 min</code></pre>
                     </div>
                 </div>
             </div>
@@ -328,7 +364,7 @@ si.uninstall()
             <div class="container">
                 <div style="max-width: 600px; margin: 0 auto; text-align: center;">
                     <h2 style="font-size: 3rem; font-weight: 600; color: white; margin-bottom: 2rem; letter-spacing: -0.02em;">try it out</h2>
-                    <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem;">experience syftbox installation in google colab</p>
+                    <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem;">experience syft-serve in google colab</p>
                     <a href="https://colab.research.google.com/github/OpenMined/syft-serve/blob/main/tutorial.ipynb" 
                        style="display: inline-block; background: white; color: #0a0a0a; padding: 1rem 2rem; border-radius: 980px; text-decoration: none; font-size: 1.1rem; font-weight: 500; transition: all 0.2s; border: none;" 
                        onmouseover="this.style.background='rgba(255,255,255,0.9)'" 
@@ -342,7 +378,7 @@ si.uninstall()
             <div class="container">
                 <div class="newsletter-content">
                     <h2>Stay Updated</h2>
-                    <p>Get notified about SOTA privacy tools like syft-installer</p>
+                    <p>Get notified about SOTA privacy tools like syft-serve</p>
                     
                     <!-- HubSpot Form -->
                     <div id="hubspot-form-container"></div>

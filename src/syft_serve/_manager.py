@@ -121,10 +121,23 @@ class ServerManager:
                 raise ServerNotFoundError("No servers are currently registered")
         return self._servers[name]
     
-    def terminate_server(self, name: str) -> None:
-        """Terminate specific server by name"""
+    def terminate_server(self, name: str, force: bool = False) -> None:
+        """Terminate specific server by name
+        
+        Args:
+            name: Server name
+            force: If True, use force_terminate if normal termination fails
+        """
         server = self.get_server(name)
-        server.terminate()
+        
+        try:
+            server.terminate()
+        except Exception as e:
+            if force:
+                print(f"Normal termination failed for {name}, using force terminate...")
+                server.force_terminate()
+            else:
+                raise
         
         # Clean up environment
         server_dir = self._envs_dir / name
@@ -135,8 +148,11 @@ class ServerManager:
         del self._servers[name]
         self._save_persistent_servers()
     
-    def terminate_all(self) -> Dict[str, Any]:
+    def terminate_all(self, force: bool = True) -> Dict[str, Any]:
         """Terminate all servers - both tracked and orphaned
+        
+        Args:
+            force: If True, use force_terminate for stubborn processes
         
         Returns:
             dict: Summary of termination results with keys:
@@ -164,7 +180,7 @@ class ServerManager:
         
         for name in names:
             try:
-                self.terminate_server(name)
+                self.terminate_server(name, force=force)
                 results['tracked_terminated'] += 1
             except Exception as e:
                 print(f"Warning: Failed to terminate tracked server {name}: {e}")
@@ -174,7 +190,7 @@ class ServerManager:
         # Then find and terminate any orphaned processes
         from ._process_discovery import terminate_all_syft_serve_processes
         
-        orphan_result = terminate_all_syft_serve_processes()
+        orphan_result = terminate_all_syft_serve_processes(force=force)
         results['orphaned_discovered'] = orphan_result['discovered']
         results['orphaned_terminated'] = orphan_result['terminated']
         results['orphaned_failed'] = orphan_result['failed']

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Reference - syft-serve    </title>
+    <title>API Reference - syft-serve</title>
     <link rel="icon" type="image/svg+xml" href="../images/syftbox-logo.svg">
     <link rel="stylesheet" href="../css/style.css">
     <style>
@@ -99,15 +99,68 @@
         
         .example-section pre {
             margin: 0;
-            background: var(--color-code-bg);
+            background: #f8f9fa;
             border: 1px solid rgba(0,0,0,0.1);
             border-radius: 8px;
             padding: var(--space-3);
+            overflow-x: auto;
+        }
+        
+        /* Custom syntax highlighting for better readability */
+        .example-section code {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* Python syntax colors */
+        .language-python .hljs-comment,
+        .language-python .comment {
+            color: #6a737d !important;
+            font-style: italic;
+        }
+        
+        .language-python .hljs-string,
+        .language-python .string {
+            color: #032f62 !important;
+        }
+        
+        .language-python .hljs-keyword,
+        .language-python .keyword {
+            color: #d73a49 !important;
+            font-weight: 600;
+        }
+        
+        .language-python .hljs-built_in,
+        .language-python .built_in {
+            color: #6f42c1 !important;
+        }
+        
+        .language-python .hljs-function,
+        .language-python .function {
+            color: #6f42c1 !important;
+        }
+        
+        .language-python .hljs-number,
+        .language-python .number {
+            color: #005cc5 !important;
+        }
+        
+        .language-python .hljs-name,
+        .language-python .name {
+            color: #e36209 !important;
+        }
+        
+        /* Default text color for better contrast */
+        .language-python {
+            color: #24292e !important;
         }
         
         .api-nav {
             position: sticky;
-            top: 20px;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
             background: white;
             border: 1px solid rgba(0,0,0,0.1);
             border-radius: 8px;
@@ -142,6 +195,26 @@
             color: var(--color-primary);
         }
         
+        .nav-submenu {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 0 var(--space-2);
+        }
+        
+        .nav-submenu li {
+            padding: 0;
+        }
+        
+        .nav-submenu a {
+            font-size: 0.85rem;
+            color: var(--color-gray);
+            padding: 4px 0;
+        }
+        
+        .nav-submenu a:hover {
+            color: var(--color-accent);
+        }
+        
         .api-content {
             display: grid;
             grid-template-columns: 250px 1fr;
@@ -157,6 +230,7 @@
             .api-nav {
                 position: static;
                 margin-bottom: var(--space-6);
+                max-height: none;
             }
         }
     </style>
@@ -168,13 +242,13 @@
             <div class="nav-wrapper">
                 <div class="logo-group">
                     <img src="../images/syftbox-logo.svg" alt="SyftBox" class="syftbox-logo">
-                    <a href="../index.html" class="logo">syft-serve    </a>
+                    <a href="../index.html" class="logo">syft-serve</a>
                 </div>
                 <div class="nav-links">
                     <a href="../index.html">Home</a>
                     <a href="https://colab.research.google.com/github/OpenMined/syft-serve/blob/main/tutorial.ipynb" target="_blank">Try in Colab</a>
                     <a href="index.html" class="active">API</a>
-                    <a href="https://github.com/OpenMined/syft-serve    " class="github-link">GitHub</a>
+                    <a href="https://github.com/OpenMined/syft-serve" class="github-link">GitHub</a>
                 </div>
             </div>
         </nav>
@@ -184,7 +258,7 @@
     <section class="api-hero">
         <div class="container">
             <h1>API Reference</h1>
-            <p class="hero-subtitle">A Python API for serving and controlling the SyftBox system — perfect for notebooks and automation</p>
+            <p class="hero-subtitle">A simple Python API for self-hosting stateless servers</p>
         </div>
     </section>
 
@@ -196,23 +270,52 @@
                 <aside class="api-nav">
                     <h3>Quick Navigation</h3>
                     <ul>
-                        <li><a href="#installation-methods">Installation Methods</a></li>
-                        <li><a href="#control-methods">Control Methods</a></li>
-                        <li><a href="#status-methods">Status Methods</a></li>
+                        <li>
+                            <a href="#server-creation">Server Creation</a>
+                            <ul class="nav-submenu">
+                                <li><a href="#create">ss.create()</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#server-management">Server Management</a>
+                            <ul class="nav-submenu">
+                                <li><a href="#list">ss.list()</a></li>
+                                <li><a href="#get">ss.get()</a></li>
+                                <li><a href="#server-display">Server Display</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#logging-debugging">Logging & Debugging</a>
+                            <ul class="nav-submenu">
+                                <li><a href="#stdout-tail">server.stdout.tail()</a></li>
+                                <li><a href="#stdout-follow">server.stdout.follow()</a></li>
+                                <li><a href="#stderr-tail">server.stderr.tail()</a></li>
+                                <li><a href="#stderr-follow">server.stderr.follow()</a></li>
+                                <li><a href="#server-env">server.env</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#lifecycle-control">Lifecycle Control</a>
+                            <ul class="nav-submenu">
+                                <li><a href="#terminate">server.terminate()</a></li>
+                                <li><a href="#terminate-all">ss.terminate_all()</a></li>
+                                <li><a href="#auto-expiring">Auto-Expiring Servers</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </aside>
 
                 <!-- Main Content -->
                 <div class="api-main">
-                    <!-- Installation Methods -->
-                    <section id="installation-methods">
-                        <h2>Installation Methods</h2>
+                    <!-- Server Creation -->
+                    <section id="server-creation">
+                        <h2>Server Creation</h2>
                         
-                        <div class="api-method">
-                            <div class="method-signature">si.run()</div>
+                        <div class="api-method" id="create">
+                            <div class="method-signature">ss.create()</div>
                             <p class="method-description">
-                                Install SyftBox (if needed) and start it. This is the primary method for most users.
-                                It will install SyftBox if not already installed, then start the daemon.
+                                Create a new server from a dictionary of endpoints. This is the primary method for turning
+                                Python functions into HTTP endpoints with automatic process management.
                             </p>
                             
                             <div class="params-section">
@@ -220,7 +323,34 @@
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td colspan="2"><em>No parameters - uses interactive prompts</em></td>
+                                            <td><span class="param-name">name</span></td>
+                                            <td><span class="param-type">str</span></td>
+                                            <td><span class="param-desc">Unique name for the server</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="param-name">endpoints</span></td>
+                                            <td><span class="param-type">dict[str, Callable]</span></td>
+                                            <td><span class="param-desc">Dictionary mapping URL paths to Python functions</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="param-name">dependencies</span></td>
+                                            <td><span class="param-type">list[str]</span></td>
+                                            <td><span class="param-desc">Optional list of pip packages to install</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="param-name">port</span></td>
+                                            <td><span class="param-type">int</span></td>
+                                            <td><span class="param-desc">Optional specific port (default: auto-assign)</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="param-name">expiration_seconds</span></td>
+                                            <td><span class="param-type">int</span></td>
+                                            <td><span class="param-desc">Auto-cleanup after N seconds (default: 86400, -1 = never)</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="param-name">force</span></td>
+                                            <td><span class="param-type">bool</span></td>
+                                            <td><span class="param-desc">Replace existing server with same name (default: False)</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -231,8 +361,8 @@
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td><span class="param-type">None</span></td>
-                                            <td><span class="param-desc">Starts SyftBox daemon in the background</span></td>
+                                            <td><span class="param-type">Server</span></td>
+                                            <td><span class="param-desc">Server object with url, status, logs, and control methods</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -240,58 +370,33 @@
                             
                             <div class="example-section">
                                 <div class="section-title">Example</div>
-                                <pre><code class="language-python">import syft_serve.api as si
+                                <pre><code class="language-python">import syft_serve as ss
 
-# Install and run SyftBox
-si.run()</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div class="api-method">
-                            <div class="method-signature">si.install()</div>
-                            <p class="method-description">
-                                Install SyftBox without starting it. Useful for deployment scenarios where you want
-                                to install first and start later.
-                            </p>
-                            
-                            <div class="params-section">
-                                <div class="section-title">Parameters</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="2"><em>No parameters - uses interactive prompts</em></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">None</span></td>
-                                            <td><span class="param-desc">Completes installation without starting the daemon</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="example-section">
-                                <div class="section-title">Example</div>
-                                <pre><code class="language-python"># Just install, don't start
-si.install()
+def predict(data: dict):
+    return {"prediction": "positive", "confidence": 0.95}
 
-# Start later when ready
-si.run_if_stopped()</code></pre>
+# Create a server
+server = ss.create(
+    name="ml_api",
+    endpoints={"/predict": predict},
+    dependencies=["numpy", "scikit-learn"]
+)
+
+print(server.url)  # http://localhost:8000</code></pre>
                             </div>
                         </div>
                         
-                        <div class="api-method">
-                            <div class="method-signature">si.install_and_run_if_needed()</div>
+                    </section>
+
+                    <!-- Server Management -->
+                    <section id="server-management">
+                        <h2>Server Management</h2>
+                        
+                        <div class="api-method" id="list">
+                            <div class="method-signature">ss.list()</div>
                             <p class="method-description">
-                                Explicit method to install (if needed) and run (if needed) SyftBox. Only installs if not already installed and only starts if not already running
-                                about the two-step process.
+                                List all currently running servers. Returns a list of Server objects that you can
+                                inspect and control.
                             </p>
                             
                             <div class="params-section">
@@ -299,7 +404,7 @@ si.run_if_stopped()</code></pre>
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td colspan="2"><em>No parameters - uses interactive prompts</em></td>
+                                            <td colspan="2"><em>No parameters</em></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -310,39 +415,8 @@ si.run_if_stopped()</code></pre>
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td><span class="param-type">None</span></td>
-                                            <td><span class="param-desc">Completes installation and starts the daemon</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        
-                        <div class="api-method">
-                            <div class="method-signature">si.uninstall()</div>
-                            <p class="method-description">
-                                Completely remove SyftBox from the system. This will stop the daemon, remove the binary,
-                                configuration files, and optionally the data directory.
-                            </p>
-                            
-                            <div class="params-section">
-                                <div class="section-title">Parameters</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="2"><em>No parameters - prompts for confirmation</em></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">None</span></td>
-                                            <td><span class="param-desc">Removes all SyftBox components</span></td>
+                                            <td><span class="param-type">list[Server]</span></td>
+                                            <td><span class="param-desc">List of all active Server objects</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -350,22 +424,137 @@ si.run_if_stopped()</code></pre>
                             
                             <div class="example-section">
                                 <div class="section-title">Example</div>
-                                <pre><code class="language-python"># Completely uninstall SyftBox
-si.uninstall()
-# Will prompt: "Are you sure? [y/N]"</code></pre>
+                                <pre><code class="language-python"># List all servers
+servers = ss.list()
+
+for server in servers:
+    print(f"{server.name}: {server.url} - {server.status}")</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method" id="get">
+                            <div class="method-signature">ss.get()</div>
+                            <p class="method-description">
+                                Get a specific server by name. Useful for retrieving a server created in a previous
+                                session or different notebook.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-name">name</span></td>
+                                            <td><span class="param-type">str</span></td>
+                                            <td><span class="param-desc">Name of the server to retrieve</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-type">Server</span></td>
+                                            <td><span class="param-desc">Server object if found</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python"># Get a specific server
+server = ss.get("ml_api")
+
+# Access server properties
+print(f"URL: {server.url}")
+print(f"Status: {server.status}")
+print(f"Uptime: {server.uptime}")</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method" id="server-display">
+                            <div class="method-signature">Server Display in Jupyter</div>
+                            <p class="method-description">
+                                Server objects have rich display representations in Jupyter notebooks that show
+                                status, logs, and control options at a glance.
+                            </p>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Jupyter Notebook Display</div>
+                                <p style="margin-bottom: 1rem;">When you evaluate a server object in a Jupyter cell, you get an interactive display:</p>
+                                
+                                <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin-bottom: 1rem;">
+                                    <h3 style="margin: 0 0 10px 0; color: #333;">🚀 hello_api</h3>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">Status:</td>
+                                            <td style="padding: 5px 0; color: #27ae60; font-weight: bold;">✅ Running</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">URL:</td>
+                                            <td style="padding: 5px 0;"><a href="#" style="color: #3498db; text-decoration: none;">http://localhost:8000</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">Endpoints:</td>
+                                            <td style="padding: 5px 0; color: #333;"><ul style='margin: 0; padding-left: 20px;'><li><code>/hello</code></li><li><code>/status</code></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">Uptime:</td>
+                                            <td style="padding: 5px 0; color: #333;">2h 15m</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">Expires In:</td>
+                                            <td style="padding: 5px 0; font-weight: bold; color: #f59e0b;">⏰ 21h 45m</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">PID:</td>
+                                            <td style="padding: 5px 0;"><code style="background: #f3f4f6; padding: 2px 4px; border-radius: 3px; color: #333;">12345</code></td>
+                                        </tr>
+                                    </table>
+                                    <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                        <div style="padding: 8px; background: #f8f9fa; border-radius: 3px; border: 1px solid #ddd;">
+                                            <div style="color: #666; font-size: 11px; margin-bottom: 5px;">Recent logs:</div>
+                                            <div style="font-size: 11px; color: #333;">
+                                                <span style='color: #374151; font-family: monospace;'>INFO: Started server process [12345]</span><br>
+                                                <span style='color: #374151; font-family: monospace;'>INFO: Uvicorn running on http://0.0.0.0:8000</span><br>
+                                                <span style='color: #374151; font-family: monospace;'>INFO: Application startup complete.</span>
+                                            </div>
+                                        </div>
+                                        <div style="padding: 8px; background: #fef2f2; border-radius: 3px; border: 1px solid #ddd;">
+                                            <div style="color: #666; font-size: 11px; margin-bottom: 5px;">Recent errors:</div>
+                                            <div style="font-size: 11px;">
+                                                <em style='color: #888;'>No recent errors</em>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 12px; color: #666;">
+                                        Try: <code style="background: #f3f4f6; padding: 2px 4px; border-radius: 3px;">server.stdout.tail(20)</code>, <code style="background: #f3f4f6; padding: 2px 4px; border-radius: 3px;">server.stderr.tail(20)</code>, <code style="background: #f3f4f6; padding: 2px 4px; border-radius: 3px;">server.env</code>, <code style="background: #f3f4f6; padding: 2px 4px; border-radius: 3px;">server.terminate()</code>
+                                    </div>
+                                </div>
+                                
+                                <pre><code class="language-python"># In Jupyter, just evaluate the server object
+server
+
+# Or get multiple servers
+servers = ss.list()
+servers  # Shows a list with each server's display</code></pre>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Control Methods -->
-                    <section id="control-methods">
-                        <h2>Control Methods</h2>
+                    <!-- Logging & Debugging -->
+                    <section id="logging-debugging">
+                        <h2>Logging & Debugging</h2>
                         
-                        <div class="api-method">
-                            <div class="method-signature">si.run_if_stopped()</div>
+                        <div class="api-method" id="stdout-tail">
+                            <div class="method-signature">server.stdout.tail()</div>
                             <p class="method-description">
-                                Start SyftBox only if it's not already running. Useful for scripts that need to ensure
-                                SyftBox is running without accidentally starting multiple instances.
+                                Get the most recent lines from the server's standard output logs. Useful for debugging
+                                and monitoring server activity.
                             </p>
                             
                             <div class="params-section">
@@ -373,7 +562,9 @@ si.uninstall()
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td colspan="2"><em>No parameters</em></td>
+                                            <td><span class="param-name">n</span></td>
+                                            <td><span class="param-type">int</span></td>
+                                            <td><span class="param-desc">Number of lines to return (default: 10)</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -384,8 +575,8 @@ si.uninstall()
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td><span class="param-type">None</span></td>
-                                            <td><span class="param-desc">Starts daemon if not running, otherwise no-op</span></td>
+                                            <td><span class="param-type">str</span></td>
+                                            <td><span class="param-desc">Last n lines from stdout</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -393,19 +584,20 @@ si.uninstall()
                             
                             <div class="example-section">
                                 <div class="section-title">Example</div>
-                                <pre><code class="language-python"># Ensure SyftBox is running
-si.run_if_stopped()
+                                <pre><code class="language-python"># Get recent logs
+logs = server.stdout.tail(20)
+print(logs)
 
-# Safe to call multiple times
-for i in range(3):
-    si.run_if_stopped()  # Only starts once</code></pre>
+# Check for errors
+errors = server.stderr.tail(20)</code></pre>
                             </div>
                         </div>
                         
-                        <div class="api-method">
-                            <div class="method-signature">si.stop()</div>
+                        <div class="api-method" id="stdout-follow">
+                            <div class="method-signature">server.stdout.follow()</div>
                             <p class="method-description">
-                                Stop the SyftBox daemon if it's running. This gracefully shuts down the background process.
+                                Stream logs in real-time as they are generated. This creates a continuous output
+                                that follows the log file, similar to `tail -f`.
                             </p>
                             
                             <div class="params-section">
@@ -424,8 +616,8 @@ for i in range(3):
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td><span class="param-type">None</span></td>
-                                            <td><span class="param-desc">Stops the daemon process</span></td>
+                                            <td><span class="param-type">Generator</span></td>
+                                            <td><span class="param-desc">Yields log lines as they appear</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -433,25 +625,147 @@ for i in range(3):
                             
                             <div class="example-section">
                                 <div class="section-title">Example</div>
-                                <pre><code class="language-python"># Stop SyftBox
-si.stop()
+                                <pre><code class="language-python"># Follow logs in real-time
+for line in server.stdout.follow():
+    print(line)
+    if "error" in line.lower():
+        break</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method" id="stderr-tail">
+                            <div class="method-signature">server.stderr.tail()</div>
+                            <p class="method-description">
+                                Get the most recent lines from the server's standard error logs. Useful for debugging
+                                errors and tracking warnings.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-name">n</span></td>
+                                            <td><span class="param-type">int</span></td>
+                                            <td><span class="param-desc">Number of lines to return (default: 10)</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-type">str</span></td>
+                                            <td><span class="param-desc">Last n lines from stderr</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python"># Check for errors
+errors = server.stderr.tail(20)
+if errors:
+    print("Recent errors:", errors)</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method" id="stderr-follow">
+                            <div class="method-signature">server.stderr.follow()</div>
+                            <p class="method-description">
+                                Stream error logs in real-time as they are generated. Perfect for monitoring
+                                errors and warnings as they occur.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Parameters</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><em>No parameters</em></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="returns-section">
+                                <div class="section-title">Returns</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-type">Generator</span></td>
+                                            <td><span class="param-desc">Yields error log lines as they appear</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python"># Monitor errors in real-time
+for error in server.stderr.follow():
+    print(f"ERROR: {error}")
+    # Send alert or take action</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="api-method" id="server-env">
+                            <div class="method-signature">server.env</div>
+                            <p class="method-description">
+                                Access the server's environment information including Python version, installed packages,
+                                and environment variables.
+                            </p>
+                            
+                            <div class="params-section">
+                                <div class="section-title">Properties</div>
+                                <table class="param-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="param-name">python</span></td>
+                                            <td><span class="param-type">str</span></td>
+                                            <td><span class="param-desc">Python version used by the server</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="param-name">packages</span></td>
+                                            <td><span class="param-type">list[str]</span></td>
+                                            <td><span class="param-desc">List of installed packages with versions</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="param-name">variables</span></td>
+                                            <td><span class="param-type">dict</span></td>
+                                            <td><span class="param-desc">Environment variables</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="example-section">
+                                <div class="section-title">Example</div>
+                                <pre><code class="language-python"># Check server environment
+print(f"Python: {server.env.python}")
+print(f"Packages: {len(server.env.packages)}")
 
-# Check if it stopped
-if not si.is_running():
-    print("SyftBox stopped successfully")</code></pre>
+# Find specific package
+for pkg in server.env.packages:
+    if "numpy" in pkg:
+        print(pkg)</code></pre>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Status Methods -->
-                    <section id="status-methods">
-                        <h2>Status Methods</h2>
+                    <!-- Lifecycle Control -->
+                    <section id="lifecycle-control">
+                        <h2>Lifecycle Control</h2>
                         
-                        <div class="api-method">
-                            <div class="method-signature">si.status()</div>
+                        <div class="api-method" id="terminate">
+                            <div class="method-signature">server.terminate()</div>
                             <p class="method-description">
-                                Display the current status of SyftBox including installation state, running status,
-                                configuration details, and data directory information.
+                                Gracefully terminate a server. This stops the server process, cleans up resources,
+                                and removes it from the active servers list.
                             </p>
                             
                             <div class="params-section">
@@ -459,7 +773,9 @@ if not si.is_running():
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td colspan="2"><em>No parameters</em></td>
+                                            <td><span class="param-name">timeout</span></td>
+                                            <td><span class="param-type">float</span></td>
+                                            <td><span class="param-desc">Maximum seconds to wait for graceful shutdown (default: 5.0)</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -471,7 +787,7 @@ if not si.is_running():
                                     <tbody>
                                         <tr>
                                             <td><span class="param-type">None</span></td>
-                                            <td><span class="param-desc">Prints status information to console</span></td>
+                                            <td><span class="param-desc">Server is terminated and cleaned up</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -479,23 +795,20 @@ if not si.is_running():
                             
                             <div class="example-section">
                                 <div class="section-title">Example</div>
-                                <pre><code class="language-python"># Check SyftBox status
-si.status()
-# Output:
-# ✅ SyftBox Status:
-# Installation: ✅ Installed
-# Status: ✅ Running (PID: 12345)
-# Email: user@example.com
-# Data Dir: /Users/user/SyftBox
-# Server: https://syftbox.openmined.org</code></pre>
+                                <pre><code class="language-python"># Terminate a specific server
+server = ss.get("ml_api")
+server.terminate()
+
+# Or with custom timeout
+server.terminate(timeout=10.0)</code></pre>
                             </div>
                         </div>
                         
-                        <div class="api-method">
-                            <div class="method-signature">si.is_installed()</div>
+                        <div class="api-method" id="terminate-all">
+                            <div class="method-signature">ss.terminate_all()</div>
                             <p class="method-description">
-                                Check if SyftBox is installed on the system. Returns True if all necessary components
-                                (binary, configuration) are present.
+                                Terminate all running servers at once. This is useful for cleanup in notebooks
+                                or when shutting down a development environment.
                             </p>
                             
                             <div class="params-section">
@@ -503,7 +816,9 @@ si.status()
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td colspan="2"><em>No parameters</em></td>
+                                            <td><span class="param-name">force</span></td>
+                                            <td><span class="param-type">bool</span></td>
+                                            <td><span class="param-desc">Use force termination if graceful shutdown fails (default: True)</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -514,8 +829,8 @@ si.status()
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td><span class="param-type">bool</span></td>
-                                            <td><span class="param-desc">True if SyftBox is installed, False otherwise</span></td>
+                                            <td><span class="param-type">dict</span></td>
+                                            <td><span class="param-desc">Summary of termination results</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -523,38 +838,30 @@ si.status()
                             
                             <div class="example-section">
                                 <div class="section-title">Example</div>
-                                <pre><code class="language-python">if si.is_installed():
-    print("SyftBox is ready to use")
-else:
-    print("Need to install SyftBox first")
-    si.install()</code></pre>
+                                <pre><code class="language-python"># Clean up all servers
+results = ss.terminate_all()
+
+print(f"Terminated {results['tracked_terminated']} servers")
+if results['orphaned_discovered'] > 0:
+    print(f"Also found and terminated {results['orphaned_terminated']} orphaned processes")</code></pre>
                             </div>
                         </div>
                         
-                        <div class="api-method">
-                            <div class="method-signature">si.is_running()</div>
+                        <div class="api-method" id="auto-expiring">
+                            <div class="method-signature">Auto-Expiring Servers</div>
                             <p class="method-description">
-                                Check if the SyftBox daemon is currently running in the background.
+                                Servers can be configured to automatically terminate after a specified time period.
+                                This prevents resource leaks and is perfect for temporary endpoints.
                             </p>
                             
                             <div class="params-section">
-                                <div class="section-title">Parameters</div>
+                                <div class="section-title">Configuration</div>
                                 <table class="param-table">
                                     <tbody>
                                         <tr>
-                                            <td colspan="2"><em>No parameters</em></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div class="returns-section">
-                                <div class="section-title">Returns</div>
-                                <table class="param-table">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="param-type">bool</span></td>
-                                            <td><span class="param-desc">True if SyftBox daemon is running, False otherwise</span></td>
+                                            <td><span class="param-name">expiration_seconds</span></td>
+                                            <td><span class="param-type">int</span></td>
+                                            <td><span class="param-desc">Seconds until auto-termination (default: 86400 = 24 hours, -1 = never expire)</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -562,11 +869,22 @@ else:
                             
                             <div class="example-section">
                                 <div class="section-title">Example</div>
-                                <pre><code class="language-python">if si.is_running():
-    print("SyftBox is active")
-else:
-    print("SyftBox is stopped")
-    si.run_if_stopped()</code></pre>
+                                <pre><code class="language-python"># Create a temporary server (5 minutes)
+temp_server = ss.create(
+    name="temp_endpoint",
+    endpoints={"/process": process_data},
+    expiration_seconds=300
+)
+
+# Create a permanent server
+permanent_server = ss.create(
+    name="always_on",
+    endpoints={"/health": lambda: "OK"},
+    expiration_seconds=-1
+)
+
+# Check time remaining
+print(f"Expires in: {temp_server.expiration_info}")</code></pre>
                             </div>
                         </div>
                     </section>

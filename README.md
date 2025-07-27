@@ -1,51 +1,20 @@
-# SyftServe
+# syft-serve
 
-**Generic FastAPI server process management and deduplication**
+**Self-hosting should be effortless**
 
-SyftServe provides a high-level API for creating, managing, and deduplicating FastAPI server processes. It's designed to solve the common problem of multiple applications accidentally starting duplicate servers on the same ports.
-
-## Features
-
-- 🚀 **Easy Server Creation** - Simple API for launching FastAPI servers
-- 🔄 **Smart Deduplication** - Automatically reuse compatible servers 
-- 📊 **Process Management** - Full lifecycle control (start/stop/restart/logs)
-- 🔍 **Endpoint Compatibility** - Only connect to servers with required endpoints
-- 💾 **Persistent Tracking** - Servers survive Python session restarts
-- 🌐 **Cross-Platform** - Works on macOS, Linux, and Windows
-
-## Quick Start
+Turn any Python function into a self-hosted server in one line. No DevOps required.
 
 ```python
-from syft_serve import ServerManager
-from fastapi import FastAPI
+import syft_serve as ss
+import requests
 
-# Create a simple FastAPI app
-app = FastAPI()
-
-@app.get("/api/hello")
 def hello():
-    return {"message": "Hello, World!"}
+    return "Hi!"
 
-# Start server with automatic deduplication
-manager = ServerManager()
-server = manager.create_server(
-    app=app,
-    endpoints=["/api/hello"],
-    name="hello_server"
-)
+server = ss.create("my_api", {"/": hello})
 
-print(f"Server running on port {server.port}")
-print(f"Health check: {server.health_check()}")
-print(f"Logs: {server.get_logs()}")
+requests.get(server.url).text  # "Hi!"
 ```
-
-## Architecture
-
-SyftServe is designed as a foundation for other packages that need reliable FastAPI server management:
-
-- **syft-widget**: Uses syft-serve for widget server deduplication
-- **syft-apps**: Uses syft-serve for application server management
-- **Your package**: Can use syft-serve for any FastAPI server needs
 
 ## Installation
 
@@ -53,6 +22,35 @@ SyftServe is designed as a foundation for other packages that need reliable Fast
 pip install syft-serve
 ```
 
+## Why syft-serve?
+
+☁️ **The cloud isn't yours** - Not your computer, not your control  
+🏠 **Yours is inconvenient** - Self-hosting means wrestling with configs  
+✨ **Convenience is possible** - Self-hosting should be a 1-liner
+
+## What it does
+
+```python
+# You write:
+server = ss.create("my_api", {"/predict": my_function})
+
+# Behind the scenes:
+# ✓ Spins up isolated Python environment
+# ✓ Installs your dependencies safely  
+# ✓ Generates production-ready FastAPI code
+# ✓ Manages server process lifecycle
+# ✓ Streams logs for easy debugging
+# ✓ Cleans up everything when done
+
+# No orphan processes. No port conflicts. No hassle.
+```
+
 ## Documentation
 
-See the [full documentation](https://docs.syft-serve.org) for detailed usage examples and API reference.
+📖 **[Full documentation and examples](https://openmined.github.io/syft-serve/)**
+
+See interactive tutorials, videos, and complete API reference.
+
+## License
+
+Apache 2.0 - see [LICENSE](LICENSE) file for details.

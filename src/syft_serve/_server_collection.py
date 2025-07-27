@@ -217,10 +217,13 @@ class ServerCollection:
         </div>
         """
     
-    def terminate_all(self):
+    def terminate_all(self, force: bool = True):
         """Terminate all servers
+        
+        Args:
+            force: If True, use force_terminate for stubborn processes
         
         Returns:
             dict: Summary of termination results
         """
-        return self._manager.terminate_all()
+        return self._manager.terminate_all(force=force)

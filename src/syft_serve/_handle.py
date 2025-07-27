@@ -177,3 +177,68 @@ class ServerHandle:
                 )
         except psutil.NoSuchProcess:
             pass
+    
+    def force_terminate(self) -> None:
+        """Nuclear option - forcefully kill the process using OS commands
+        
+        This method uses platform-specific OS commands to ensure process termination.
+        Use only when terminate() fails.
+        """
+        import subprocess
+        import platform
+        import signal
+        import os
+        
+        try:
+            process = self._get_process()
+            pid = process.pid
+            
+            if platform.system() == "Windows":
+                # Windows: Use taskkill with force flag
+                subprocess.run(
+                    ["taskkill", "/F", "/T", "/PID", str(pid)],
+                    capture_output=True,
+                    check=False
+                )
+            else:
+                # Unix-like systems: Use kill -9 on process group
+                try:
+                    # First try to kill the entire process group
+                    os.killpg(pid, signal.SIGKILL)
+                except (ProcessLookupError, PermissionError):
+                    # Fallback to killing just the process
+                    subprocess.run(
+                        ["kill", "-9", str(pid)],
+                        capture_output=True,
+                        check=False
+                    )
+                
+                # Also try to kill all children explicitly
+                try:
+                    children = process.children(recursive=True)
+                    child_pids = [str(child.pid) for child in children]
+                    if child_pids:
+                        subprocess.run(
+                            ["kill", "-9"] + child_pids,
+                            capture_output=True,
+                            check=False
+                        )
+                except psutil.NoSuchProcess:
+                    pass
+            
+            # Give it a moment to die
+            time.sleep(0.5)
+            
+            # Final verification - if still running, it's likely a zombie or system issue
+            try:
+                if process.is_running() and process.status() != psutil.STATUS_ZOMBIE:
+                    raise ServerShutdownError(
+                        f"Process {pid} survived force termination - may require manual intervention"
+                    )
+            except psutil.NoSuchProcess:
+                # Good, it's dead
+                pass
+                
+        except psutil.NoSuchProcess:
+            # Already dead, that's fine
+            pass

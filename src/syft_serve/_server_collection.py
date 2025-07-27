@@ -136,7 +136,6 @@ class ServerCollection:
             text_color = "#e0e0e0"
             label_color = "#a0a0a0"
             header_bg = "#2d2d2d"
-            row_hover_bg = "#252525"
         else:
             # Light mode colors
             bg_color = "#ffffff"

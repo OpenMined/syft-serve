@@ -144,7 +144,7 @@ class TestHandle:
         handle = Handle("test", 8000, 12345, mock_config)
         
         with patch('os.killpg') as mock_killpg, \
-             patch('time.sleep') as mock_sleep:
+             patch('time.sleep'):
             
             handle.terminate()
             

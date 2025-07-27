@@ -194,10 +194,11 @@ class TestEndpointSerializerMethods:
     
     def test_handle_lambda_function(self):
         """Test handling lambda functions."""
-        lambda_func = lambda x: x * 2
+        def multiply_by_two(x):
+            return x * 2
         
         serializer = EndpointSerializer()
-        result = serializer._handle_lambda_function(lambda_func, "test_lambda")
+        result = serializer._handle_lambda_function(multiply_by_two, "test_lambda")
         
         # Should return a serializable result
         assert isinstance(result, str)
@@ -205,7 +206,6 @@ class TestEndpointSerializerMethods:
     
     def test_generate_fastapi_app(self):
         """Test generating FastAPI app code."""
-        endpoints = {"/test": lambda: "test"}
         serializer = EndpointSerializer()
         
         # Mock the function serialization
@@ -262,11 +262,8 @@ class TestEndpointSerializerEdgeCases:
     def test_function_with_unsupported_features(self):
         """Test function with features that are hard to serialize."""
         # Function using globals
-        global_var = "test"
-        
         def uses_global():
-            global global_var
-            return global_var
+            return "test"
         
         endpoints = {"/global": uses_global}
         serializer = EndpointSerializer()

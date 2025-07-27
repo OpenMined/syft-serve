@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>syft-serve - FastAPI Servers Made Simpler</title>
+    <link rel="icon" type="image/svg+xml" href="images/syftbox-logo.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <div class="logo-group">
+                    <img src="images/syftbox-logo.svg" alt="SyftBox" class="syftbox-logo">
+                    <a href="index.html" class="logo">syft-serve</a>
+                </div>
+                <div class="nav-links">
+                    <a href="quickstart.html">Quick Start</a>
+                    <a href="server-features.html">Server Features</a>
+                    <a href="api/index.html">API</a>
+                    <a href="https://github.com/OpenMined/syft-serve" class="github-link">GitHub</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section with Swoop -->
+    <div class="hero-swoop">
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 C480,100 960,100 1440,0 L1440,100 L0,100 Z" fill="#f8f9fa"></path>
+        </svg>
+    </div>
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">FastAPI Servers Made Simpler</h1>
+            <p class="hero-subtitle">Launch and manage stateless servers with just two functions</p>
+            
+            <!-- Problem/Solution Split -->
+            <div class="code-comparison">
+                <div class="code-before">
+                    <div class="code-label">🚀 CREATE servers instantly</div>
+                    <pre><code class="language-python"># Define your endpoint
+def hello():
+    return {"message": "Hello World!"}
+
+# Launch a server with one line
+server = syft_serve.create(
+    name="my_api",
+    endpoints={"/hello": hello}
+)
+
+# Your server is running at http://localhost:8000
+print(f"Server ready at {server.url}")</code></pre>
+                </div>
+                
+                <div class="code-arrow">+</div>
+                
+                <div class="code-after">
+                    <div class="code-label">🎯 MANAGE servers simply</div>
+                    <pre><code class="language-python"># View all your servers
+ss.servers  # Nice table with status, endpoints, uptime
+
+# Access by name (no port confusion!)
+my_server = ss.servers["my_api"]
+my_server.stdout.tail(20)  # View recent logs
+
+# Clean shutdown when done
+ss.terminate_all()  # Properly cleans up everything</code></pre>
+                </div>
+            </div>
+
+            <!-- Install Command -->
+            <div class="install-section">
+                <div class="install-command">
+                    <code>pip install syft-serve</code>
+                    <button class="copy-btn" data-copy="pip install syft-serve">Copy</button>
+                </div>
+                <p class="install-note">Works anywhere Python runs • Zero configuration • Isolated environments</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why SyftServe -->
+    <section class="why-syftperm">
+        <div class="container">
+            <h2>Why We Built This</h2>
+            <p class="section-subtitle">Managing multiple FastAPI servers shouldn't require DevOps expertise. SyftServe makes it trivial.</p>
+            
+            <div class="value-props">
+                <div class="value-prop">
+                    <h3>🚀 Launch in Seconds</h3>
+                    <p>From Python function to running server in one line. No config files, no boilerplate, no complexity.</p>
+                </div>
+                <div class="value-prop">
+                    <h3>📦 Isolated Environments</h3>
+                    <p>Each server gets its own virtual environment. Install pandas in one, tensorflow in another - no conflicts!</p>
+                </div>
+                <div class="value-prop">
+                    <h3>📝 Named Servers</h3>
+                    <p>Access servers by name, not port numbers. No more "which service is on port 8003 again?"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- See It In Action -->
+    <section class="video-demo">
+        <div class="container">
+            <h2>See It In Action</h2>
+            <p class="section-subtitle">Watch how easy it is to create and manage multiple servers</p>
+            
+            <div class="demo-video-container">
+                <!-- TODO: Add syft-serve demo video -->
+                <pre><code class="language-python"># Create multiple servers with different purposes
+data_api = ss.create(
+    name="data_api",
+    endpoints={"/analyze": analyze_data},
+    dependencies=["pandas", "numpy"]
+)
+
+ml_api = ss.create(
+    name="ml_api", 
+    endpoints={"/predict": predict},
+    dependencies=["tensorflow", "scikit-learn"]
+)
+
+# Each server runs in isolation with its own dependencies!</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Complete API -->
+    <section class="api-preview">
+        <div class="container">
+            <h2>The Whole API</h2>
+            <p class="section-subtitle">Yes, this is literally everything</p>
+            
+            <div class="api-examples">
+                <div class="api-example">
+                    <h3>Creating Servers</h3>
+                    <pre><code class="language-python"># Create a server
+server = ss.create(
+    name="my_api",
+    endpoints={"/hello": hello_func},
+    dependencies=["pandas>=2.0.0"]  # Optional
+)</code></pre>
+                </div>
+                
+                <div class="api-example">
+                    <h3>Accessing Servers</h3>
+                    <pre><code class="language-python"># View all servers
+ss.servers                    # Interactive table
+
+# Get specific server
+server = ss.servers["my_api"] # By name
+server = ss.servers[0]        # By index</code></pre>
+                </div>
+                
+                <div class="api-example">
+                    <h3>Server Properties</h3>
+                    <pre><code class="language-python"># Basic info
+server.name       # "my_api"
+server.url        # "http://localhost:8000"
+server.port       # 8000
+server.status     # "running"
+server.endpoints  # ["/hello"]
+server.uptime     # "2m 15s"</code></pre>
+                </div>
+                
+                <div class="api-example">
+                    <h3>Viewing Logs</h3>
+                    <pre><code class="language-python"># Access logs easily
+server.stdout.tail(20)   # Last 20 lines
+server.stdout.head(10)   # First 10 lines
+server.stdout.lines()    # All lines as list
+server.stderr.tail(10)   # Error logs</code></pre>
+                </div>
+                
+                <div class="api-example">
+                    <h3>Environment Info</h3>
+                    <pre><code class="language-python"># Check installed packages
+server.env               # Pretty tree view
+server.env.list()        # List all packages</code></pre>
+                </div>
+                
+                <div class="api-example">
+                    <h3>Managing Servers</h3>
+                    <pre><code class="language-python"># Replace existing server
+server = ss.create(
+    name="my_api",
+    endpoints={"/v2": new_func},
+    force=True  # Replaces existing
+)
+
+# Terminate specific server
+server.terminate()
+
+# Terminate all servers
+ss.terminate_all()</code></pre>
+                </div>
+                
+                <div class="api-example">
+                    <h3>Multiple Endpoints</h3>
+                    <pre><code class="language-python"># Server with multiple endpoints
+api = ss.create(
+    name="full_api",
+    endpoints={
+        "/users": get_users,
+        "/posts": get_posts,
+        "/analytics": get_analytics
+    }
+)</code></pre>
+                </div>
+                
+                <div class="api-example">
+                    <h3>Persistence</h3>
+                    <pre><code class="language-python"># Servers survive notebook restarts!
+# After restart:
+import syft_serve as ss
+ss.servers  # Your servers are still running</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started -->
+    <section class="get-started">
+        <div class="container">
+            <h2>Ready to Simplify Your Server Management?</h2>
+            <div class="cta-buttons">
+                <a href="quickstart.html" class="btn btn-primary btn-large">Get Started</a>
+                <a href="https://github.com/OpenMined/syft-serve" class="btn btn-secondary btn-large">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 OpenMined. Part of the <a href="https://syftbox.org">SyftBox</a> ecosystem.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -14,7 +14,8 @@
       "Bash(uv pip:*)",
       "Bash(sed:*)",
       "Bash(mv:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(jupyter nbconvert:*)"
     ],
     "deny": []
   }

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start - SyftServe</title>
+    <link rel="icon" type="image/svg+xml" href="images/syftbox-logo.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <div class="logo-group">
+                    <img src="images/syftbox-logo.svg" alt="SyftBox" class="syftbox-logo">
+                    <a href="index.html" class="logo">SyftServe</a>
+                </div>
+                <div class="nav-links">
+                    <a href="quickstart.html" class="active">Quick Start</a>
+                    <a href="server-features.html">Server Features</a>
+                    <a href="api/index.html">API</a>
+                    <a href="https://github.com/OpenMined/syft-serve" class="github-link">GitHub</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Quick Start Content -->
+    <section class="quickstart-hero">
+        <div class="container">
+            <h1>1-Minute Quick Start</h1>
+            <p class="hero-subtitle">From zero to running servers in 60 seconds.</p>
+        </div>
+    </section>
+
+    <!-- Step 1: Install -->
+    <section class="quickstart-step">
+        <div class="container">
+            <h2><span class="step-number">1</span> Install SyftServe</h2>
+            <div class="install-command">
+                <code>pip install syft-serve</code>
+                <button class="copy-btn" data-copy="pip install syft-serve">Copy</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step 2: Your First Server -->
+    <section class="quickstart-step alt-bg">
+        <div class="container">
+            <h2><span class="step-number">2</span> Launch Your First Server</h2>
+            <p>Create a simple API endpoint and launch it:</p>
+            <pre><code class="language-python">import syft_serve as ss
+
+# Define an endpoint
+def hello():
+    return {"message": "Hello from SyftServe!"}
+
+# Create the server
+server = ss.create(
+    name="hello_api",
+    endpoints={"/hello": hello}
+)
+
+print(f"Server running at {server.url}")
+# Output: Server running at http://localhost:8000</code></pre>
+        </div>
+    </section>
+
+    <!-- Step 3: Test It -->
+    <section class="quickstart-step">
+        <div class="container">
+            <h2><span class="step-number">3</span> Test Your Server</h2>
+            <p>Your server is already running! Test it with requests:</p>
+            <pre><code class="language-python">import requests
+
+# Make a request to your endpoint
+response = requests.get(f"{server.url}/hello")
+print(response.json())
+# Output: {'message': 'Hello from SyftServe!'}</code></pre>
+        </div>
+    </section>
+
+    <!-- Step 4: View Your Servers -->
+    <section class="quickstart-step alt-bg">
+        <div class="container">
+            <h2><span class="step-number">4</span> View & Access Servers</h2>
+            <p>See all your running servers in a nice table:</p>
+            <pre><code class="language-python"># View all servers
+ss.servers
+
+# Output:
+# Name         Port  Status     Endpoints  Uptime    PID
+# ----------  ------  ---------  ---------  ------  -----
+# hello_api    8000  ✅ Running  /hello     45s     1234
+
+# Access a specific server
+my_server = ss.servers["hello_api"]
+print(f"Uptime: {my_server.uptime}")
+print(f"Recent logs: {my_server.stdout.tail(5)}")</code></pre>
+        </div>
+    </section>
+
+    <!-- Step 5: Advanced -->
+    <section class="quickstart-step">
+        <div class="container">
+            <h2><span class="step-number">5</span> Real-World Example</h2>
+            <p>Here's how a data science team might use SyftServe:</p>
+            <pre><code class="language-python"># Data processing API
+def process_data():
+    import pandas as pd
+    # Your data processing logic here
+    return {"status": "processed", "rows": 1000}
+
+data_api = ss.create(
+    name="data_processor",
+    endpoints={"/process": process_data},
+    dependencies=["pandas", "numpy"]  # Auto-installed!
+)
+
+# ML prediction API
+def predict():
+    # Your ML model logic here
+    return {"prediction": 0.95, "confidence": 0.87}
+
+ml_api = ss.create(
+    name="ml_predictor",
+    endpoints={"/predict": predict},
+    dependencies=["tensorflow", "scikit-learn"]
+)
+
+# View all your services
+ss.servers  # Shows both servers running on different ports</code></pre>
+        </div>
+    </section>
+
+    <!-- What's Next -->
+    <section class="next-steps">
+        <div class="container">
+            <h2>You're Ready! 🎉</h2>
+            <p>You now know the core of SyftServe. That's really all there is!</p>
+            
+            <div class="next-links">
+                <div class="next-link">
+                    <h3>🚀 Full Tutorial</h3>
+                    <p>Master SyftServe with our comprehensive Jupyter notebook tutorial.</p>
+                    <a href="https://github.com/OpenMined/syft-serve/blob/main/tutorial.ipynb" class="btn btn-primary">Launch Tutorial</a>
+                </div>
+                
+                <div class="next-link">
+                    <h3>📖 API Reference</h3>
+                    <p>Explore all two functions and their options.</p>
+                    <a href="api/index.html" class="btn btn-secondary">View API Docs</a>
+                </div>
+                
+                <div class="next-link">
+                    <h3>💡 Server Features</h3>
+                    <p>Learn about logs, environments, and persistence.</p>
+                    <a href="server-features.html" class="btn btn-secondary">Explore Features</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 OpenMined. Part of the <a href="https://syftbox.org">SyftBox</a> ecosystem.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

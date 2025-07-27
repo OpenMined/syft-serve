@@ -1,5 +1,4 @@
 """Tests for the process discovery module."""
-import pytest
 from unittest.mock import Mock, patch
 import psutil
 

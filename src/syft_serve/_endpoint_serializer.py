@@ -3,9 +3,6 @@ Utilities for serializing endpoint functions to Python code
 """
 
 import inspect
-import textwrap
-import pickle
-import base64
 from typing import Callable, Dict
 
 
@@ -14,7 +11,7 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
     Serialize a function to Python code.
     
     For simple functions, we can use inspect.getsource().
-    For lambdas and complex functions, we pickle them.
+    For lambdas and complex functions, we generate wrapper code.
     For closures, we try to extract closure variables.
     """
     try:
@@ -45,8 +42,9 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
                                 simple_attrs[attr] = val
                         if simple_attrs:
                             closure_vars[var_name] = simple_attrs
-                except:
-                    pass
+                except (AttributeError, TypeError, ValueError):
+                    # Skip closure variables we can't serialize
+                    continue
             
         # Remove any decorators and fix indentation
         lines = source.split('\n')
@@ -117,7 +115,9 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
                 return f'''def {func_name}():
     # Auto-generated from lambda function
     return {json_result}'''
-            except:
+            except (Exception):
+                # Function requires arguments or has side effects
+                # Continue to fallback
                 pass
         
         # Fallback: generic endpoint

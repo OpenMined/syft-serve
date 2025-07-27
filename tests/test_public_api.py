@@ -1,6 +1,6 @@
 """Test to ensure public API remains stable and clean."""
 import pytest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 
 try:
     import syft_serve as ss

@@ -1,9 +1,6 @@
 """Tests for the ServerManager class."""
 import pytest
-from unittest.mock import Mock, patch, MagicMock, call
-from pathlib import Path
-import subprocess
-import time
+from unittest.mock import Mock, patch
 
 from syft_serve._manager import ServerManager
 from syft_serve._exceptions import (
@@ -12,7 +9,6 @@ from syft_serve._exceptions import (
     PortConflictError
 )
 from syft_serve._server import Server
-from syft_serve._handle import Handle
 
 
 class TestServerManager:

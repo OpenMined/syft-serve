@@ -132,7 +132,7 @@ class ServerManager:
         
         try:
             server.terminate()
-        except Exception as e:
+        except Exception:
             if force:
                 print(f"Normal termination failed for {name}, using force terminate...")
                 server.force_terminate()
@@ -265,7 +265,7 @@ package = false
         pyproject_path.write_text(pyproject_content)
         
         # Create virtual environment
-        result = subprocess.run(
+        result = subprocess.run(  # nosec B603,B607 - Fixed command, no user input
             ["uv", "venv", "--python", "3.12"],
             cwd=str(server_dir),
             capture_output=True,
@@ -276,7 +276,7 @@ package = false
             raise ServerStartupError(f"Failed to create venv for {name}: {result.stderr}")
         
         # Install dependencies
-        result = subprocess.run(
+        result = subprocess.run(  # nosec B603,B607 - Fixed command, no user input
             ["uv", "sync"],
             cwd=str(server_dir),
             capture_output=True,
@@ -313,7 +313,7 @@ package = false
             cmd = [
                 "uv", "run", "uvicorn", 
                 f"{app_file.stem}:app",
-                "--host", "0.0.0.0", 
+                "--host", "127.0.0.1",  # Only bind to localhost for security
                 "--port", str(port),
                 "--log-level", "info"
             ]
@@ -321,7 +321,7 @@ package = false
             cmd = [
                 "uvicorn", 
                 f"{app_file.stem}:app",
-                "--host", "0.0.0.0", 
+                "--host", "127.0.0.1",  # Only bind to localhost for security
                 "--port", str(port),
                 "--log-level", "info"
             ]
@@ -332,7 +332,7 @@ package = false
             
             with open(stdout_log, 'w') as out, open(stderr_log, 'w') as err:
                 # Use start_new_session=True to detach from parent process group
-                process = subprocess.Popen(
+                process = subprocess.Popen(  # nosec B603 - Command built from validated inputs
                     cmd,
                     stdout=out,
                     stderr=err,

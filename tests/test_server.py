@@ -1,7 +1,6 @@
 """Tests for the Server class."""
 import pytest
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
+from unittest.mock import Mock
 
 from syft_serve._server import Server
 from syft_serve._handle import Handle

@@ -1,7 +1,6 @@
 """Tests for the main API module."""
 import pytest
-from unittest.mock import Mock, patch, MagicMock
-from typing import Dict, Callable
+from unittest.mock import Mock, patch
 
 from syft_serve import _api as api
 from syft_serve._exceptions import ServerStartupError, DuplicateServerError

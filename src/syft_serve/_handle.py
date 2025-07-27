@@ -195,7 +195,7 @@ class ServerHandle:
             
             if platform.system() == "Windows":
                 # Windows: Use taskkill with force flag
-                subprocess.run(
+                subprocess.run(  # nosec B603,B607 - Fixed command with validated PID
                     ["taskkill", "/F", "/T", "/PID", str(pid)],
                     capture_output=True,
                     check=False
@@ -207,7 +207,7 @@ class ServerHandle:
                     os.killpg(pid, signal.SIGKILL)
                 except (ProcessLookupError, PermissionError):
                     # Fallback to killing just the process
-                    subprocess.run(
+                    subprocess.run(  # nosec B603,B607 - Fixed command with validated PID
                         ["kill", "-9", str(pid)],
                         capture_output=True,
                         check=False
@@ -218,7 +218,7 @@ class ServerHandle:
                     children = process.children(recursive=True)
                     child_pids = [str(child.pid) for child in children]
                     if child_pids:
-                        subprocess.run(
+                        subprocess.run(  # nosec B603 - Fixed command with validated PIDs
                             ["kill", "-9"] + child_pids,
                             capture_output=True,
                             check=False

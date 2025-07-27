@@ -1,12 +1,9 @@
 """Tests for the ServerCollection class."""
 import pytest
 from unittest.mock import Mock, patch
-from pathlib import Path
 
 from syft_serve._server_collection import ServerCollection
 from syft_serve._server import Server
-from syft_serve._handle import Handle
-from syft_serve._exceptions import ServerNotFoundError
 
 
 class TestServerCollection:

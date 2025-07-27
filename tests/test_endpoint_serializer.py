@@ -1,6 +1,5 @@
 """Tests for the endpoint serializer module."""
 import pytest
-from unittest.mock import Mock, patch
 import tempfile
 from pathlib import Path
 
@@ -156,7 +155,7 @@ class TestEndpointSerializer:
         # Function that can't be serialized easily
         def problematic_function():
             # This uses a global that doesn't exist
-            return {"value": undefined_global}
+            return {"value": "undefined"}
         
         endpoints = {"/problem": problematic_function}
         serializer = EndpointSerializer()

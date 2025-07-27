@@ -1,12 +1,10 @@
 """Tests for the Handle class."""
 import pytest
 import time
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
+from unittest.mock import Mock, patch
 import psutil
 
 from syft_serve._handle import Handle
-from syft_serve._exceptions import ServerNotFoundError
 
 
 class TestHandle:

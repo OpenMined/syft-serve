@@ -44,7 +44,7 @@ class ServerCollection:
                     f"Available servers: {', '.join(names)}"
                 )
             else:
-                raise KeyError(f"No servers are currently running")
+                raise KeyError("No servers are currently running")
                 
         elif isinstance(key, int):
             # Access by index
@@ -144,7 +144,6 @@ class ServerCollection:
             text_color = "#333"
             label_color = "#666"
             header_bg = "#f8f9fa"
-            row_hover_bg = "#f5f5f5"
         
         servers = self._get_servers()
         if not servers:
@@ -169,10 +168,10 @@ class ServerCollection:
                 expiration_color = "#dc2626"
             elif expiration != "Unknown":
                 # Parse time to determine urgency
-                if "s" in expiration or ("m" in expiration and not "h" in expiration):
+                if "s" in expiration or ("m" in expiration and "h" not in expiration):
                     # Less than 1 hour - urgent
                     expiration_color = "#ea580c"
-                elif "h" in expiration and not "d" in expiration:
+                elif "h" in expiration and "d" not in expiration:
                     # Less than 1 day - warning
                     expiration_color = "#f59e0b"
             

@@ -5,13 +5,12 @@ import shutil
 from pathlib import Path
 from typing import Generator, Dict, Callable
 import pytest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 import psutil
 
 from syft_serve._config import ServerConfig
 from syft_serve._server import Server
 from syft_serve._handle import ServerHandle
-from syft_serve._manager import ServerManager
 from syft_serve._server_collection import ServerCollection
 
 

@@ -1,6 +1,5 @@
 """Simple tests for the main API module."""
 import pytest
-from unittest.mock import patch
 
 import syft_serve as ss
 
@@ -48,7 +47,7 @@ class TestAPIValidation:
         try:
             ss.create(name=unique_name, endpoints={})
             # If no exception is raised, that's also acceptable for now
-        except Exception as e:
+        except Exception:
             # Any exception is acceptable as validation
             pass
 
@@ -95,6 +94,6 @@ class TestAPITypes:
         """Test that servers is accessible."""
         # This might raise an exception, but it should be accessible
         try:
-            servers = ss.servers
+            ss.servers
         except Exception:
             pass  # It's ok if it fails, as long as the attribute exists

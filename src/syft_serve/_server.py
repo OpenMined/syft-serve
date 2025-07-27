@@ -62,7 +62,7 @@ class Server:
             process = psutil.Process(self.pid)
             start_time = datetime.fromtimestamp(process.create_time())
             delta = datetime.now() - start_time
-        except:
+        except Exception:
             # Fallback to object creation time
             delta = datetime.now() - self._start_time
         
@@ -93,7 +93,6 @@ class Server:
             return "Never"
         
         # Calculate remaining time
-        import time
         elapsed = time.time() - self._handle.created_at
         remaining = self._handle.expiration_seconds - elapsed
         
@@ -231,10 +230,10 @@ class Server:
             expiration_color = "#dc2626"
         elif expiration != "Unknown":
             # Parse time to determine urgency
-            if "s" in expiration or ("m" in expiration and not "h" in expiration):
+            if "s" in expiration or ("m" in expiration and "h" not in expiration):
                 # Less than 1 hour - urgent
                 expiration_color = "#ea580c"
-            elif "h" in expiration and not "d" in expiration:
+            elif "h" in expiration and "d" not in expiration:
                 # Less than 1 day - warning
                 expiration_color = "#f59e0b"
         

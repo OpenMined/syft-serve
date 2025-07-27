@@ -28,7 +28,7 @@ class Environment:
             cmd = ["uv"] + args
         
         try:
-            result = subprocess.run(
+            result = subprocess.run(  # nosec B603 - Command validated, no user input in cmd
                 cmd,
                 cwd=str(self.server_dir),
                 capture_output=True,

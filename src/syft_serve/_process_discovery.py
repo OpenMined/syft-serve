@@ -4,8 +4,7 @@ Process discovery for finding all syft-serve servers
 
 import psutil
 import requests
-from typing import List, Dict, Any, Optional
-import re
+from typing import List, Dict, Any
 
 
 def discover_syft_serve_processes() -> List[Dict[str, Any]]:
@@ -49,7 +48,7 @@ def discover_syft_serve_processes() -> List[Dict[str, Any]]:
                                     else:
                                         server_info['verified'] = False
                                         server_info['health'] = 'unhealthy'
-                                except:
+                                except Exception:
                                     server_info['verified'] = False
                                     server_info['health'] = 'unreachable'
                                 

@@ -1,4 +1,5 @@
 """Test configuration and fixtures."""
+
 import os
 import tempfile
 import shutil
@@ -28,11 +29,11 @@ def mock_config(temp_dir: Path) -> ServerConfig:
     config = ServerConfig()
     config.log_dir = temp_dir / "logs"
     config.persistence_file = temp_dir / "servers.json"
-    
+
     # Create directories
     config.log_dir.mkdir(parents=True, exist_ok=True)
     config.persistence_file.parent.mkdir(parents=True, exist_ok=True)
-    
+
     return config
 
 
@@ -53,20 +54,17 @@ def mock_process():
 @pytest.fixture
 def sample_endpoints() -> Dict[str, Callable]:
     """Create sample endpoint functions for testing."""
+
     def hello():
         return {"message": "Hello World"}
-    
+
     def goodbye():
         return {"message": "Goodbye"}
-    
+
     def echo(data: str):
         return {"echo": data}
-    
-    return {
-        "/hello": hello,
-        "/goodbye": goodbye,
-        "/echo": echo
-    }
+
+    return {"/hello": hello, "/goodbye": goodbye, "/echo": echo}
 
 
 @pytest.fixture
@@ -81,12 +79,8 @@ def mock_server(mock_config: ServerConfig, sample_endpoints: Dict[str, Callable]
     handle.uptime = "5m 30s"
     handle.is_running.return_value = True
     handle.terminate.return_value = None
-    
-    server = Server(
-        handle=handle,
-        endpoints=list(sample_endpoints.keys()),
-        config=mock_config
-    )
+
+    server = Server(handle=handle, endpoints=list(sample_endpoints.keys()), config=mock_config)
     return server
 
 
@@ -102,10 +96,10 @@ def mock_uvicorn_process():
     process = Mock()
     process.pid = 12345
     process.info = {
-        'pid': 12345,
-        'name': 'python',
-        'cmdline': ['python', '-m', 'uvicorn', 'app:app', '--port', '8000'],
-        'create_time': 1234567890.0
+        "pid": 12345,
+        "name": "python",
+        "cmdline": ["python", "-m", "uvicorn", "app:app", "--port", "8000"],
+        "create_time": 1234567890.0,
     }
     return process
 
@@ -118,10 +112,11 @@ def cleanup_env():
     # Clean up any existing servers
     try:
         import syft_serve
+
         syft_serve.terminate_all()
     except Exception:
         pass  # Ignore cleanup errors
-    
+
     # Restore original environment
     os.environ.clear()
     os.environ.update(original_env)
@@ -130,7 +125,7 @@ def cleanup_env():
 @pytest.fixture
 def mock_requests_get():
     """Mock requests.get for health check tests."""
-    with patch('requests.get') as mock_get:
+    with patch("requests.get") as mock_get:
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"status": "ok"}
@@ -141,7 +136,7 @@ def mock_requests_get():
 @pytest.fixture
 def mock_subprocess_popen():
     """Mock subprocess.Popen for process creation tests."""
-    with patch('subprocess.Popen') as mock_popen:
+    with patch("subprocess.Popen") as mock_popen:
         mock_process = Mock()
         mock_process.pid = 12345
         mock_process.poll.return_value = None  # Process is running
@@ -153,7 +148,7 @@ def mock_subprocess_popen():
 @pytest.fixture
 def mock_psutil_process_iter():
     """Mock psutil.process_iter for process discovery tests."""
-    with patch('psutil.process_iter') as mock_iter:
+    with patch("psutil.process_iter") as mock_iter:
         yield mock_iter
 
 
@@ -162,19 +157,19 @@ def isolated_test_env(monkeypatch, temp_dir):
     """Create an isolated test environment with mocked paths."""
     # Mock the home directory and config paths
     monkeypatch.setenv("HOME", str(temp_dir))
-    
+
     # Create a mock syft-serve directory structure
     syft_serve_dir = temp_dir / ".syft_serve"
     servers_dir = syft_serve_dir / "servers"
     logs_dir = syft_serve_dir / "logs"
-    
+
     syft_serve_dir.mkdir()
     servers_dir.mkdir()
     logs_dir.mkdir()
-    
+
     return {
         "temp_dir": temp_dir,
         "syft_serve_dir": syft_serve_dir,
         "servers_dir": servers_dir,
-        "logs_dir": logs_dir
+        "logs_dir": logs_dir,
     }

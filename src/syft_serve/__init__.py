@@ -12,18 +12,18 @@ Main API:
 
 Example:
     import syft_serve as ss
-    
+
     # Create a server
     server = ss.create(
         name="my_api",
         endpoints={"/hello": lambda: {"message": "Hello!"}},
         dependencies=["pandas", "numpy"]
     )
-    
+
     # Access servers
     print(ss.servers)  # Shows all servers
     api = ss.servers["my_api"]  # Get specific server
-    
+
     # View logs
     print(api.stdout.tail(20))
 """
@@ -34,6 +34,6 @@ from ._api import servers, create
 __version__ = "0.2.4"
 
 __all__ = [
-    "servers", 
+    "servers",
     "create",
 ]

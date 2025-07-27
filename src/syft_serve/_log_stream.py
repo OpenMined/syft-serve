@@ -8,11 +8,11 @@ from typing import List
 
 class LogStream:
     """Access to a server's log stream (stdout or stderr)"""
-    
+
     def __init__(self, log_path: Path, stream_type: str = "stdout"):
         self.log_path = log_path
         self.stream_type = stream_type
-    
+
     def tail(self, n: int = 10) -> str:
         """Return last n lines"""
         if not self.log_path.exists():
@@ -22,10 +22,10 @@ class LogStream:
             if not content:
                 return ""
             lines = content.splitlines()
-            return '\n'.join(lines[-n:])
+            return "\n".join(lines[-n:])
         except Exception:
             return ""
-    
+
     def head(self, n: int = 10) -> str:
         """Return first n lines"""
         if not self.log_path.exists():
@@ -35,10 +35,10 @@ class LogStream:
             if not content:
                 return ""
             lines = content.splitlines()
-            return '\n'.join(lines[:n])
+            return "\n".join(lines[:n])
         except Exception:
             return ""
-    
+
     def lines(self) -> List[str]:
         """Return log lines as a list"""
         if not self.log_path.exists():
@@ -50,7 +50,7 @@ class LogStream:
             return content.splitlines()
         except Exception:
             return []
-    
+
     def __repr__(self) -> str:
         """Show recent log entries"""
         recent = self.tail(5)

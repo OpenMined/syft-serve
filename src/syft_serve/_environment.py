@@ -2,7 +2,7 @@
 Simplified read-only environment access for servers
 """
 
-import subprocess  # noqa: S404
+import subprocess  # nosec B404
 import json
 from pathlib import Path
 from typing import List, Dict, Optional
@@ -28,7 +28,7 @@ class Environment:
             cmd = ["uv"] + args
 
         try:
-            result = subprocess.run(  # nosec B603 - Command validated, no user input in cmd
+            result = subprocess.run(  # nosec B603
                 cmd, cwd=str(self.server_dir), capture_output=True, text=True, check=True
             )
             return result.stdout

@@ -53,6 +53,10 @@ server = ss.create("my_api", {"/predict": my_function})
 # No orphan processes. No port conflicts. No hassle.
 ```
 
+## See It In Action
+
+![syft-serve Demo](https://github.com/OpenMined/syft-serve/blob/main/docs/syft_serve_demo_full.gif?raw=true)
+
 ## Documentation
 
 📖 **[Full documentation and examples](https://openmined.github.io/syft-serve/)**

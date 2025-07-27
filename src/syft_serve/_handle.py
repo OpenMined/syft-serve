@@ -179,7 +179,7 @@ class ServerHandle:
         This method uses platform-specific OS commands to ensure process termination.
         Use only when terminate() fails.
         """
-        import subprocess  # noqa: S404
+        import subprocess  # nosec B404
         import platform
         import signal
         import os
@@ -190,7 +190,7 @@ class ServerHandle:
 
             if platform.system() == "Windows":
                 # Windows: Use taskkill with force flag
-                subprocess.run(  # nosec B603,B607 - Fixed command with validated PID
+                subprocess.run(  # nosec B603 B607
                     ["taskkill", "/F", "/T", "/PID", str(pid)], capture_output=True, check=False
                 )
             else:
@@ -200,7 +200,7 @@ class ServerHandle:
                     os.killpg(pid, signal.SIGKILL)
                 except (ProcessLookupError, PermissionError):
                     # Fallback to killing just the process
-                    subprocess.run(  # nosec B603,B607 - Fixed command with validated PID
+                    subprocess.run(  # nosec B603 B607
                         ["kill", "-9", str(pid)], capture_output=True, check=False
                     )
 
@@ -209,7 +209,7 @@ class ServerHandle:
                     children = process.children(recursive=True)
                     child_pids = [str(child.pid) for child in children]
                     if child_pids:
-                        subprocess.run(  # nosec B603 - Fixed command with validated PIDs
+                        subprocess.run(  # nosec B603
                             ["kill", "-9"] + child_pids, capture_output=True, check=False
                         )
                 except psutil.NoSuchProcess:

@@ -4,7 +4,7 @@ Simplified ServerManager - only what's needed for tutorial
 
 import json
 import shutil
-import subprocess  # noqa: S404
+import subprocess  # nosec B404
 import time
 import socket
 import re
@@ -273,7 +273,7 @@ package = false
         pyproject_path.write_text(pyproject_content)
 
         # Create virtual environment
-        result = subprocess.run(  # nosec B603,B607 - Fixed command, no user input
+        result = subprocess.run(  # nosec B603 B607
             ["uv", "venv", "--python", "3.12"], cwd=str(server_dir), capture_output=True, text=True
         )
 
@@ -281,7 +281,7 @@ package = false
             raise ServerStartupError(f"Failed to create venv for {name}: {result.stderr}")
 
         # Install dependencies
-        result = subprocess.run(  # nosec B603,B607 - Fixed command, no user input
+        result = subprocess.run(  # nosec B603 B607
             ["uv", "sync"], cwd=str(server_dir), capture_output=True, text=True
         )
 
@@ -349,7 +349,7 @@ package = false
 
             with open(stdout_log, "w") as out, open(stderr_log, "w") as err:
                 # Use start_new_session=True to detach from parent process group
-                process = subprocess.Popen(  # nosec B603 - Command built from validated inputs
+                process = subprocess.Popen(  # nosec B603
                     cmd,
                     stdout=out,
                     stderr=err,

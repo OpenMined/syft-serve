@@ -81,6 +81,9 @@ disallow_untyped_defs = true
 skips = ["B404", "B603", "B607"]
 exclude_dirs = ["/test/", "/tests/", "/.venv/", "/venv/"]
 
+[tool.bandit.assert_used]
+skips = ["B404", "B603", "B607"]
+
 [[tool.mypy.overrides]]
 module = [
     "psutil",

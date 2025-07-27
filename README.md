@@ -57,7 +57,7 @@ server = ss.create("my_api", {"/predict": my_function})
 
 <div align="center">
   <a href="https://github.com/OpenMined/syft-serve">
-    <img src="https://github.com/OpenMined/syft-serve/blob/main/docs/syft_serve_demo_corners.gif?raw=true" alt="syft-serve Demo" width="700" />
+    <img src="https://github.com/OpenMined/syft-serve/blob/main/docs/syft_serve_demo_rounded.gif?raw=true" alt="syft-serve Demo" width="700" />
   </a>
 </div>
 

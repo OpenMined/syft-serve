@@ -123,7 +123,7 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
                 return f"""def {func_name}():
     # Auto-generated from lambda function
     return {json_result}"""
-            except Exception:
+            except Exception:  # nosec B110
                 # Function requires arguments or has side effects
                 # Continue to fallback
                 pass

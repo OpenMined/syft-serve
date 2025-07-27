@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(pip3 install:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(rm:*)",
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(uv pip:*)",
+      "Bash(sed:*)",
+      "Bash(mv:*)",
+      "Bash(cp:*)"
+    ],
+    "deny": []
+  }
+}

@@ -18,6 +18,10 @@ class Environment:
 
     def _run_uv_command(self, args: List[str]) -> str:
         """Run a uv command in the server's environment"""
+        # Check if server directory exists
+        if not self.server_dir.exists():
+            return ""
+            
         # Check if we have a virtual environment
         venv_path = self.server_dir / ".venv"
         if venv_path.exists():
@@ -32,7 +36,7 @@ class Environment:
                 cmd, cwd=str(self.server_dir), capture_output=True, text=True, check=True
             )
             return result.stdout
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, FileNotFoundError):
             return ""
 
     def _get_packages(self) -> Dict[str, str]:

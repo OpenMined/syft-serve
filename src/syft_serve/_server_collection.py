@@ -5,6 +5,7 @@ ServerCollection - simplified collection of servers with dict-like access
 from typing import List, Optional, Iterator, Union, Any, Dict
 
 from ._server import Server
+from ._exceptions import ServerNotFoundError
 
 
 class ServerCollection:
@@ -39,11 +40,11 @@ class ServerCollection:
             # Helpful error message
             names = [s.name for s in servers]
             if names:
-                raise KeyError(
+                raise ServerNotFoundError(
                     f"No server found with name '{key}'. " f"Available servers: {', '.join(names)}"
                 )
             else:
-                raise KeyError("No servers are currently running")
+                raise ServerNotFoundError("No servers are currently running")
 
         elif isinstance(key, int):
             # Access by index
@@ -63,7 +64,7 @@ class ServerCollection:
         try:
             self[name]
             return True
-        except KeyError:
+        except (KeyError, ServerNotFoundError):
             return False
 
     def __len__(self) -> int:

@@ -89,6 +89,7 @@ skips = ["B404", "B603", "B607"]
 dev-dependencies = [
     "bandit[toml]>=1.8.6",
     "pip-audit>=2.9.0",
+    "pytest-pythonpath>=0.7.3",
     "safety>=3.2.4",
 ]
 
@@ -100,3 +101,22 @@ module = [
     "jupyter_dark_detect",
 ]
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--verbose",
+    "--tb=short",
+    "--disable-warnings",
+]
+markers = [
+    "integration: Integration tests that may take longer",
+    "slow: Tests that are known to be slow",
+    "windows_only: Tests that only run on Windows",
+    "posix_only: Tests that only run on POSIX systems",
+]

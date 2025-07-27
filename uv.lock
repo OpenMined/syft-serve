@@ -1396,6 +1396,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pytest-pythonpath"
+version = "0.7.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/46/c1/4b784495bb316962962df191b3c1b2302c60236301406283a9de1470786f/pytest-pythonpath-0.7.3.tar.gz", hash = "sha256:63fc546ace7d2c845c1ee289e8f7a6362c2b6bae497d10c716e58e253e801d62", size = 4498 }
+
+[[package]]
 name = "pytest-xdist"
 version = "3.8.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1739,6 +1748,7 @@ dev = [
 dev = [
     { name = "bandit", extra = ["toml"] },
     { name = "pip-audit" },
+    { name = "pytest-pythonpath" },
     { name = "safety" },
 ]
 
@@ -1768,6 +1778,7 @@ requires-dist = [
 dev = [
     { name = "bandit", extras = ["toml"], specifier = ">=1.8.6" },
     { name = "pip-audit", specifier = ">=2.9.0" },
+    { name = "pytest-pythonpath", specifier = ">=0.7.3" },
     { name = "safety", specifier = ">=3.2.4" },
 ]
 

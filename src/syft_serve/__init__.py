@@ -29,11 +29,14 @@ Example:
 """
 
 # Import only what we need for the public API
-from ._api import servers, create
+from ._api import servers, create, terminate_all, ServerAlreadyExistsError, ServerNotFoundError
 
 __version__ = "0.2.5"
 
 __all__ = [
     "servers",
     "create",
+    "terminate_all",
+    "ServerAlreadyExistsError",
+    "ServerNotFoundError",
 ]

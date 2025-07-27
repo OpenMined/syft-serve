@@ -66,7 +66,7 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
                 if line.strip():  # Skip empty lines
                     indent = len(line) - len(line.lstrip())
                     min_indent = min(min_indent, indent)
-            
+
             # Convert to int for slicing
             if min_indent == float("inf"):
                 min_indent = 0

@@ -26,7 +26,7 @@ from ._endpoint_serializer import generate_app_code_from_endpoints
 class ServerManager:
     """Simple manager for FastAPI server processes"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._config = get_config()
         self._servers: Dict[str, ServerHandle] = {}  # name -> ServerHandle
         self._load_persistent_servers()
@@ -166,7 +166,7 @@ class ServerManager:
                 - orphaned_failed: list of PIDs that failed to terminate
                 - success: bool indicating if all servers were terminated
         """
-        results = {
+        results: Dict[str, Any] = {
             "tracked_total": 0,
             "tracked_terminated": 0,
             "tracked_failed": [],

@@ -2,7 +2,7 @@
 ServerCollection - simplified collection of servers with dict-like access
 """
 
-from typing import List, Optional, Iterator, Union, Any
+from typing import List, Optional, Iterator, Union, Any, Dict
 
 from ._server import Server
 
@@ -215,7 +215,7 @@ class ServerCollection:
         </div>
         """
 
-    def terminate_all(self, force: bool = True):
+    def terminate_all(self, force: bool = True) -> Dict[str, Any]:
         """Terminate all servers
 
         Args:
@@ -224,4 +224,5 @@ class ServerCollection:
         Returns:
             dict: Summary of termination results
         """
-        return self._manager.terminate_all(force=force)
+        result: Dict[str, Any] = self._manager.terminate_all(force=force)
+        return result

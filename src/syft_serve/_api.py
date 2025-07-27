@@ -77,7 +77,7 @@ def create(
     return Server(handle)
 
 
-def terminate_all():
+def terminate_all() -> None:
     """Terminate all servers"""
     _get_manager().terminate_all()
 

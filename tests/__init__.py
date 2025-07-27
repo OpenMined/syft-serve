@@ -1,1 +1,1 @@
-# Tests package for syft-serve
+"""Tests package for syft-serve"""

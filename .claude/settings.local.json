@@ -27,7 +27,8 @@
       "Bash(/usr/bin/python3:*)",
       "Bash(ffmpeg:*)",
       "Bash(mypy:*)",
-      "Bash(ffprobe:*)"
+      "Bash(ffprobe:*)",
+      "Bash(pip-audit:*)"
     ],
     "deny": []
   }

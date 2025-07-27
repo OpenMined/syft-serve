@@ -83,13 +83,13 @@ def terminate_all_syft_serve_processes(force: bool = True) -> Dict[str, Any]:
 
         try:
             # Try to kill the process group first (if it's a session leader)
-            if hasattr(os, 'killpg'):
+            if hasattr(os, "killpg"):
                 try:
                     os.killpg(pid, signal.SIGTERM)
                     time.sleep(0.2)
 
                     # Check if still alive
-                    if proc.is_running() and hasattr(signal, 'SIGKILL'):
+                    if proc.is_running() and hasattr(signal, "SIGKILL"):
                         os.killpg(pid, signal.SIGKILL)
                         time.sleep(0.1)
                 except (ProcessLookupError, PermissionError):

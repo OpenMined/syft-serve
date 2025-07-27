@@ -1466,7 +1466,7 @@ wheels = [
 
 [[package]]
 name = "syft-serve"
-version = "0.2.4"
+version = "0.2.5"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
@@ -1475,6 +1475,7 @@ dependencies = [
     { name = "psutil" },
     { name = "pydantic" },
     { name = "requests" },
+    { name = "starlette" },
     { name = "tabulate" },
     { name = "urllib3" },
     { name = "uvicorn", extra = ["standard"] },
@@ -1501,7 +1502,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "black", marker = "extra == 'dev'", specifier = ">=23.0.0" },
-    { name = "fastapi", specifier = ">=0.104.0" },
+    { name = "fastapi", specifier = ">=0.115.5" },
     { name = "httpx", specifier = ">=0.25.0" },
     { name = "jupyter-dark-detect", specifier = ">=0.1.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0.0" },
@@ -1514,6 +1515,7 @@ requires-dist = [
     { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.0.0" },
     { name = "requests", specifier = ">=2.31.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
+    { name = "starlette", specifier = ">=0.41.2" },
     { name = "tabulate", specifier = ">=0.9.0" },
     { name = "urllib3", specifier = ">=2.5.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.24.0" },

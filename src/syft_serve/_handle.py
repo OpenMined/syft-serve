@@ -106,7 +106,7 @@ class ServerHandle:
             # The process group ID is the same as the process ID for session leaders
             pgid = process.pid
 
-            if hasattr(os, 'killpg'):
+            if hasattr(os, "killpg"):
                 # Unix-like systems - use process groups
                 try:
                     # Send SIGTERM to entire process group
@@ -200,7 +200,7 @@ class ServerHandle:
                 )
             else:
                 # Unix-like systems: Use kill -9 on process group
-                if hasattr(os, 'killpg') and hasattr(signal, 'SIGKILL'):
+                if hasattr(os, "killpg") and hasattr(signal, "SIGKILL"):
                     try:
                         # First try to kill the entire process group
                         os.killpg(pid, signal.SIGKILL)

@@ -2,10 +2,10 @@
 Simplified read-only environment access for servers
 """
 
-import subprocess
+import subprocess  # noqa: S404
 import json
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 
 class Environment:
@@ -13,8 +13,8 @@ class Environment:
 
     def __init__(self, server_dir: Path):
         self.server_dir = server_dir
-        self._cache = None
-        self._cache_time = 0
+        self._cache: Optional[Dict[str, str]] = None
+        self._cache_time: float = 0.0
 
     def _run_uv_command(self, args: List[str]) -> str:
         """Run a uv command in the server's environment"""

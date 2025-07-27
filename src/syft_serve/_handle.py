@@ -66,7 +66,7 @@ class ServerHandle:
         """Check if server is responding to HTTP requests"""
         try:
             response = requests.get(f"http://localhost:{self.port}/health", timeout=timeout)
-            return response.status_code == 200
+            return bool(response.status_code == 200)
         except requests.RequestException:
             return False
 
@@ -179,7 +179,7 @@ class ServerHandle:
         This method uses platform-specific OS commands to ensure process termination.
         Use only when terminate() fails.
         """
-        import subprocess
+        import subprocess  # noqa: S404
         import platform
         import signal
         import os

@@ -15,7 +15,7 @@ authors = [
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -70,7 +70,22 @@ line-length = 100
 target-version = "py38"
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+
+[tool.bandit]
+# Skip subprocess warnings - we use it for core process management functionality
+# All subprocess calls are validated with no user input
+skips = ["B404", "B603", "B607"]
+exclude_dirs = ["/test/", "/tests/", "/.venv/", "/venv/"]
+
+[[tool.mypy.overrides]]
+module = [
+    "psutil",
+    "requests",
+    "tabulate",
+    "jupyter_dark_detect",
+]
+ignore_missing_imports = true

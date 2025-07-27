@@ -2,7 +2,7 @@
 ServerCollection - simplified collection of servers with dict-like access
 """
 
-from typing import List, Optional, Iterator, Union
+from typing import List, Optional, Iterator, Union, Any
 
 from ._server import Server
 
@@ -10,7 +10,7 @@ from ._server import Server
 class ServerCollection:
     """Collection of servers with name and index access"""
 
-    def __init__(self, manager_or_callable):
+    def __init__(self, manager_or_callable: Any) -> None:
         # Accept either a manager instance or a callable that returns one
         if callable(manager_or_callable):
             self._manager_func = manager_or_callable
@@ -18,7 +18,7 @@ class ServerCollection:
             self._manager_func = lambda: manager_or_callable
 
     @property
-    def _manager(self):
+    def _manager(self) -> Any:
         """Get the manager instance"""
         return self._manager_func()
 
@@ -112,7 +112,7 @@ class ServerCollection:
             stopped = len(servers) - running
             summary = f"\n{len(servers)} servers ({running} running, {stopped} stopped)"
 
-            return table + summary
+            return str(table + summary)
 
         except ImportError:
             # Fallback without tabulate

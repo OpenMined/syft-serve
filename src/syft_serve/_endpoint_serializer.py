@@ -66,6 +66,12 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
                 if line.strip():  # Skip empty lines
                     indent = len(line) - len(line.lstrip())
                     min_indent = min(min_indent, indent)
+            
+            # Convert to int for slicing
+            if min_indent == float("inf"):
+                min_indent = 0
+            else:
+                min_indent = int(min_indent)
 
             # Remove the common indent
             dedented_lines = []
@@ -120,7 +126,7 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
             except Exception:
                 # Function requires arguments or has side effects
                 # Continue to fallback
-                pass
+                func_result = None
 
         # Fallback: generic endpoint
         return f"""def {func_name}():

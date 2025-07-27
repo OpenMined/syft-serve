@@ -24,7 +24,7 @@ class ServerConfig:
     startup_timeout: float = 10.0  # seconds
     health_check_interval: float = 1.0  # seconds
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Ensure directories exist"""
         self.log_dir.mkdir(parents=True, exist_ok=True)
         self.persistence_file.parent.mkdir(parents=True, exist_ok=True)

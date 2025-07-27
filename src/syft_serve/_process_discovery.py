@@ -75,7 +75,7 @@ def terminate_all_syft_serve_processes(force: bool = True) -> Dict[str, Any]:
     import time
 
     processes = discover_syft_serve_processes()
-    result = {"discovered": len(processes), "terminated": 0, "failed": []}
+    result: Dict[str, Any] = {"discovered": len(processes), "terminated": 0, "failed": []}
 
     for proc_info in processes:
         proc = proc_info["process"]

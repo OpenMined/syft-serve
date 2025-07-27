@@ -4,7 +4,7 @@ Simplified ServerManager - only what's needed for tutorial
 
 import json
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 import time
 import socket
 import re

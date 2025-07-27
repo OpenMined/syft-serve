@@ -20,13 +20,16 @@ class ServerHandle:
         pid: int, 
         endpoints: List[str],
         name: Optional[str] = None,
-        app_module: Optional[str] = None
+        app_module: Optional[str] = None,
+        expiration_seconds: int = 86400
     ):
         self.port = port
         self.pid = pid
         self.endpoints = endpoints
         self.name = name or f"server_{port}"
         self.app_module = app_module
+        self.expiration_seconds = expiration_seconds
+        self.created_at = time.time()
         self._process: Optional[psutil.Process] = None
         self._config = get_config()
         
@@ -34,6 +37,10 @@ class ServerHandle:
     def status(self) -> str:
         """Get current server status"""
         try:
+            # Check if server has expired
+            if self.is_expired():
+                return "expired"
+            
             if self._get_process().is_running():
                 if self.health_check():
                     return "running"
@@ -65,6 +72,26 @@ class ServerHandle:
             return response.status_code == 200
         except requests.RequestException:
             return False
+    
+    def is_expired(self) -> bool:
+        """Check if server has expired based on creation time and expiration_seconds"""
+        if self.expiration_seconds == -1:  # Never expires
+            return False
+        
+        current_time = time.time()
+        elapsed_seconds = current_time - self.created_at
+        return elapsed_seconds > self.expiration_seconds
+    
+    def check_and_self_destruct(self) -> bool:
+        """Check if expired and self-destruct if so. Returns True if destroyed."""
+        if self.is_expired():
+            try:
+                self.terminate()
+                return True
+            except Exception:
+                # If termination fails, still consider it destroyed
+                return True
+        return False
     
     def terminate(self) -> None:
         """Terminate the server process and entire process group"""

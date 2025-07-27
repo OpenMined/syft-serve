@@ -126,7 +126,7 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
     return {{"message": "Auto-generated endpoint", "path": "{func_name}"}}'''
 
 
-def generate_app_code_from_endpoints(endpoints: Dict[str, Callable], name: str) -> str:
+def generate_app_code_from_endpoints(endpoints: Dict[str, Callable], name: str, expiration_seconds: int = 86400) -> str:
     """Generate complete FastAPI app code from endpoints dictionary"""
     
     # Serialize all endpoint functions
@@ -156,6 +156,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import hashlib
 import time
+import os
+import threading
+import atexit
 
 # Create app without automatic docs to avoid conflicts
 app = FastAPI(
@@ -173,6 +176,39 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Server expiration management
+SERVER_START_TIME = time.time()
+EXPIRATION_SECONDS = {expiration_seconds}
+
+def check_expiration():
+    """Check if server has expired and self-destruct if so"""
+    if EXPIRATION_SECONDS == -1:  # Never expires
+        return
+    
+    elapsed = time.time() - SERVER_START_TIME
+    if elapsed > EXPIRATION_SECONDS:
+        print(f"Server {{'{name}'}} expired after {{elapsed:.1f}} seconds (limit: {{EXPIRATION_SECONDS}}). Self-destructing...")
+        os._exit(0)  # Force exit
+
+def start_expiration_monitor():
+    """Start background thread to monitor expiration"""
+    if EXPIRATION_SECONDS == -1:
+        return
+    
+    def monitor():
+        while True:
+            check_expiration()
+            time.sleep(60)  # Check every minute
+    
+    monitor_thread = threading.Thread(target=monitor, daemon=True)
+    monitor_thread.start()
+
+# Start expiration monitoring
+start_expiration_monitor()
+
+# Register cleanup on exit
+atexit.register(lambda: print(f"Server {{'{name}'}} shutting down..."))
 
 # Health endpoint
 @app.get("/health")
@@ -205,6 +241,27 @@ def get_server_info():
         "endpoints": {list(endpoints.keys())},
         "endpoint_hash": get_endpoint_hash()["hash"],
         "version": "0.1.0"
+    }}
+
+# Expiration status endpoint
+@app.get("/syft/expiration")
+def get_expiration_status():
+    elapsed = time.time() - SERVER_START_TIME
+    if EXPIRATION_SECONDS == -1:
+        return {{
+            "expires": False,
+            "elapsed_seconds": elapsed,
+            "remaining_seconds": None,
+            "status": "permanent"
+        }}
+    
+    remaining = EXPIRATION_SECONDS - elapsed
+    return {{
+        "expires": True,
+        "elapsed_seconds": elapsed,
+        "remaining_seconds": max(0, remaining),
+        "expiration_seconds": EXPIRATION_SECONDS,
+        "status": "expired" if remaining <= 0 else "active"
     }}
 
 # User-defined endpoint functions

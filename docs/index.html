@@ -17,9 +17,9 @@
                     <a href="index.html" class="logo">syft-serve API</a>
                 </div>
                 <div class="nav-links">
-                    <a href="https://colab.research.google.com/github/OpenMined/syft-serve/blob/main/examples/syft_serve_quickstart.ipynb" target="_blank">Try in Colab</a>
+                    <a href="https://colab.research.google.com/github/OpenMined/syft-installer/blob/main/examples/syft_install_quickstart.ipynb" target="_blank">Try in Colab</a>
                     <a href="api/index.html">API</a>
-                    <a href="https://github.com/OpenMined/syft-serve" class="github-link">GitHub</a>
+                    <a href="https://github.com/OpenMined/syft-installer" class="github-link">GitHub</a>
                 </div>
             </div>
         </nav>
@@ -39,8 +39,20 @@
 
             <!-- Code Example - Hero -->
             <div style="margin: 3rem 0;">
-                <pre style="background: #2d3748; color: #e2e8f0; padding: 2rem 2rem; border-radius: 12px; font-size: 1.5rem; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; line-height: 1.4; display: inline-block; text-align: left; width: 400px; box-sizing: border-box;"><code class="language-python">import syft_serve as server
-server.start_and_manage_all()</code></pre>
+                <pre style="background: #2d3748; color: #e2e8f0; padding: 2rem 2rem; border-radius: 12px; font-size: 1.2rem; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; line-height: 1.4; display: inline-block; text-align: left; width: 600px; box-sizing: border-box;"><code class="language-python">from syft_widget import DynamicWidget
+import time
+
+class LiveClock(DynamicWidget):
+    def get_endpoints(self):
+        @self.endpoint("/api/time")
+        def get_time():
+            return {"time": time.strftime("%H:%M:%S")}
+    
+    def get_template(self):
+        return '<div data-field="time">{time}</div>'
+
+clock = LiveClock()  # Server starts automatically!
+clock</code></pre>
             </div>
         </div>
     </section>
@@ -183,7 +195,7 @@ server.start_and_manage_all()</code></pre>
                             <video width="100%" controls preload="metadata" muted loop poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KUGF0aCBkPSJNOCA1VjE5TDE5IDEyTDggNVoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+Cg==">
                                 <source src="videos/jupyter_noaudio_cropped.mp4" type="video/mp4">
                                 <source src="videos/jupyter_noaudio.mp4" type="video/mp4">
-                                <source src="https://raw.githubusercontent.com/OpenMined/syft-serve/main/docs/videos/jupyter_noaudio_cropped.mp4" type="video/mp4">
+                                <source src="https://raw.githubusercontent.com/OpenMined/syft-installer/main/docs/videos/jupyter_noaudio_cropped.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
@@ -194,7 +206,7 @@ server.start_and_manage_all()</code></pre>
                             <video width="100%" controls preload="metadata" muted loop poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KUGF0aCBkPSJNOCA1VjE5TDE5IDEyTDggNVoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+Cg==">
                                 <source src="videos/colab_noaudio.mp4" type="video/mp4">
                                 <source src="videos/colab.mp4" type="video/mp4">
-                                <source src="https://raw.githubusercontent.com/OpenMined/syft-serve/main/docs/videos/colab_noaudio.mp4" type="video/mp4">
+                                <source src="https://raw.githubusercontent.com/OpenMined/syft-installer/main/docs/videos/colab_noaudio.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
@@ -205,7 +217,7 @@ server.start_and_manage_all()</code></pre>
                             <video width="100%" controls preload="metadata" muted loop poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KUGF0aCBkPSJNOCA1VjE5TDE5IDEyTDggNVoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+Cg==">
                                 <source src="videos/terminal_noaudio.mp4" type="video/mp4">
                                 <source src="videos/terminal.mp4" type="video/mp4">
-                                <source src="https://raw.githubusercontent.com/OpenMined/syft-serve/main/docs/videos/terminal_noaudio.mp4" type="video/mp4">
+                                <source src="https://raw.githubusercontent.com/OpenMined/syft-installer/main/docs/videos/terminal_noaudio.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
@@ -231,7 +243,7 @@ server.start_and_manage_all()</code></pre>
         <section class="under-the-hood">
             <div class="container">
                 <h2>Under the Hood</h2>
-                <p class="section-subtitle">Here's what SyftBox server creates when configured</p>
+                <p class="section-subtitle">Here's what SyftBox daemon creates when installed</p>
                 
                 <div class="code-showcase">
                     <pre><code class="language-python"># SyftBox creates a complete local environment:
@@ -254,7 +266,7 @@ server.start_and_manage_all()</code></pre>
         <section class="api-preview-dark">
             <div class="container">
                 <h2>The Complete API</h2>
-                <p class="section-subtitle">effortless setup and teardown of syftbox servers</p>
+                <p class="section-subtitle">effortless setup and teardown of syftbox daemon</p>
                 
                 <style>
                     .api-examples {
@@ -276,34 +288,34 @@ server.start_and_manage_all()</code></pre>
                 <div class="api-examples">
                     <div class="api-example">
                         <h3>Quick Start</h3>
-                        <pre><code class="language-python">import syft_serve as server
+                        <pre><code class="language-python">import syft_installer as si
 
-server.start_and_manage_all() # Install and start
-server.install()     # Install only
-server.start()       # Start if already installed</code></pre>
+si.install_and_run_if_needed() # Install and start
+si.install()         # Install only
+si.run()             # Start if already installed</code></pre>
                     </div>
                     
                     <div class="api-example">
                         <h3>Status & Control</h3>
-                        <pre><code class="language-python">server.status()
-server.is_installed()
-server.is_running()
+                        <pre><code class="language-python">si.status()
+si.is_installed()
+si.is_running()
 
-server.stop()
-server.start_if_stopped()</code></pre>
+si.stop()
+si.run_if_stopped()</code></pre>
                     </div>
                     
                     <div class="api-example">
                         <h3>Non-Interactive Mode</h3>
-                        <pre><code class="language-python">session = server.create("email@example.com", interactive=False)
-session.submit_auth("ABC123")
+                        <pre><code class="language-python">session = si.install("email@example.com", interactive=False)
+session.submit_otp("ABC123")
 print(session.is_authenticated)</code></pre>
                     </div>
                     
                     <div class="api-example">
                         <h3>Clean Uninstall</h3>
                         <pre><code class="language-python"># Removes everything
-server.uninstall()
+si.uninstall()
 
 # Confirms before deleting</code></pre>
                     </div>
@@ -316,8 +328,8 @@ server.uninstall()
             <div class="container">
                 <div style="max-width: 600px; margin: 0 auto; text-align: center;">
                     <h2 style="font-size: 3rem; font-weight: 600; color: white; margin-bottom: 2rem; letter-spacing: -0.02em;">try it out</h2>
-                    <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem;">experience syftbox server management in google colab</p>
-                    <a href="https://colab.research.google.com/github/OpenMined/syft-serve/blob/main/examples/syft_serve_quickstart.ipynb" 
+                    <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem;">experience syftbox installation in google colab</p>
+                    <a href="https://colab.research.google.com/github/OpenMined/syft-installer/blob/main/examples/syft_install_quickstart.ipynb" 
                        style="display: inline-block; background: white; color: #0a0a0a; padding: 1rem 2rem; border-radius: 980px; text-decoration: none; font-size: 1.1rem; font-weight: 500; transition: all 0.2s; border: none;" 
                        onmouseover="this.style.background='rgba(255,255,255,0.9)'" 
                        onmouseout="this.style.background='white'">open in colab</a>
@@ -330,7 +342,7 @@ server.uninstall()
             <div class="container">
                 <div class="newsletter-content">
                     <h2>Stay Updated</h2>
-                    <p>Get notified about SOTA privacy tools like syft-serve API</p>
+                    <p>Get notified about SOTA privacy tools like syft-installer</p>
                     
                     <!-- HubSpot Form -->
                     <div id="hubspot-form-container"></div>

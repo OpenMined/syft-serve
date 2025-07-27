@@ -176,3 +176,7 @@ class ServerCollection:
             </div>
         </div>
         """
+    
+    def terminate_all(self):
+        """Terminate all servers"""
+        self._manager.terminate_all()

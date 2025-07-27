@@ -23,7 +23,6 @@ class TestPublicAPI:
         expected_attrs = [
             'create',
             'servers',
-            'terminate_all',
         ]
         
         # Sort for consistent comparison
@@ -44,20 +43,20 @@ class TestPublicAPI:
         public_attrs = [attr for attr in dir(ss.servers) if not attr.startswith('_')]
         
         # Expected public API for ServerCollection
-        # ServerCollection should have minimal public attributes since it works via dunder methods
-        # However, it might have some public methods, so we'll check what's actually there
-        expected_attrs = []  # Start with empty, will be updated based on actual implementation
+        expected_attrs = [
+            'terminate_all',  # Method to terminate all servers
+        ]
         
         # Sort for consistent comparison
         public_attrs.sort()
         expected_attrs.sort()
         
-        # For now, just ensure we don't have too many public attributes
-        # This test will catch if internal methods get accidentally exposed
-        assert len(public_attrs) <= 5, (
-            f"ServerCollection should have minimal public API.\n"
-            f"Current public attributes: {public_attrs}\n"
-            f"If this is intentional, update the test."
+        assert public_attrs == expected_attrs, (
+            f"ServerCollection public API mismatch!\n"
+            f"Expected: {expected_attrs}\n"
+            f"Actual: {public_attrs}\n"
+            f"Extra: {set(public_attrs) - set(expected_attrs)}\n"
+            f"Missing: {set(expected_attrs) - set(public_attrs)}"
         )
     
     @patch('syft_serve._manager.ServerManager')
@@ -117,7 +116,7 @@ class TestPublicAPI:
         """Test that __all__ contains exactly what we expect."""
         assert hasattr(ss, '__all__'), "syft_serve module should have __all__ defined"
         
-        expected_all = ['servers', 'create', 'terminate_all']
+        expected_all = ['servers', 'create']
         actual_all = sorted(ss.__all__)
         expected_all = sorted(expected_all)
         
@@ -155,6 +154,10 @@ class TestPublicAPI:
         assert hasattr(ss.servers, '__iter__'), "servers should support iteration"
         assert hasattr(ss.servers, '__getitem__'), "servers should support indexing"
         assert hasattr(ss.servers, '__contains__'), "servers should support 'in' operator"
+        
+        # Test that it has terminate_all method
+        assert hasattr(ss.servers, 'terminate_all'), "servers should have terminate_all method"
+        assert callable(ss.servers.terminate_all), "servers.terminate_all should be callable"
 
 
 class TestPublicAPIStructure:
@@ -177,10 +180,9 @@ class TestPublicAPIStructure:
         assert '__all__ = [' in content, "__all__ should be defined"
         assert '"servers"' in content, "__all__ should contain 'servers'"
         assert '"create"' in content, "__all__ should contain 'create'"
-        assert '"terminate_all"' in content, "__all__ should contain 'terminate_all'"
         
         # Check that we're importing from _api (underscore-prefixed module)
-        assert 'from ._api import servers, create, terminate_all' in content, "Should import from _api module"
+        assert 'from ._api import servers, create' in content, "Should import from _api module"
         
         # Check that we're not importing old module names
         bad_imports = ['from .api import', 'from .manager import', 'from .server import']

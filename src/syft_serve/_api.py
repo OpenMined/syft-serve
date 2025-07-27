@@ -30,7 +30,8 @@ def create(
     name: str,
     endpoints: Dict[str, Callable],
     dependencies: Optional[List[str]] = None,
-    force: bool = False
+    force: bool = False,
+    expiration_seconds: int = 86400  # 24 hours default
 ) -> Server:
     """
     Create a new server
@@ -40,6 +41,7 @@ def create(
         endpoints: Dictionary mapping paths to handler functions
         dependencies: List of Python packages to install
         force: If True, destroy any existing server with the same name
+        expiration_seconds: Server auto-expires after this many seconds (default: 86400 = 24 hours, -1 = never)
     
     Returns:
         Server object for the created server
@@ -49,13 +51,28 @@ def create(
             name="my_api",
             endpoints={"/hello": hello_func}
         )
+        
+        # Server that expires in 1 hour
+        server = ss.create(
+            name="temp_api",
+            endpoints={"/hello": hello_func},
+            expiration_seconds=3600
+        )
+        
+        # Server that never expires
+        server = ss.create(
+            name="permanent_api",
+            endpoints={"/hello": hello_func},
+            expiration_seconds=-1
+        )
     """
     manager = _get_manager()
     handle = manager.create_server(
         name=name,
         endpoints=endpoints,
         dependencies=dependencies,
-        force=force
+        force=force,
+        expiration_seconds=expiration_seconds
     )
     return Server(handle)
 

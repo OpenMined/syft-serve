@@ -14,7 +14,7 @@ def test_public_api():
         public_attrs = [attr for attr in dir(ss) if not attr.startswith('_')]
         print(f"Public attributes: {sorted(public_attrs)}")
         
-        expected_attrs = ['create', 'servers', 'terminate_all']
+        expected_attrs = ['create', 'servers']
         assert sorted(public_attrs) == sorted(expected_attrs), (
             f"Expected {expected_attrs}, got {public_attrs}"
         )
@@ -22,8 +22,8 @@ def test_public_api():
         
         # Test __all__ attribute
         assert hasattr(ss, '__all__'), "Should have __all__ defined"
-        assert sorted(ss.__all__) == sorted(['servers', 'create', 'terminate_all']), (
-            f"__all__ should be ['servers', 'create', 'terminate_all'], got {ss.__all__}"
+        assert sorted(ss.__all__) == sorted(['servers', 'create']), (
+            f"__all__ should be ['servers', 'create'], got {ss.__all__}"
         )
         print("✓ __all__ attribute is correct")
         
@@ -31,11 +31,12 @@ def test_public_api():
         servers_attrs = [attr for attr in dir(ss.servers) if not attr.startswith('_')]
         print(f"Servers collection public attributes: {sorted(servers_attrs)}")
         
-        # Should have minimal public API
-        assert len(servers_attrs) <= 5, (
-            f"Servers collection should have minimal public API, got {servers_attrs}"
+        # Should have expected public API
+        expected_servers_attrs = ['terminate_all']
+        assert sorted(servers_attrs) == sorted(expected_servers_attrs), (
+            f"Servers collection API mismatch. Expected {expected_servers_attrs}, got {servers_attrs}"
         )
-        print("✓ servers collection API is minimal")
+        print("✓ servers collection API is correct")
         
         # Test create function
         assert callable(ss.create), "create should be callable"
@@ -46,7 +47,9 @@ def test_public_api():
         assert hasattr(ss.servers, '__iter__'), "servers should support iteration"
         assert hasattr(ss.servers, '__getitem__'), "servers should support indexing"
         assert hasattr(ss.servers, '__contains__'), "servers should support 'in' operator"
-        print("✓ servers collection has expected dunder methods")
+        assert hasattr(ss.servers, 'terminate_all'), "servers should have terminate_all method"
+        assert callable(ss.servers.terminate_all), "servers.terminate_all should be callable"
+        print("✓ servers collection has expected dunder methods and terminate_all")
         
         # Test that internal modules are not exposed
         internal_modules = [
@@ -62,7 +65,8 @@ def test_public_api():
         print("✓ Internal modules are properly hidden")
         
         print("\n🎉 All public API tests passed!")
-        print("The public API is clean with only 'create', 'servers', and 'terminate_all' exposed.")
+        print("The public API is clean with only 'create' and 'servers' exposed.")
+        print("The servers collection provides 'terminate_all()' method for convenience.")
         
     except ImportError as e:
         print(f"⚠️  Could not import syft_serve: {e}")

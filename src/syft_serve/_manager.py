@@ -45,7 +45,8 @@ class ServerManager:
         name: str,
         endpoints: Dict[str, Callable],
         dependencies: Optional[List[str]] = None,
-        force: bool = False
+        force: bool = False,
+        expiration_seconds: int = 86400
     ) -> ServerHandle:
         """
         Create a new server with a unique name
@@ -55,6 +56,7 @@ class ServerManager:
             endpoints: Dictionary of endpoint paths to handler functions
             dependencies: Optional list of Python packages to install
             force: If True, destroy existing server with same name
+            expiration_seconds: Server auto-expires after this many seconds (default: 86400 = 24 hours, -1 = never)
             
         Returns:
             ServerHandle for the created server
@@ -86,14 +88,15 @@ class ServerManager:
         endpoint_paths = list(endpoints.keys())
         
         # Start the server process
-        pid = self._start_server_from_endpoints(port, endpoints, name, dependencies)
+        pid = self._start_server_from_endpoints(port, endpoints, name, dependencies, expiration_seconds)
         
         # Create server handle
         server = ServerHandle(
             port=port,
             pid=pid,
             endpoints=endpoint_paths,
-            name=name
+            name=name,
+            expiration_seconds=expiration_seconds
         )
         
         # Wait for server to be ready
@@ -232,7 +235,7 @@ package = false
         
         return server_dir
     
-    def _start_server_from_endpoints(self, port: int, endpoints: Dict[str, Callable], name: str, dependencies: Optional[List[str]] = None) -> int:
+    def _start_server_from_endpoints(self, port: int, endpoints: Dict[str, Callable], name: str, dependencies: Optional[List[str]] = None, expiration_seconds: int = 86400) -> int:
         """Start server from endpoint dictionary"""
         # Generate app code directly from endpoints
         if shutil.which('uv'):
@@ -249,7 +252,7 @@ package = false
             server_dir = None
         
         # Generate the app code
-        app_code = generate_app_code_from_endpoints(endpoints, name)
+        app_code = generate_app_code_from_endpoints(endpoints, name, expiration_seconds)
         app_file.write_text(app_code)
         
         # Use uv run if available for better dependency management
@@ -303,11 +306,15 @@ package = false
         )
     
     def _cleanup_dead_servers(self) -> None:
-        """Remove dead servers from registry"""
+        """Remove dead, expired, and stopped servers from registry"""
         dead_servers = []
         
         for name, server in self._servers.items():
-            if server.status == "stopped":
+            status = server.status
+            if status in ["stopped", "expired", "error"]:
+                dead_servers.append(name)
+            elif hasattr(server, 'check_and_self_destruct') and server.check_and_self_destruct():
+                # Server expired and self-destructed
                 dead_servers.append(name)
         
         for name in dead_servers:

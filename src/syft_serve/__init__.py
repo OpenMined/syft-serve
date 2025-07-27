@@ -29,12 +29,11 @@ Example:
 """
 
 # Import only what we need for the public API
-from ._api import servers, create, terminate_all
+from ._api import servers, create
 
 __version__ = "0.1.0"
 
 __all__ = [
     "servers", 
     "create",
-    "terminate_all",
 ]

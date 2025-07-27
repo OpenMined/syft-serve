@@ -88,6 +88,7 @@ skips = ["B404", "B603", "B607"]
 [tool.uv]
 dev-dependencies = [
     "bandit[toml]>=1.8.6",
+    "pip-audit>=2.9.0",
     "safety>=3.2.4",
 ]
 

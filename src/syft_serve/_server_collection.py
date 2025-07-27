@@ -124,9 +124,31 @@ class ServerCollection:
     
     def _repr_html_(self) -> str:
         """Jupyter notebook representation - HTML table"""
+        # Detect dark mode
+        from jupyter_dark_detect import is_dark
+        is_dark_mode = is_dark()
+        
+        # Theme-aware colors
+        if is_dark_mode:
+            # Dark mode colors
+            bg_color = "#1e1e1e"
+            border_color = "#3e3e3e"
+            text_color = "#e0e0e0"
+            label_color = "#a0a0a0"
+            header_bg = "#2d2d2d"
+            row_hover_bg = "#252525"
+        else:
+            # Light mode colors
+            bg_color = "#ffffff"
+            border_color = "#ddd"
+            text_color = "#333"
+            label_color = "#666"
+            header_bg = "#f8f9fa"
+            row_hover_bg = "#f5f5f5"
+        
         servers = self._get_servers()
         if not servers:
-            return "<p style='color: #888;'>No servers</p>"
+            return f"<p style='color: {label_color};'>No servers</p>"
         
         # Build HTML table
         rows = []
@@ -138,14 +160,31 @@ class ServerCollection:
             if len(server.endpoints) > 2:
                 endpoints += f" <em>+{len(server.endpoints)-2} more</em>"
             
+            # Get expiration info
+            expiration = server.expiration_info
+            expiration_color = "#666"
+            if expiration == "Never":
+                expiration_color = "#059669"
+            elif expiration == "Expired":
+                expiration_color = "#dc2626"
+            elif expiration != "Unknown":
+                # Parse time to determine urgency
+                if "s" in expiration or ("m" in expiration and not "h" in expiration):
+                    # Less than 1 hour - urgent
+                    expiration_color = "#ea580c"
+                elif "h" in expiration and not "d" in expiration:
+                    # Less than 1 day - warning
+                    expiration_color = "#f59e0b"
+            
             row = f"""
-            <tr>
-                <td style="padding: 8px;"><strong>{server.name}</strong></td>
-                <td style="padding: 8px;">{server.port}</td>
+            <tr style="background: {bg_color};">
+                <td style="padding: 8px; color: {text_color};"><strong>{server.name}</strong></td>
+                <td style="padding: 8px; color: {text_color};">{server.port}</td>
                 <td style="padding: 8px; color: {status_color};">{status_icon} {server.status.title()}</td>
-                <td style="padding: 8px;">{endpoints or '<em>-</em>'}</td>
-                <td style="padding: 8px;">{server.uptime}</td>
-                <td style="padding: 8px;"><code>{server.pid or '-'}</code></td>
+                <td style="padding: 8px; color: {text_color};">{endpoints or '<em>-</em>'}</td>
+                <td style="padding: 8px; color: {text_color};">{server.uptime}</td>
+                <td style="padding: 8px; color: {expiration_color}; font-weight: 500;">{expiration}</td>
+                <td style="padding: 8px;"><code style="background: {header_bg}; padding: 2px 4px; border-radius: 3px; color: {text_color};">{server.pid or '-'}</code></td>
             </tr>
             """
             rows.append(row)
@@ -155,23 +194,24 @@ class ServerCollection:
         stopped = len(servers) - running
         
         return f"""
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-            <table style="border-collapse: collapse; width: 100%; margin-bottom: 10px;">
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: {bg_color}; border: 1px solid {border_color}; border-radius: 5px; padding: 15px;">
+            <table style="border-collapse: collapse; width: 100%; margin-bottom: 10px; background: {bg_color};">
                 <thead>
-                    <tr style="border-bottom: 2px solid #ddd;">
-                        <th style="padding: 8px; text-align: left;">Name</th>
-                        <th style="padding: 8px; text-align: left;">Port</th>
-                        <th style="padding: 8px; text-align: left;">Status</th>
-                        <th style="padding: 8px; text-align: left;">Endpoints</th>
-                        <th style="padding: 8px; text-align: left;">Uptime</th>
-                        <th style="padding: 8px; text-align: left;">PID</th>
+                    <tr style="border-bottom: 2px solid {border_color}; background: {header_bg};">
+                        <th style="padding: 8px; text-align: left; color: {text_color};">Name</th>
+                        <th style="padding: 8px; text-align: left; color: {text_color};">Port</th>
+                        <th style="padding: 8px; text-align: left; color: {text_color};">Status</th>
+                        <th style="padding: 8px; text-align: left; color: {text_color};">Endpoints</th>
+                        <th style="padding: 8px; text-align: left; color: {text_color};">Uptime</th>
+                        <th style="padding: 8px; text-align: left; color: {text_color};">Expires In</th>
+                        <th style="padding: 8px; text-align: left; color: {text_color};">PID</th>
                     </tr>
                 </thead>
                 <tbody>
                     {''.join(rows)}
                 </tbody>
             </table>
-            <div style="color: #666; font-size: 14px;">
+            <div style="color: {label_color}; font-size: 14px;">
                 {len(servers)} servers ({running} running, {stopped} stopped)
             </div>
         </div>

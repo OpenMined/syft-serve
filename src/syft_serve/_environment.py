@@ -18,7 +18,15 @@ class Environment:
     
     def _run_uv_command(self, args: List[str]) -> str:
         """Run a uv command in the server's environment"""
-        cmd = ["uv"] + args
+        # Check if we have a virtual environment
+        venv_path = self.server_dir / ".venv"
+        if venv_path.exists():
+            # Use uv run to execute within the virtual environment
+            cmd = ["uv", "run"] + args
+        else:
+            # Fallback to direct command
+            cmd = ["uv"] + args
+        
         try:
             result = subprocess.run(
                 cmd,
@@ -38,7 +46,7 @@ class Environment:
         if self._cache and (time.time() - self._cache_time) < 5:
             return self._cache
         
-        # Run uv pip list --format=json
+        # Run pip list --format=json within the environment
         output = self._run_uv_command(["pip", "list", "--format=json"])
         if not output:
             return {}

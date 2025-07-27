@@ -83,6 +83,38 @@ class Server:
             hours = (total_seconds % 86400) // 3600
             return f"{days}d {hours}h"
     
+    @property
+    def expiration_info(self) -> str:
+        """Human-readable expiration information"""
+        if not hasattr(self._handle, 'expiration_seconds'):
+            return "Unknown"
+        
+        if self._handle.expiration_seconds == -1:
+            return "Never"
+        
+        # Calculate remaining time
+        import time
+        elapsed = time.time() - self._handle.created_at
+        remaining = self._handle.expiration_seconds - elapsed
+        
+        if remaining <= 0:
+            return "Expired"
+        
+        # Format remaining time
+        if remaining < 60:
+            return f"{int(remaining)}s"
+        elif remaining < 3600:
+            minutes = int(remaining // 60)
+            return f"{minutes}m"
+        elif remaining < 86400:
+            hours = int(remaining // 3600)
+            minutes = int((remaining % 3600) // 60)
+            return f"{hours}h {minutes}m"
+        else:
+            days = int(remaining // 86400)
+            hours = int((remaining % 86400) // 3600)
+            return f"{days}d {hours}h"
+    
     # Log access
     @property
     def stdout(self) -> LogStream:
@@ -129,20 +161,71 @@ class Server:
     def __repr__(self) -> str:
         """Console representation"""
         status_icon = "✅" if self.status == "running" else "❌"
+        # Get expiration info
+        expiration = self.expiration_info
+        expiration_emoji = "♾️" if expiration == "Never" else "⏰"
+        if expiration == "Expired":
+            expiration_emoji = "💀"
+        
         lines = [
             f"Server: {self.name}",
             f"├── Status: {status_icon} {self.status.title()}",
             f"├── URL: {self.url}",
             f"├── Endpoints: {', '.join(self.endpoints) if self.endpoints else 'none'}",
             f"├── Uptime: {self.uptime}",
+            f"├── Expires: {expiration_emoji} {expiration}",
             f"└── PID: {self.pid or '-'}"
         ]
         return '\n'.join(lines)
     
     def _repr_html_(self) -> str:
         """Jupyter notebook representation"""
+        # Detect dark mode
+        from jupyter_dark_detect import is_dark
+        is_dark_mode = is_dark()
+        
+        # Theme-aware colors
+        if is_dark_mode:
+            # Dark mode colors
+            bg_color = "#1e1e1e"
+            border_color = "#3e3e3e"
+            text_color = "#e0e0e0"
+            label_color = "#a0a0a0"
+            code_bg = "#2d2d2d"
+            log_bg = "#1a1a1a"
+            error_bg = "#1a1a1a"
+            link_color = "#66b3ff"
+        else:
+            # Light mode colors
+            bg_color = "#ffffff"
+            border_color = "#ddd"
+            text_color = "#333"
+            label_color = "#666"
+            code_bg = "#f8f9fa"
+            log_bg = "#f8f9fa"
+            error_bg = "#fef2f2"
+            link_color = "#3498db"
+        
         status_color = "#27ae60" if self.status == "running" else "#e74c3c"
         status_icon = "✅" if self.status == "running" else "❌"
+        
+        # Get expiration info
+        expiration = self.expiration_info
+        expiration_emoji = "♾️" if expiration == "Never" else "⏰"
+        expiration_color = "#666"
+        if expiration == "Never":
+            expiration_color = "#059669"
+        elif expiration == "Expired":
+            expiration_emoji = "💀"
+            expiration_color = "#dc2626"
+        elif expiration != "Unknown":
+            # Parse time to determine urgency
+            if "s" in expiration or ("m" in expiration and not "h" in expiration):
+                # Less than 1 hour - urgent
+                expiration_color = "#ea580c"
+            elif "h" in expiration and not "d" in expiration:
+                # Less than 1 day - warning
+                expiration_color = "#f59e0b"
         
         endpoints_html = ""
         if self.endpoints:
@@ -151,47 +234,74 @@ class Server:
         else:
             endpoints_html = "<em style='color: #888;'>No endpoints</em>"
         
-        # Get recent logs preview
+        # Get recent logs preview for both stdout and stderr
         recent_stdout = self.stdout.tail(3)
-        log_preview = ""
-        if recent_stdout:
-            log_lines = recent_stdout.split('\n')
-            log_html = '<br>'.join(f"<code>{line}</code>" for line in log_lines[:3])
-            log_preview = f"""
-            <div style="margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 3px;">
-                <div style="color: #666; font-size: 11px; margin-bottom: 5px;">Recent logs:</div>
-                <div style="font-size: 11px; color: #333;">{log_html}</div>
+        recent_stderr = self.stderr.tail(3)
+        
+        logs_section = ""
+        if recent_stdout or recent_stderr:
+            stdout_html = ""
+            stderr_html = ""
+            
+            if recent_stdout:
+                stdout_lines = recent_stdout.split('\n')
+                log_text_color = "#9ca3af" if is_dark_mode else "#374151"
+                stdout_html = '<br>'.join(f"<span style='color: {log_text_color}; font-family: monospace;'>{line}</span>" for line in stdout_lines[:3])
+            else:
+                stdout_html = "<em style='color: #888;'>No recent output</em>"
+                
+            if recent_stderr:
+                stderr_lines = recent_stderr.split('\n')
+                error_text_color = "#ff6b6b" if is_dark_mode else "#d73a49"
+                stderr_html = '<br>'.join(f"<span style='color: {error_text_color}; font-family: monospace;'>{line}</span>" for line in stderr_lines[:3])
+            else:
+                stderr_html = "<em style='color: #888;'>No recent errors</em>"
+            
+            logs_section = f"""
+            <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="padding: 8px; background: {log_bg}; border-radius: 3px; border: 1px solid {border_color};">
+                    <div style="color: {label_color}; font-size: 11px; margin-bottom: 5px;">Recent logs:</div>
+                    <div style="font-size: 11px; color: {text_color};">{stdout_html}</div>
+                </div>
+                <div style="padding: 8px; background: {error_bg}; border-radius: 3px; border: 1px solid {border_color};">
+                    <div style="color: {label_color}; font-size: 11px; margin-bottom: 5px;">Recent errors:</div>
+                    <div style="font-size: 11px;">{stderr_html}</div>
+                </div>
             </div>
             """
         
         return f"""
-        <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-            <h3 style="margin: 0 0 10px 0; color: #333;">🚀 {self.name}</h3>
+        <div style="background: {bg_color}; border: 1px solid {border_color}; border-radius: 5px; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <h3 style="margin: 0 0 10px 0; color: {text_color};">🚀 {self.name}</h3>
             <table style="width: 100%; border-collapse: collapse;">
                 <tr>
-                    <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">Status:</td>
+                    <td style="padding: 5px 10px 5px 0; color: {label_color}; vertical-align: top;">Status:</td>
                     <td style="padding: 5px 0; color: {status_color}; font-weight: bold;">{status_icon} {self.status.title()}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">URL:</td>
-                    <td style="padding: 5px 0;"><a href="{self.url}" target="_blank" style="color: #3498db; text-decoration: none;">{self.url}</a></td>
+                    <td style="padding: 5px 10px 5px 0; color: {label_color}; vertical-align: top;">URL:</td>
+                    <td style="padding: 5px 0;"><a href="{self.url}" target="_blank" style="color: {link_color}; text-decoration: none;">{self.url}</a></td>
                 </tr>
                 <tr>
-                    <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">Endpoints:</td>
-                    <td style="padding: 5px 0;">{endpoints_html}</td>
+                    <td style="padding: 5px 10px 5px 0; color: {label_color}; vertical-align: top;">Endpoints:</td>
+                    <td style="padding: 5px 0; color: {text_color};">{endpoints_html}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">Uptime:</td>
-                    <td style="padding: 5px 0;">{self.uptime}</td>
+                    <td style="padding: 5px 10px 5px 0; color: {label_color}; vertical-align: top;">Uptime:</td>
+                    <td style="padding: 5px 0; color: {text_color};">{self.uptime}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 5px 10px 5px 0; color: #666; vertical-align: top;">PID:</td>
-                    <td style="padding: 5px 0;"><code>{self.pid or '-'}</code></td>
+                    <td style="padding: 5px 10px 5px 0; color: {label_color}; vertical-align: top;">Expires In:</td>
+                    <td style="padding: 5px 0; font-weight: bold; color: {expiration_color};">{expiration_emoji} {expiration}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px 10px 5px 0; color: {label_color}; vertical-align: top;">PID:</td>
+                    <td style="padding: 5px 0;"><code style="background: {code_bg}; padding: 2px 4px; border-radius: 3px; color: {text_color};">{self.pid or '-'}</code></td>
                 </tr>
             </table>
-            {log_preview}
-            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; font-size: 12px; color: #666;">
-                Try: <code>server.stdout.tail(20)</code>, <code>server.env</code>, <code>server.terminate()</code>
+            {logs_section}
+            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid {border_color}; font-size: 12px; color: {label_color};">
+                Try: <code style="background: {code_bg}; padding: 2px 4px; border-radius: 3px;">server.stdout.tail(20)</code>, <code style="background: {code_bg}; padding: 2px 4px; border-radius: 3px;">server.stderr.tail(20)</code>, <code style="background: {code_bg}; padding: 2px 4px; border-radius: 3px;">server.env</code>, <code style="background: {code_bg}; padding: 2px 4px; border-radius: 3px;">server.terminate()</code>
             </div>
         </div>
         """

@@ -15,7 +15,16 @@
       "Bash(sed:*)",
       "Bash(mv:*)",
       "Bash(cp:*)",
-      "Bash(jupyter nbconvert:*)"
+      "Bash(jupyter nbconvert:*)",
+      "Bash(uv build:*)",
+      "Bash(uv:*)",
+      "Bash(mkdir:*)",
+      "Bash(for:*)",
+      "Bash(do mv \"$file\" \"_$file\")",
+      "Bash(done)",
+      "Bash(chmod:*)",
+      "Bash(pip install:*)",
+      "Bash(/usr/bin/python3:*)"
     ],
     "deny": []
   }

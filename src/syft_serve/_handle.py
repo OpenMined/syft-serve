@@ -93,8 +93,12 @@ class ServerHandle:
                 return True
         return False
     
-    def terminate(self) -> None:
-        """Terminate the server process and entire process group"""
+    def terminate(self, timeout: float = 5.0) -> None:
+        """Terminate the server process and entire process group
+        
+        Args:
+            timeout: Maximum time to wait for graceful shutdown (default: 5.0 seconds)
+        """
         import signal
         import os
         
@@ -109,20 +113,32 @@ class ServerHandle:
                 # Send SIGTERM to entire process group
                 os.killpg(pgid, signal.SIGTERM)
                 
-                # Wait for processes to terminate
-                time.sleep(0.5)
+                # Wait for graceful shutdown with timeout
+                start_time = time.time()
+                while process.is_running() and (time.time() - start_time) < timeout:
+                    time.sleep(0.1)
                 
                 # Check if main process is still alive
                 if process.is_running():
                     # Force kill the entire process group
                     os.killpg(pgid, signal.SIGKILL)
-                    time.sleep(0.2)
                     
-                    # Verify it's dead
+                    # Wait a bit more for SIGKILL to take effect
+                    kill_timeout = 2.0
+                    start_time = time.time()
+                    while process.is_running() and (time.time() - start_time) < kill_timeout:
+                        time.sleep(0.1)
+                    
+                    # Final check - if still running, try fallback method
                     if process.is_running():
-                        raise ServerShutdownError(
-                            f"Failed to kill server process group {pgid}"
-                        )
+                        self._terminate_process_tree(process)
+                        
+                        # One last check after fallback
+                        time.sleep(0.5)
+                        if process.is_running():
+                            raise ServerShutdownError(
+                                f"Failed to kill server process group {pgid} after {timeout + kill_timeout}s"
+                            )
             except ProcessLookupError:
                 # Process group already dead
                 pass

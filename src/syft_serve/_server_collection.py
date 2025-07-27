@@ -218,5 +218,9 @@ class ServerCollection:
         """
     
     def terminate_all(self):
-        """Terminate all servers"""
-        self._manager.terminate_all()
+        """Terminate all servers
+        
+        Returns:
+            dict: Summary of termination results
+        """
+        return self._manager.terminate_all()

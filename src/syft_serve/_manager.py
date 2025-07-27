@@ -9,7 +9,7 @@ import time
 import socket
 import re
 from pathlib import Path
-from typing import List, Dict, Optional, Callable
+from typing import List, Dict, Optional, Callable, Any
 import psutil
 
 from ._handle import ServerHandle
@@ -135,25 +135,62 @@ class ServerManager:
         del self._servers[name]
         self._save_persistent_servers()
     
-    def terminate_all(self) -> None:
-        """Terminate all servers - both tracked and orphaned"""
+    def terminate_all(self) -> Dict[str, Any]:
+        """Terminate all servers - both tracked and orphaned
+        
+        Returns:
+            dict: Summary of termination results with keys:
+                - tracked_total: number of tracked servers
+                - tracked_terminated: number of tracked servers successfully terminated
+                - tracked_failed: list of server names that failed to terminate
+                - orphaned_discovered: number of orphaned processes found
+                - orphaned_terminated: number of orphaned processes terminated
+                - orphaned_failed: list of PIDs that failed to terminate
+                - success: bool indicating if all servers were terminated
+        """
+        results = {
+            'tracked_total': 0,
+            'tracked_terminated': 0,
+            'tracked_failed': [],
+            'orphaned_discovered': 0,
+            'orphaned_terminated': 0,
+            'orphaned_failed': [],
+            'success': True
+        }
+        
         # First terminate tracked servers
         names = list(self._servers.keys())
+        results['tracked_total'] = len(names)
+        
         for name in names:
             try:
                 self.terminate_server(name)
+                results['tracked_terminated'] += 1
             except Exception as e:
                 print(f"Warning: Failed to terminate tracked server {name}: {e}")
+                results['tracked_failed'].append(name)
+                results['success'] = False
         
         # Then find and terminate any orphaned processes
         from ._process_discovery import terminate_all_syft_serve_processes
         
-        result = terminate_all_syft_serve_processes()
-        if result['discovered'] > 0:
-            print(f"Found {result['discovered']} orphaned server process(es)")
-            print(f"Terminated {result['terminated']} process(es)")
-            if result['failed']:
-                print(f"Failed to terminate PIDs: {result['failed']}")
+        orphan_result = terminate_all_syft_serve_processes()
+        results['orphaned_discovered'] = orphan_result['discovered']
+        results['orphaned_terminated'] = orphan_result['terminated']
+        results['orphaned_failed'] = orphan_result['failed']
+        
+        if orphan_result['failed']:
+            results['success'] = False
+            print(f"Failed to terminate orphaned PIDs: {orphan_result['failed']}")
+        
+        # Print summary
+        if results['tracked_failed']:
+            print(f"Failed to terminate {len(results['tracked_failed'])} tracked server(s): {', '.join(results['tracked_failed'])}")
+        
+        if results['orphaned_discovered'] > 0:
+            print(f"Found {results['orphaned_discovered']} orphaned process(es), terminated {results['orphaned_terminated']}")
+        
+        return results
     
     # Helper methods
     def _is_valid_name(self, name: str) -> bool:

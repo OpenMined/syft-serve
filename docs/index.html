@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>syft-perm - Syft Permissions Made Simpler</title>
+    <title>syft-serve - FastAPI Servers Made Simpler</title>
     <link rel="icon" type="image/svg+xml" href="images/syftbox-logo.svg">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -14,13 +14,13 @@
             <div class="nav-wrapper">
                 <div class="logo-group">
                     <img src="images/syftbox-logo.svg" alt="SyftBox" class="syftbox-logo">
-                    <a href="index.html" class="logo">syft-perm</a>
+                    <a href="index.html" class="logo">syft-serve</a>
                 </div>
                 <div class="nav-links">
                     <a href="quickstart.html">Quick Start</a>
-                    <a href="permission-reasons.html">Permission Reasons</a>
+                    <a href="server-features.html">Server Features</a>
                     <a href="api/index.html">API</a>
-                    <a href="https://github.com/OpenMined/syft-perm" class="github-link">GitHub</a>
+                    <a href="https://github.com/OpenMined/syft-serve" class="github-link">GitHub</a>
                 </div>
             </div>
         </nav>
@@ -34,67 +34,72 @@
     </div>
     <section class="hero">
         <div class="container">
-            <h1 class="hero-title">Syft Permissions Made Simpler</h1>
-            <p class="hero-subtitle">A friendlier way to manage who can access what in SyftBox</p>
+            <h1 class="hero-title">FastAPI Servers Made Simpler</h1>
+            <p class="hero-subtitle">Launch and manage stateless servers with just two functions</p>
             
             <!-- Problem/Solution Split -->
             <div class="code-comparison">
                 <div class="code-before">
-                    <div class="code-label">🔍 SEE permissions clearly</div>
-                    <pre><code class="language-python"># In Jupyter notebooks - interactive permission editor
-file = syft_perm.open("data.csv")
-file  # Shows interactive permission editor widget
+                    <div class="code-label">🚀 CREATE servers instantly</div>
+                    <pre><code class="language-python"># Define your endpoint
+def hello():
+    return {"message": "Hello World!"}
 
-# Or view permissions in console:
-print(file)  # Shows permission table
-# User               Read  Create  Write  Admin  Reason
-# alice@example.com  ✓     ✓       ✓              admin.yaml: Admin permission granted
-# bob@example.com    ✓                            read.yaml: Pattern '*.txt' matched</code></pre>
+# Launch a server with one line
+server = syft_serve.create(
+    name="my_api",
+    endpoints={"/hello": hello}
+)
+
+# Your server is running at http://localhost:8000
+print(f"Server ready at {server.url}")</code></pre>
                 </div>
                 
                 <div class="code-arrow">+</div>
                 
                 <div class="code-after">
-                    <div class="code-label">🎯 SET permissions simply</div>
-                    <pre><code class="language-python"># Simple API instead of YAML wrestling
-file = syft_perm.open("data.csv")
-file.grant_read_access("alice@example.com")
-file.grant_write_access("bob@company.com")
+                    <div class="code-label">🎯 MANAGE servers simply</div>
+                    <pre><code class="language-python"># View all your servers
+ss.servers  # Nice table with status, endpoints, uptime
 
-# Automatically creates/updates syft.pub.yaml
-# No manual YAML editing needed!</code></pre>
+# Access by name (no port confusion!)
+my_server = ss.servers["my_api"]
+my_server.stdout.tail(20)  # View recent logs
+
+# Clean shutdown when done
+ss.terminate_all()  # Properly cleans up everything</code></pre>
                 </div>
             </div>
 
             <!-- Install Command -->
             <div class="install-section">
                 <div class="install-command">
-                    <code>pip install syft-perm</code>
-                    <button class="copy-btn" data-copy="pip install syft-perm">Copy</button>
+                    <code>pip install syft-serve</code>
+                    <button class="copy-btn" data-copy="pip install syft-serve">Copy</button>
                 </div>
-                <p class="install-note">Works with your existing SyftBox setup • No configuration needed</p>
+                <p class="install-note">Works anywhere Python runs • Zero configuration • Isolated environments</p>
             </div>
         </div>
     </section>
 
-    <!-- Why SyftPerm -->
+    <!-- Why SyftServe -->
     <section class="why-syftperm">
         <div class="container">
             <h2>Why We Built This</h2>
-            <p class="section-subtitle">SyftBox's YAML-based permissions are powerful and flexible. SyftPerm makes them more accessible.</p>
+            <p class="section-subtitle">Managing multiple FastAPI servers shouldn't require DevOps expertise. SyftServe makes it trivial.</p>
             
             <div class="value-props">
                 <div class="value-prop">
-                    <h3>🤝 Works With SyftBox</h3>
-                    <p>No changes to SyftBox core. SyftPerm is a friendly Python layer on top of our existing syft.pub.yaml system.</p>
+                    <h3>🚀 Launch in Seconds</h3>
+                    <p>From Python function to running server in one line. No config files, no boilerplate, no complexity.</p>
                 </div>
                 <div class="value-prop">
-                    <h3>📚 Lowers Learning Curve</h3>
-                    <p>New team members and data scientists can start managing permissions immediately without learning YAML syntax.</p>
+                    <h3>📦 Isolated Environments</h3>
+                    <p>Each server gets its own virtual environment. Install pandas in one, tensorflow in another - no conflicts!</p>
                 </div>
                 <div class="value-prop">
-                    <h3>🚀 Speeds Development</h3>
-                    <p>Less time debugging YAML indentation, more time building privacy-preserving applications.</p>
+                    <h3>📝 Named Servers</h3>
+                    <p>Access servers by name, not port numbers. No more "which service is on port 8003 again?"</p>
                 </div>
             </div>
         </div>
@@ -104,14 +109,24 @@ file.grant_write_access("bob@company.com")
     <section class="video-demo">
         <div class="container">
             <h2>See It In Action</h2>
-            <p class="section-subtitle">Interactive widgets that make permission management a breeze</p>
+            <p class="section-subtitle">Watch how easy it is to create and manage multiple servers</p>
             
             <div class="demo-video-container">
-                <video controls autoplay loop muted playsinline>
-                    <source src="images/syft-perm-widgets-demo.webm" type="video/webm">
-                    <source src="images/syft-perm-widgets-demo.mp4" type="video/mp4">
-                    <img src="images/syft-perm-widgets-demo.gif" alt="SyftPerm Demo">
-                </video>
+                <!-- TODO: Add syft-serve demo video -->
+                <pre><code class="language-python"># Create multiple servers with different purposes
+data_api = ss.create(
+    name="data_api",
+    endpoints={"/analyze": analyze_data},
+    dependencies=["pandas", "numpy"]
+)
+
+ml_api = ss.create(
+    name="ml_api", 
+    endpoints={"/predict": predict},
+    dependencies=["tensorflow", "scikit-learn"]
+)
+
+# Each server runs in isolation with its own dependencies!</code></pre>
             </div>
         </div>
     </section>
@@ -120,161 +135,103 @@ file.grant_write_access("bob@company.com")
     <section class="api-preview">
         <div class="container">
             <h2>The Whole API</h2>
-            <p class="section-subtitle">Every single public method and property</p>
+            <p class="section-subtitle">Yes, this is literally everything</p>
             
             <div class="api-examples">
                 <div class="api-example">
-                    <h3>Opening Files & Folders</h3>
-                    <pre><code class="language-python"># Open files and folders
-file = syft_perm.open("data.csv")
-folder = syft_perm.open("project/")
-remote = syft_perm.open("syft://user@site/file.txt")</code></pre>
+                    <h3>Creating Servers</h3>
+                    <pre><code class="language-python"># Create a server
+server = ss.create(
+    name="my_api",
+    endpoints={"/hello": hello_func},
+    dependencies=["pandas>=2.0.0"]  # Optional
+)</code></pre>
                 </div>
                 
                 <div class="api-example">
-                    <h3>Granting Permissions</h3>
-                    <pre><code class="language-python"># Grant different permission levels
-file.grant_read_access("user@example.com")
-file.grant_create_access("user@example.com")
-file.grant_write_access("user@example.com")
-file.grant_admin_access("user@example.com")</code></pre>
+                    <h3>Accessing Servers</h3>
+                    <pre><code class="language-python"># View all servers
+ss.servers                    # Interactive table
+
+# Get specific server
+server = ss.servers["my_api"] # By name
+server = ss.servers[0]        # By index</code></pre>
                 </div>
                 
                 <div class="api-example">
-                    <h3>Checking Permissions</h3>
-                    <pre><code class="language-python"># Check if user has specific permissions
-file.has_read_access("user@example.com")
-file.has_create_access("user@example.com")
-file.has_write_access("user@example.com")
-file.has_admin_access("user@example.com")</code></pre>
+                    <h3>Server Properties</h3>
+                    <pre><code class="language-python"># Basic info
+server.name       # "my_api"
+server.url        # "http://localhost:8000"
+server.port       # 8000
+server.status     # "running"
+server.endpoints  # ["/hello"]
+server.uptime     # "2m 15s"</code></pre>
                 </div>
                 
                 <div class="api-example">
-                    <h3>Revoking Permissions</h3>
-                    <pre><code class="language-python"># Revoke specific permission levels
-file.revoke_read_access("user@example.com")
-file.revoke_create_access("user@example.com")
-file.revoke_write_access("user@example.com")
-file.revoke_admin_access("user@example.com")</code></pre>
+                    <h3>Viewing Logs</h3>
+                    <pre><code class="language-python"># Access logs easily
+server.stdout.tail(20)   # Last 20 lines
+server.stdout.head(10)   # First 10 lines
+server.stdout.lines()    # All lines as list
+server.stderr.tail(10)   # Error logs</code></pre>
                 </div>
                 
                 <div class="api-example">
-                    <h3>Understanding Permissions</h3>
-                    <pre><code class="language-python"># Get detailed explanation of permissions
-explanation = file.explain_permissions("user@example.com")
-print(explanation)</code></pre>
-                    <p style="margin-top: 12px; font-size: 0.9rem;">
-                        <a href="permission-reasons.html" style="color: var(--color-accent);">
-                            📖 Learn about all permission reasons →
-                        </a>
-                    </p>
+                    <h3>Environment Info</h3>
+                    <pre><code class="language-python"># Check installed packages
+server.env               # Pretty tree view
+server.env.list()        # List all packages</code></pre>
                 </div>
                 
                 <div class="api-example">
-                    <h3>File Operations</h3>
-                    <pre><code class="language-python"># Move file with permissions preserved
-new_file = file.move_file_and_its_permissions("new/path.csv")</code></pre>
+                    <h3>Managing Servers</h3>
+                    <pre><code class="language-python"># Replace existing server
+server = ss.create(
+    name="my_api",
+    endpoints={"/v2": new_func},
+    force=True  # Replaces existing
+)
+
+# Terminate specific server
+server.terminate()
+
+# Terminate all servers
+ss.terminate_all()</code></pre>
                 </div>
                 
                 <div class="api-example">
-                    <h3>Files Browser API</h3>
-                    <pre><code class="language-python"># Browse all files
-sp.files                                    # Interactive widget
-sp.files.all()                             # Get all files
-sp.files.get(limit=10, offset=0)          # Paginated results
-sp.files.search("query")                   # Search files
-sp.files.search(admin="user@example.com")  # Filter by admin
-sp.files.filter(folders=["path1", "path2"]) # Filter by folders
-sp.files[0:10]                            # Slice notation</code></pre>
+                    <h3>Multiple Endpoints</h3>
+                    <pre><code class="language-python"># Server with multiple endpoints
+api = ss.create(
+    name="full_api",
+    endpoints={
+        "/users": get_users,
+        "/posts": get_posts,
+        "/analytics": get_analytics
+    }
+)</code></pre>
                 </div>
                 
                 <div class="api-example">
-                    <h3>Interactive Widgets</h3>
-                    <pre><code class="language-python"># Display interactive widgets (Jupyter only)
-file.share  # Permission sharing widget
-file        # File editor with permissions view
-sp.files    # File browser widget</code></pre>
+                    <h3>Persistence</h3>
+                    <pre><code class="language-python"># Servers survive notebook restarts!
+# After restart:
+import syft_serve as ss
+ss.servers  # Your servers are still running</code></pre>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Gradient Feature Section -->
-    <section class="gradient-feature">
+    <!-- Get Started -->
+    <section class="get-started">
         <div class="container">
-            <h2>Designed for Our Workflow</h2>
-            <p class="section-subtitle">Built by the team, for the team, to make our daily SyftBox permission work smoother</p>
-            
-            <div class="feature-cards">
-                <div class="feature-card">
-                    <div class="feature-icon">🔐</div>
-                    <h3>Same Power, Better Experience</h3>
-                    <p>All the granular control we need, now accessible through Python methods we already know</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Demo-Friendly</h3>
-                    <p>Show stakeholders how permissions work without explaining YAML syntax</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Faster Debugging</h3>
-                    <p>Quickly see why permissions aren't working with explain_permissions()</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Real Example -->
-    <section class="real-example">
-        <div class="container">
-            <h2>Under the Hood</h2>
-            <p style="text-align: center; margin-bottom: var(--space-6);">SyftPerm respects our existing infrastructure - it just makes it easier to use:</p>
-            <pre><code class="language-python"># When you write this Python:
-project = syft_perm.open("research_data/")
-project.grant_read_access("reviewer@journal.org")
-project.grant_write_access("team@university.edu")
-
-# SyftPerm manages the YAML for you:
-"""
-rules:
-  - pattern: '**/*'
-    access:
-      read:
-        - 'reviewer@journal.org'
-        - 'team@university.edu'
-      write:
-        - 'team@university.edu'
-"""
-
-# Full compatibility with manual YAML edits!</code></pre>
-        </div>
-    </section>
-
-    <!-- Tutorial CTA Section -->
-    <section class="tutorial-cta gradient-feature">
-        <div class="container">
-            <h2>Take the Tutorial</h2>
-            
+            <h2>Ready to Simplify Your Server Management?</h2>
             <div class="cta-buttons">
-                <a href="quickstart.html" class="btn btn-primary btn-large">1 Minute Quickstart</a>
-                <a href="https://github.com/OpenMined/syft-perm/blob/main/syft-perm-10-minute-tutorial.ipynb" class="btn btn-primary btn-large">10 Minute Tutorial</a>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Newsletter Section -->
-    <section class="newsletter-section">
-        <div class="container">
-            <div class="newsletter-content">
-                <h2>Let's Discuss</h2>
-                <p>Questions? Ideas? Let's talk about how SyftPerm can help our team</p>
-                
-                <!-- HubSpot Form -->
-                <div id="hubspot-form-container"></div>
+                <a href="quickstart.html" class="btn btn-primary btn-large">Get Started</a>
+                <a href="https://github.com/OpenMined/syft-serve" class="btn btn-secondary btn-large">View on GitHub</a>
             </div>
         </div>
     </section>
@@ -282,36 +239,10 @@ rules:
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>Built with ❤️ by <a href="https://openmined.org">OpenMined</a></p>
+            <p>&copy; 2024 OpenMined. Part of the <a href="https://syftbox.org">SyftBox</a> ecosystem.</p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
-    
-    <!-- HubSpot Forms Script -->
-    <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
-    <script>
-        hbspt.forms.create({
-            region: "na1",
-            portalId: "6487402",
-            formId: "b7a08fdc-0fb5-4938-99e8-4a09e7bbc09e",
-            target: "#hubspot-form-container",
-            css: "",
-            cssClass: "newsletter-hubspot-form",
-            onFormReady: function(form) {
-                // Style the form to match our design
-                const formElement = form[0] || form;
-                formElement.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(el => {
-                    el.classList.add('hubspot-input');
-                });
-                formElement.querySelectorAll('input[type="submit"]').forEach(el => {
-                    el.classList.add('hubspot-submit');
-                });
-                formElement.querySelectorAll('input[type="checkbox"]').forEach(el => {
-                    el.parentElement.classList.add('hubspot-checkbox-wrapper');
-                });
-            }
-        });
-    </script>
 </body>
 </html>

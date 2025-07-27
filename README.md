@@ -3,12 +3,9 @@
 [![PyPI](https://img.shields.io/pypi/v/syft-serve.svg)](https://pypi.org/project/syft-serve/)
 [![Python](https://img.shields.io/pypi/pyversions/syft-serve.svg)](https://pypi.org/project/syft-serve/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Security](https://github.com/OpenMined/syft-serve/actions/workflows/security.yml/badge.svg)](https://github.com/OpenMined/syft-serve/actions/workflows/security.yml)
-[![Tests](https://github.com/OpenMined/syft-serve/actions/workflows/tests.yml/badge.svg)](https://github.com/OpenMined/syft-serve/actions/workflows/tests.yml)
 [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://openmined.github.io/syft-serve/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Ruff](https://img.shields.io/badge/linter-ruff-FCC21B.svg)](https://github.com/astral-sh/ruff)
-[![Downloads](https://static.pepy.tech/badge/syft-serve)](https://pepy.tech/project/syft-serve)
 [![OpenMined](https://img.shields.io/badge/by-OpenMined-blue.svg)](https://github.com/OpenMined)
 
 **Self-hosting should be effortless**

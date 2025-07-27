@@ -26,22 +26,22 @@
         </nav>
     </header>
 
-    <!-- Hero Section with Swoop -->
-    <div class="hero-swoop">
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,0 C480,100 960,100 1440,0 L1440,100 L0,100 Z" fill="#f8f9fa"></path>
-        </svg>
-    </div>
-    <section class="hero">
-        <div class="container">
-            <h1 class="hero-title">FastAPI Servers Made Simpler</h1>
-            <p class="hero-subtitle">Launch and manage stateless servers with just two functions</p>
+    <section class="hero" style="min-height: 100vh; display: flex; align-items: center; padding-top: 0; margin-top: -4rem;">
+        <div class="container" style="text-align: center; max-width: 1200px; margin: 0 auto;">
+            <!-- Main Title -->
+            <h1 style="font-size: 4rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem; letter-spacing: -0.02em;">FastAPI Servers Made Simpler</h1>
+            <p style="font-size: 1.3rem; color: #718096; margin-bottom: 4rem; font-weight: 400;">Launch and manage stateless servers with just two functions</p>
             
-            <!-- Problem/Solution Split -->
-            <div class="code-comparison">
-                <div class="code-before">
-                    <div class="code-label">🚀 CREATE servers instantly</div>
-                    <pre><code class="language-python"># Define your endpoint
+            <!-- Two-Panel Code Comparison -->
+            <div style="position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; max-width: 1000px; margin-left: auto; margin-right: auto;">
+                <!-- CREATE Panel -->
+                <div>
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🚀</span>
+                        <h3 style="font-size: 1.3rem; font-weight: 600; color: #1a202c; margin: 0;">CREATE servers instantly</h3>
+                    </div>
+                    <div style="background: #2d3748; border-radius: 12px; padding: 1.5rem;">
+                        <pre style="margin: 0; color: #e2e8f0; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; text-align: left;"><code class="language-python"># Define your endpoint
 def hello():
     return {"message": "Hello World!"}
 
@@ -53,13 +53,17 @@ server = syft_serve.create(
 
 # Your server is running at http://localhost:8000
 print(f"Server ready at {server.url}")</code></pre>
+                    </div>
                 </div>
-                
-                <div class="code-arrow">+</div>
-                
-                <div class="code-after">
-                    <div class="code-label">🎯 MANAGE servers simply</div>
-                    <pre><code class="language-python"># View all your servers
+
+                <!-- MANAGE Panel -->
+                <div>
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🎯</span>
+                        <h3 style="font-size: 1.3rem; font-weight: 600; color: #1a202c; margin: 0;">MANAGE servers simply</h3>
+                    </div>
+                    <div style="background: #2d3748; border-radius: 12px; padding: 1.5rem;">
+                        <pre style="margin: 0; color: #e2e8f0; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; text-align: left;"><code class="language-python"># View all your servers
 ss.servers  # Nice table with status, endpoints, uptime
 
 # Access by name (no port confusion!)
@@ -68,37 +72,43 @@ my_server.stdout.tail(20)  # View recent logs
 
 # Clean shutdown when done
 ss.terminate_all()  # Properly cleans up everything</code></pre>
+                    </div>
+                </div>
+
+                <!-- Plus Sign -->
+                <div style="position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); z-index: 10;">
+                    <div style="background: #48bb78; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);">+</div>
                 </div>
             </div>
 
             <!-- Install Command -->
-            <div class="install-section">
-                <div class="install-command">
-                    <code>pip install syft-serve</code>
+            <div class="install-section" style="margin: 2rem 0;">
+                <div class="install-command" style="width: 400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem 1.5rem;">
+                    <code style="font-size: 1rem;">pip install syft-serve</code>
                     <button class="copy-btn" data-copy="pip install syft-serve">Copy</button>
                 </div>
-                <p class="install-note">Works anywhere Python runs • Zero configuration • Isolated environments</p>
+                <p style="font-size: 0.9rem; color: #a0aec0; margin-top: 1rem; font-weight: 400;">Works anywhere Python runs • Zero configuration • Isolated environments</p>
             </div>
         </div>
     </section>
 
-    <!-- Why SyftServe -->
+    <!-- Why We Built This -->
     <section class="why-syftperm">
         <div class="container">
             <h2>Why We Built This</h2>
-            <p class="section-subtitle">Managing multiple FastAPI servers shouldn't require DevOps expertise. SyftServe makes it trivial.</p>
+            <p class="section-subtitle">server management should be effortless</p>
             
             <div class="value-props">
                 <div class="value-prop">
-                    <h3>🚀 Launch in Seconds</h3>
-                    <p>From Python function to running server in one line. No config files, no boilerplate, no complexity.</p>
+                    <h3>🚀 Instant Servers</h3>
+                    <p>From Python function to running API in one line. No boilerplate, no config files, no complexity.</p>
                 </div>
                 <div class="value-prop">
                     <h3>📦 Isolated Environments</h3>
                     <p>Each server gets its own virtual environment. Install pandas in one, tensorflow in another - no conflicts!</p>
                 </div>
                 <div class="value-prop">
-                    <h3>📝 Named Servers</h3>
+                    <h3>📝 Named Access</h3>
                     <p>Access servers by name, not port numbers. No more "which service is on port 8003 again?"</p>
                 </div>
             </div>
@@ -109,10 +119,9 @@ ss.terminate_all()  # Properly cleans up everything</code></pre>
     <section class="video-demo">
         <div class="container">
             <h2>See It In Action</h2>
-            <p class="section-subtitle">Watch how easy it is to create and manage multiple servers</p>
+            <p class="section-subtitle">watch how easy it is to create and manage multiple servers</p>
             
             <div class="demo-video-container">
-                <!-- TODO: Add syft-serve demo video -->
                 <pre><code class="language-python"># Create multiple servers with different purposes
 data_api = ss.create(
     name="data_api",
@@ -126,123 +135,295 @@ ml_api = ss.create(
     dependencies=["tensorflow", "scikit-learn"]
 )
 
-# Each server runs in isolation with its own dependencies!</code></pre>
+# Each server runs in isolation with its own dependencies!
+ss.servers  # View all running servers in a nice table</code></pre>
             </div>
         </div>
     </section>
 
-    <!-- Complete API -->
-    <section class="api-preview">
-        <div class="container">
-            <h2>The Whole API</h2>
-            <p class="section-subtitle">Yes, this is literally everything</p>
-            
-            <div class="api-examples">
-                <div class="api-example">
-                    <h3>Creating Servers</h3>
-                    <pre><code class="language-python"># Create a server
+    <!-- Dark Section Wrapper - Contains all dark sections with roaming spotlights -->
+    <div class="dark-section-wrapper">
+        <!-- Under the Hood -->
+        <section class="under-the-hood">
+            <div class="container">
+                <h2>Under the Hood</h2>
+                <p class="section-subtitle">Here's what syft-serve creates when you launch servers</p>
+                
+                <div class="code-showcase">
+                    <pre><code class="language-python"># Each server gets its own isolated environment:
+
+~/.syft_serve/servers/
+  ├── my_api/
+  │   ├── venv/                    # Isolated Python environment
+  │   ├── logs/                    # Server logs (stdout/stderr)
+  │   ├── app.py                   # Generated FastAPI application
+  │   └── pid.txt                  # Process ID for management
+  │
+  └── data_api/
+      ├── venv/                    # Separate environment
+      ├── logs/                    # Separate logs
+      └── ...
+
+# Plus automatic port management, process tracking, and clean shutdown</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Complete API -->
+        <section class="api-preview-dark">
+            <div class="container">
+                <h2>The Complete API</h2>
+                <p class="section-subtitle">effortless creation and management of fastapi servers</p>
+                
+                <style>
+                    .api-examples {
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 2rem;
+                    }
+                    .api-example {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    .api-example pre {
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+                    }
+                </style>
+                
+                <div class="api-examples">
+                    <div class="api-example">
+                        <h3>Creating Servers</h3>
+                        <pre><code class="language-python">import syft_serve as ss
+
+# Simple server
 server = ss.create(
     name="my_api",
-    endpoints={"/hello": hello_func},
-    dependencies=["pandas>=2.0.0"]  # Optional
+    endpoints={"/hello": hello_func}
 )</code></pre>
-                </div>
-                
-                <div class="api-example">
-                    <h3>Accessing Servers</h3>
-                    <pre><code class="language-python"># View all servers
-ss.servers                    # Interactive table
+                    </div>
+                    
+                    <div class="api-example">
+                        <h3>Server Management</h3>
+                        <pre><code class="language-python"># View all servers
+ss.servers
 
-# Get specific server
-server = ss.servers["my_api"] # By name
-server = ss.servers[0]        # By index</code></pre>
-                </div>
-                
-                <div class="api-example">
-                    <h3>Server Properties</h3>
-                    <pre><code class="language-python"># Basic info
-server.name       # "my_api"
-server.url        # "http://localhost:8000"
-server.port       # 8000
-server.status     # "running"
-server.endpoints  # ["/hello"]
-server.uptime     # "2m 15s"</code></pre>
-                </div>
-                
-                <div class="api-example">
-                    <h3>Viewing Logs</h3>
-                    <pre><code class="language-python"># Access logs easily
-server.stdout.tail(20)   # Last 20 lines
-server.stdout.head(10)   # First 10 lines
-server.stdout.lines()    # All lines as list
-server.stderr.tail(10)   # Error logs</code></pre>
-                </div>
-                
-                <div class="api-example">
-                    <h3>Environment Info</h3>
-                    <pre><code class="language-python"># Check installed packages
-server.env               # Pretty tree view
-server.env.list()        # List all packages</code></pre>
-                </div>
-                
-                <div class="api-example">
-                    <h3>Managing Servers</h3>
-                    <pre><code class="language-python"># Replace existing server
-server = ss.create(
-    name="my_api",
-    endpoints={"/v2": new_func},
-    force=True  # Replaces existing
-)
-
-# Terminate specific server
+# Access by name
+server = ss.servers["my_api"]
+print(server.url)  # http://localhost:8000</code></pre>
+                    </div>
+                    
+                    <div class="api-example">
+                        <h3>Viewing Logs</h3>
+                        <pre><code class="language-python"># Easy log access
+server.stdout.tail(20)    # Last 20 lines
+server.stderr.head(10)    # First 10 error lines
+server.uptime             # "2m 15s"</code></pre>
+                    </div>
+                    
+                    <div class="api-example">
+                        <h3>Clean Shutdown</h3>
+                        <pre><code class="language-python"># Terminate one server
 server.terminate()
 
 # Terminate all servers
 ss.terminate_all()</code></pre>
-                </div>
-                
-                <div class="api-example">
-                    <h3>Multiple Endpoints</h3>
-                    <pre><code class="language-python"># Server with multiple endpoints
-api = ss.create(
-    name="full_api",
-    endpoints={
-        "/users": get_users,
-        "/posts": get_posts,
-        "/analytics": get_analytics
-    }
-)</code></pre>
-                </div>
-                
-                <div class="api-example">
-                    <h3>Persistence</h3>
-                    <pre><code class="language-python"># Servers survive notebook restarts!
-# After restart:
-import syft_serve as ss
-ss.servers  # Your servers are still running</code></pre>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Get Started -->
-    <section class="get-started">
-        <div class="container">
-            <h2>Ready to Simplify Your Server Management?</h2>
-            <div class="cta-buttons">
-                <a href="quickstart.html" class="btn btn-primary btn-large">Get Started</a>
-                <a href="https://github.com/OpenMined/syft-serve" class="btn btn-secondary btn-large">View on GitHub</a>
+        <!-- Try It Out - Apple Style -->
+        <section class="try-it-out">
+            <div class="container">
+                <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                    <h2 style="font-size: 3rem; font-weight: 600; color: white; margin-bottom: 2rem; letter-spacing: -0.02em;">try it out</h2>
+                    <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 3rem;">experience fastapi servers made simple</p>
+                    <a href="quickstart.html" 
+                       style="display: inline-block; background: white; color: #0a0a0a; padding: 1rem 2rem; border-radius: 980px; text-decoration: none; font-size: 1.1rem; font-weight: 500; transition: all 0.2s; border: none;" 
+                       onmouseover="this.style.background='rgba(255,255,255,0.9)'" 
+                       onmouseout="this.style.background='white'">quick start guide</a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 OpenMined. Part of the <a href="https://syftbox.org">SyftBox</a> ecosystem.</p>
-        </div>
-    </footer>
+        <!-- Newsletter Section -->
+        <section class="newsletter-section-dark">
+            <div class="container">
+                <div class="newsletter-content">
+                    <h2>Stay Updated</h2>
+                    <p>Get notified about developer tools like syft-serve</p>
+                    
+                    <!-- HubSpot Form -->
+                    <div id="hubspot-form-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer-dark">
+            <div class="container">
+                <p>&copy; 2024 OpenMined. Part of the <a href="https://syftbox.org">SyftBox</a> ecosystem.</p>
+            </div>
+        </footer>
+    </div>
 
     <script src="js/main.js"></script>
+    
+    <!-- HubSpot Forms Script -->
+    <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+    <script>
+        hbspt.forms.create({
+            region: "na1",
+            portalId: "6487402",
+            formId: "b7a08fdc-0fb5-4938-99e8-4a09e7bbc09e",
+            target: "#hubspot-form-container",
+            css: "",
+            cssClass: "newsletter-hubspot-form",
+            onFormReady: function(form) {
+                // Function to apply all styles
+                function applyFormStyles() {
+                    const formElement = document.querySelector('#hubspot-form-container form');
+                    if (!formElement) return;
+                    
+                    // Hide all labels (we'll use placeholders)
+                    formElement.querySelectorAll('label').forEach(label => {
+                        if (!label.querySelector('input[type="checkbox"]')) {
+                            label.style.display = 'none';
+                        }
+                    });
+                    
+                    // Fix the name field layout by finding the actual field groups
+                    const fieldGroups = formElement.querySelectorAll('.hs-form-field');
+                    let firstNameGroup = null;
+                    let lastNameGroup = null;
+                    
+                    fieldGroups.forEach(group => {
+                        if (group.querySelector('input[name="firstname"]')) firstNameGroup = group;
+                        if (group.querySelector('input[name="lastname"]')) lastNameGroup = group;
+                    });
+                    
+                    if (firstNameGroup && lastNameGroup) {
+                        // Create a container for both name fields
+                        const nameContainer = document.createElement('div');
+                        nameContainer.style.cssText = 'display: flex; gap: 1rem; margin-bottom: 0.5rem;';
+                        
+                        // Insert the container
+                        firstNameGroup.parentNode.insertBefore(nameContainer, firstNameGroup);
+                        
+                        // Move both field groups into the container
+                        nameContainer.appendChild(firstNameGroup);
+                        nameContainer.appendChild(lastNameGroup);
+                        
+                        // Style the field groups
+                        [firstNameGroup, lastNameGroup].forEach(group => {
+                            group.style.cssText = 'flex: 1; margin: 0;';
+                        });
+                    }
+                    
+                    // Style all inputs with more specific selectors
+                    formElement.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(el => {
+                        el.style.cssText = `
+                            width: 100% !important;
+                            padding: 12px 16px !important;
+                            font-size: 1rem !important;
+                            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                            border-radius: 12px !important;
+                            background: rgba(255, 255, 255, 0.05) !important;
+                            color: white !important;
+                            box-sizing: border-box !important;
+                            margin: 0 !important;
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+                        `;
+                        
+                        // Add placeholders
+                        if (el.name === 'firstname') el.placeholder = 'First name';
+                        if (el.name === 'lastname') el.placeholder = 'Last name';
+                        if (el.name === 'email') el.placeholder = 'Email address';
+                    });
+                    
+                    // Style submit button
+                    formElement.querySelectorAll('input[type="submit"]').forEach(el => {
+                        el.style.cssText = `
+                            background: white !important;
+                            color: #0a0a0a !important;
+                            border: none !important;
+                            padding: 12px 32px !important;
+                            border-radius: 980px !important;
+                            font-size: 1rem !important;
+                            font-weight: 500 !important;
+                            cursor: pointer !important;
+                            width: auto !important;
+                            margin-top: 1rem !important;
+                        `;
+                    });
+                    
+                    // Style form groups to remove default margins
+                    formElement.querySelectorAll('.hs-form-field').forEach(field => {
+                        field.style.marginBottom = '0';
+                    });
+                    
+                    // Fix email field group specifically
+                    const emailGroup = formElement.querySelector('.hs_email');
+                    if (emailGroup) {
+                        emailGroup.style.marginBottom = '0.5rem';
+                        emailGroup.style.marginTop = '0';
+                    }
+                    
+                    // Fix ALL text elements
+                    formElement.querySelectorAll('.hs-richtext p, .hs-richtext span, .hs-richtext em, .hs-richtext i').forEach(el => {
+                        el.style.cssText = `
+                            color: rgba(255, 255, 255, 0.6) !important;
+                            font-style: normal !important;
+                            font-weight: normal !important;
+                            font-size: 0.9rem !important;
+                            line-height: 1.6 !important;
+                            margin: 0.5rem 0 !important;
+                        `;
+                    });
+                    
+                    // Style legal text
+                    formElement.querySelectorAll('.legal-consent-container').forEach(el => {
+                        el.style.cssText = `
+                            margin-top: 1rem !important;
+                            color: rgba(255, 255, 255, 0.6) !important;
+                            font-size: 0.9rem !important;
+                        `;
+                    });
+                    
+                    // Fix checkboxes and their labels
+                    formElement.querySelectorAll('input[type="checkbox"]').forEach(el => {
+                        el.style.cssText = `
+                            margin-right: 8px !important;
+                            width: 16px !important;
+                            height: 16px !important;
+                            vertical-align: middle !important;
+                        `;
+                        
+                        // Style the label that contains the checkbox
+                        const label = el.closest('label');
+                        if (label) {
+                            label.style.cssText = `
+                                display: flex !important;
+                                align-items: flex-start !important;
+                                color: rgba(255, 255, 255, 0.6) !important;
+                                font-size: 0.9rem !important;
+                                line-height: 1.4 !important;
+                            `;
+                        }
+                    });
+                }
+                
+                // Apply styles immediately
+                applyFormStyles();
+                
+                // Apply again after a delay to catch any async rendering
+                setTimeout(applyFormStyles, 100);
+                setTimeout(applyFormStyles, 500);
+                setTimeout(applyFormStyles, 1000);
+            }
+        });
+    </script>
 </body>
 </html>

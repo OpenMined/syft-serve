@@ -120,7 +120,11 @@ class ServerHandle:
                     # Check if main process is still alive
                     if process.is_running():
                         # Force kill the entire process group
-                        os.killpg(pgid, signal.SIGKILL)
+                        if hasattr(signal, "SIGKILL"):
+                            os.killpg(pgid, signal.SIGKILL)
+                        else:
+                            # Windows doesn't have SIGKILL
+                            self._terminate_process_tree(process)
 
                         # Wait a bit more for SIGKILL to take effect
                         kill_timeout = 2.0

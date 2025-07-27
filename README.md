@@ -55,9 +55,11 @@ server = ss.create("my_api", {"/predict": my_function})
 
 ## See It In Action
 
-<p align="center">
-  <img src="https://github.com/OpenMined/syft-serve/blob/main/docs/syft_serve_demo_rounded.gif?raw=true" alt="syft-serve Demo" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" />
-</p>
+<div align="center">
+  <a href="https://github.com/OpenMined/syft-serve">
+    <img src="https://github.com/OpenMined/syft-serve/blob/main/docs/syft_serve_demo_corners.gif?raw=true" alt="syft-serve Demo" width="700" />
+  </a>
+</div>
 
 ## Documentation
 

@@ -4,10 +4,10 @@ build-backend = "hatchling.build"
 
 [project]
 name = "syft-serve"
-version = "0.2.5"
+version = "0.2.7"
 description = "Generic FastAPI server process management and deduplication"
 readme = "README.md"
-license = "Apache-2.0"
+license = {text = "Apache-2.0"}
 requires-python = ">=3.9"
 authors = [
     { name = "OpenMined", email = "info@openmined.org" },

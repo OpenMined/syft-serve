@@ -21,7 +21,7 @@ class Environment:
         # Check if server directory exists
         if not self.server_dir.exists():
             return ""
-            
+
         # Check if we have a virtual environment
         venv_path = self.server_dir / ".venv"
         if venv_path.exists():

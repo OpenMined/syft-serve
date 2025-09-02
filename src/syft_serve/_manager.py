@@ -253,8 +253,21 @@ class ServerManager:
             "httpx",  # for health checks
         ]
 
-        # Combine default and custom dependencies
-        all_deps = default_deps + (dependencies or [])
+        # Separate local paths from pip packages
+        pip_deps = []
+        local_paths = []
+        
+        for dep in (dependencies or []):
+            # Check if it's a path (absolute or relative)
+            if (dep.startswith('/') or dep.startswith('./') or dep.startswith('../') or 
+                ':' in dep and len(dep) > 1 and dep[1] == ':' or  # Windows path like C:
+                Path(dep).exists()):
+                local_paths.append(dep)
+            else:
+                pip_deps.append(dep)
+        
+        # Only include pip packages in dependencies, not local paths
+        all_deps = default_deps + pip_deps
 
         # Create pyproject.toml
         pyproject_path = server_dir / "pyproject.toml"
@@ -288,6 +301,11 @@ package = false
         if result.returncode != 0:
             raise ServerStartupError(f"Failed to install dependencies for {name}: {result.stderr}")
 
+        # Store local paths in a file so the app can read them
+        if local_paths:
+            local_paths_file = server_dir / "local_paths.json"
+            local_paths_file.write_text(json.dumps(local_paths))
+        
         return server_dir
 
     def _start_server_from_endpoints(

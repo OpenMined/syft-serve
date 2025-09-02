@@ -2,7 +2,8 @@
 Simplified high-level API for syft-serve
 """
 
-from typing import Dict, Optional, List, Callable
+from typing import Dict, Optional, List, Callable, Union
+from pathlib import Path
 
 from ._manager import ServerManager
 from ._server import Server
@@ -39,7 +40,7 @@ def create(
     Args:
         name: Unique server name (required)
         endpoints: Dictionary mapping paths to handler functions
-        dependencies: List of Python packages to install
+        dependencies: List of Python packages to install or local paths to add to sys.path
         force: If True, destroy any existing server with the same name
         expiration_seconds: Server auto-expires after this many seconds (default: 86400 = 24 hours, -1 = never)
 
@@ -64,6 +65,17 @@ def create(
             name="permanent_api",
             endpoints={"/hello": hello_func},
             expiration_seconds=-1
+        )
+        
+        # Server with local path dependency
+        server = ss.create(
+            name="dev_api",
+            endpoints={"/": my_func},
+            dependencies=[
+                "/path/to/my/local/project",  # Automatically detected as local path
+                "pandas",  # Regular pip package
+                "numpy"
+            ]
         )
     """
     manager = _get_manager()

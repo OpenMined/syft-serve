@@ -168,6 +168,17 @@ import time
 import os
 import threading
 import atexit
+import sys
+import json
+from pathlib import Path
+
+# Load local paths if they exist
+local_paths_file = Path(__file__).parent / "local_paths.json"
+if local_paths_file.exists():
+    local_paths = json.loads(local_paths_file.read_text())
+    for path in local_paths:
+        if path not in sys.path:
+            sys.path.insert(0, path)
 
 # Create app without automatic docs to avoid conflicts
 app = FastAPI(

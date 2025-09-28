@@ -31,7 +31,7 @@ Example:
 # Import only what we need for the public API
 from ._api import servers, create, terminate_all, ServerAlreadyExistsError, ServerNotFoundError
 
-__version__ = "0.2.8"
+__version__ = "0.2.9"
 
 __all__ = [
     "servers",

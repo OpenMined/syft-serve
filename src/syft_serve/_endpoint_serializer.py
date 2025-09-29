@@ -34,6 +34,10 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
                     # Only capture simple types that can be serialized
                     if isinstance(var_value, (str, int, float, bool, list, dict, type(None))):
                         closure_vars[var_name] = var_value
+                    # Skip modules and other complex objects
+                    elif hasattr(var_value, "__file__") or str(type(var_value)) == "<class 'module'>":
+                        # This is a module, skip it
+                        continue
                     elif hasattr(var_value, "__dict__"):
                         # Try to capture simple object attributes
                         simple_attrs = {}
@@ -95,10 +99,8 @@ def serialize_endpoint_function(func: Callable, func_name: str) -> str:
                 # Add variable definitions after the function signature
                 var_lines = []
                 for var_name, var_value in closure_vars.items():
-                    if isinstance(var_value, str):
-                        var_lines.append(f"    {var_name} = {repr(var_value)}")
-                    else:
-                        var_lines.append(f"    {var_name} = {var_value}")
+                    # Use repr() for safe serialization of all types
+                    var_lines.append(f"    {var_name} = {repr(var_value)}")
 
                 # Insert after the def line
                 dedented_lines = [dedented_lines[0]] + var_lines + dedented_lines[1:]

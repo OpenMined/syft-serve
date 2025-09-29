@@ -24,7 +24,8 @@ class ServerCollection:
         return self._manager_func()
 
     def _get_servers(self) -> List[Server]:
-        """Get all servers as Server objects"""
+        """Get all servers as Server objects - always fresh discovery"""
+        # Always call list_servers which now does fresh discovery
         handles = self._manager.list_servers()
         return [Server(handle) for handle in handles]
 

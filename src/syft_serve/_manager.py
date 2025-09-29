@@ -29,16 +29,103 @@ class ServerManager:
     def __init__(self) -> None:
         self._config = get_config()
         self._servers: Dict[str, ServerHandle] = {}  # name -> ServerHandle
-        self._load_persistent_servers()
-
+        # Don't load persistent servers on init - discover on demand instead
+        
         # Create base directory for isolated server environments
         self._envs_dir = self._config.log_dir / "server_envs"
         self._envs_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Clean up dead environments on startup
+        self._cleanup_dead_environments()
 
     def list_servers(self) -> List[ServerHandle]:
-        """List all managed servers"""
-        self._cleanup_dead_servers()
-        return list(self._servers.values())
+        """List all managed servers - always discovers from scratch"""
+        # First discover all running syft-serve processes
+        from ._process_discovery import discover_syft_serve_processes
+        import requests
+        
+        discovered_servers = []
+        
+        # Discover all running servers
+        processes = discover_syft_serve_processes()
+        
+        for proc_info in processes:
+            if proc_info.get("verified", False):
+                # Additional health check
+                try:
+                    # Check if process is actually healthy
+                    proc = psutil.Process(proc_info["pid"])
+                    status = proc.status()
+                    
+                    # Skip zombie or dead processes
+                    if status in [psutil.STATUS_ZOMBIE, psutil.STATUS_DEAD]:
+                        continue
+                        
+                    # Try to verify it's responsive
+                    if proc_info.get("url"):
+                        response = requests.get(f"{proc_info['url']}/health", timeout=0.5)
+                        if response.status_code != 200:
+                            continue
+                except:
+                    # Skip unhealthy processes
+                    continue
+                port = proc_info["port"]
+                pid = proc_info["pid"]
+                
+                # Try to get more info from the server
+                try:
+                    # Get server info
+                    info_resp = requests.get(f"http://localhost:{port}/syft/info", timeout=0.5)
+                    if info_resp.status_code == 200:
+                        info = info_resp.json()
+                        name = info.get("name", f"unknown_{port}")
+                        endpoints = info.get("endpoints", ["/"])
+                    else:
+                        # Fallback name from cmdline
+                        cmdline = proc_info["cmdline"]
+                        # Extract app name from uvicorn command
+                        import re
+                        match = re.search(r'(\w+)_app:app', cmdline)
+                        name = match.group(1) if match else f"server_{port}"
+                        endpoints = ["/"]
+                    
+                    # Create ServerHandle
+                    server = ServerHandle(
+                        port=port,
+                        pid=pid,
+                        endpoints=endpoints,
+                        name=name,
+                        app_module=None
+                    )
+                    discovered_servers.append(server)
+                    
+                    # Update our registry with discovered server
+                    self._servers[name] = server
+                    
+                except Exception:
+                    # If we can't get info, still create a basic handle
+                    name = f"server_{port}"
+                    server = ServerHandle(
+                        port=port,
+                        pid=pid,
+                        endpoints=["/"],
+                        name=name,
+                        app_module=None
+                    )
+                    discovered_servers.append(server)
+                    self._servers[name] = server
+        
+        # Also check our persistence file for any additional info
+        self._load_persistent_servers()
+        
+        # Merge with any servers we already know about
+        for name, server in self._servers.items():
+            if not any(s.name == name for s in discovered_servers):
+                # Check if this server is still alive
+                if server.status == "running":
+                    discovered_servers.append(server)
+        
+        return discovered_servers
 
     def create_server(
         self,
@@ -123,28 +210,44 @@ class ServerManager:
                 raise ServerNotFoundError("No servers are currently registered")
         return self._servers[name]
 
-    def terminate_server(self, name: str, force: bool = False) -> None:
+    def terminate_server(self, name: str, force: bool = True) -> None:
         """Terminate specific server by name
 
         Args:
             name: Server name
-            force: If True, use force_terminate if normal termination fails
+            force: If True, use force_terminate if normal termination fails (default: True)
         """
         server = self.get_server(name)
 
         try:
-            server.terminate()
-        except Exception:
+            # Try normal termination first
+            server.terminate(timeout=5.0)
+            
+            # Verify it's dead
+            time.sleep(0.5)
+            if server.status == "running":
+                if force:
+                    print(f"Normal termination failed for {name}, using force terminate...")
+                    server.force_terminate()
+                else:
+                    raise Exception(f"Failed to terminate server {name}")
+        except Exception as e:
             if force:
-                print(f"Normal termination failed for {name}, using force terminate...")
-                server.force_terminate()
+                print(f"Error during termination: {e}. Using force terminate...")
+                try:
+                    server.force_terminate()
+                except:
+                    print(f"Warning: Force terminate also failed for {name}")
             else:
                 raise
 
         # Clean up environment
         server_dir = self._envs_dir / name
         if server_dir.exists():
-            shutil.rmtree(server_dir)
+            try:
+                shutil.rmtree(server_dir)
+            except:
+                print(f"Warning: Failed to clean up environment directory for {name}")
 
         # Remove from registry
         del self._servers[name]
@@ -438,7 +541,9 @@ package = false
             print(f"Warning: Failed to load persistent servers: {e}")
 
     def _save_persistent_servers(self) -> None:
-        """Save server registry to persistence file"""
+        """Save server registry to persistence file atomically"""
+        import tempfile
+        
         try:
             data = {
                 "servers": [
@@ -454,8 +559,43 @@ package = false
                 ]
             }
 
-            with open(self._config.persistence_file, "w") as f:
-                json.dump(data, f, indent=2)
+            # Write to temp file first
+            temp_fd, temp_path = tempfile.mkstemp(dir=self._config.persistence_file.parent, text=True)
+            try:
+                with open(temp_fd, 'w') as f:
+                    json.dump(data, f, indent=2)
+                
+                # Atomic rename
+                Path(temp_path).replace(self._config.persistence_file)
+            except:
+                # Clean up temp file on error
+                try:
+                    os.unlink(temp_path)
+                except:
+                    pass
+                raise
 
         except Exception as e:
             print(f"Warning: Failed to save persistent servers: {e}")
+
+    def _cleanup_dead_environments(self) -> None:
+        """Clean up environments for dead servers"""
+        import os
+        
+        if not self._envs_dir.exists():
+            return
+            
+        for env_path in self._envs_dir.iterdir():
+            if env_path.is_dir():
+                pid_file = env_path / "server.pid"
+                if pid_file.exists():
+                    try:
+                        pid = int(pid_file.read_text())
+                        # Check if process exists
+                        os.kill(pid, 0)
+                    except (OSError, ValueError):
+                        # Process doesn't exist, clean up
+                        try:
+                            shutil.rmtree(env_path)
+                        except:
+                            pass

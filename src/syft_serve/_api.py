@@ -31,7 +31,7 @@ def create(
     name: str,
     endpoints: Dict[str, Callable],
     dependencies: Optional[List[str]] = None,
-    force: bool = False,
+    force: bool = True,  # Default to True for better UX
     expiration_seconds: int = 86400,  # 24 hours default
 ) -> Server:
     """
@@ -89,9 +89,14 @@ def create(
     return Server(handle)
 
 
-def terminate_all() -> None:
-    """Terminate all servers"""
-    _get_manager().terminate_all()
+def terminate_all() -> int:
+    """Terminate all servers
+    
+    Returns:
+        Number of servers terminated
+    """
+    results = _get_manager().terminate_all()
+    return results.get("tracked_terminated", 0) + results.get("orphaned_terminated", 0)
 
 
 __all__ = [

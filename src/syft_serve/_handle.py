@@ -32,6 +32,7 @@ class ServerHandle:
         self.created_at = time.time()
         self._process: Optional[psutil.Process] = None
         self._config = get_config()
+        self.host = "localhost"  # Add host property for health checker
 
     @property
     def status(self) -> str:

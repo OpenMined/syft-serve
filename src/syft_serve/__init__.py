@@ -31,7 +31,7 @@ Example:
 # Import only what we need for the public API
 from ._api import servers, create, terminate_all, ServerAlreadyExistsError, ServerNotFoundError
 
-__version__ = "0.2.10"
+__version__ = "0.3.0"
 
 # Clean up orphaned processes on module import
 import psutil

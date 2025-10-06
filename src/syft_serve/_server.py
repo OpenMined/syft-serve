@@ -18,6 +18,7 @@ class Server:
     def __init__(self, handle: ServerHandle):
         self._handle = handle
         self._start_time = datetime.now()
+        self.host = getattr(handle, 'host', 'localhost')  # Ensure host is available
 
     # Basic properties
     @property
@@ -37,8 +38,21 @@ class Server:
 
     @property
     def status(self) -> str:
-        """Server status (running/stopped)"""
+        """Server status (running/stopped/unhealthy/expired)"""
         return self._handle.status
+    
+    @property
+    def is_healthy(self) -> bool:
+        """Check if server is healthy"""
+        return self.status == "running"
+    
+    @property
+    def is_running(self) -> bool:
+        """Check if server process is running"""
+        try:
+            return self._handle._get_process().is_running()
+        except:
+            return False
 
     @property
     def url(self) -> str:

@@ -33,6 +33,8 @@ def create(
     dependencies: Optional[List[str]] = None,
     force: bool = True,  # Default to True for better UX
     expiration_seconds: int = 86400,  # 24 hours default
+    verify_startup: bool = True,  # Default to True for robustness
+    startup_timeout: float = 10.0,  # Default 10 seconds
 ) -> Server:
     """
     Create a new server
@@ -43,6 +45,8 @@ def create(
         dependencies: List of Python packages to install or local paths to add to sys.path
         force: If True, destroy any existing server with the same name
         expiration_seconds: Server auto-expires after this many seconds (default: 86400 = 24 hours, -1 = never)
+        verify_startup: If True, verify server health after starting (default: True)
+        startup_timeout: Maximum time to wait for server to become healthy (default: 10.0 seconds)
 
     Returns:
         Server object for the created server
@@ -85,6 +89,8 @@ def create(
         dependencies=dependencies,
         force=force,
         expiration_seconds=expiration_seconds,
+        verify_startup=verify_startup,
+        startup_timeout=startup_timeout,
     )
     return Server(handle)
 

@@ -21,6 +21,8 @@ from ._exceptions import (
     ServerAlreadyExistsError,
 )
 from ._endpoint_serializer import generate_app_code_from_endpoints
+from ._health import HealthChecker, HealthCheckConfig
+from ._process_manager import ProcessManager
 
 
 class ServerManager:
@@ -29,6 +31,7 @@ class ServerManager:
     def __init__(self) -> None:
         self._config = get_config()
         self._servers: Dict[str, ServerHandle] = {}  # name -> ServerHandle
+        self._health_checker = HealthChecker()
         # Don't load persistent servers on init - discover on demand instead
         
         # Create base directory for isolated server environments
@@ -37,6 +40,9 @@ class ServerManager:
         
         # Clean up dead environments on startup
         self._cleanup_dead_environments()
+        
+        # Clean up orphaned processes on startup
+        self._cleanup_orphaned_processes_on_startup()
 
     def list_servers(self) -> List[ServerHandle]:
         """List all managed servers - always discovers from scratch"""
@@ -127,6 +133,19 @@ class ServerManager:
         
         return discovered_servers
 
+    def _cleanup_orphaned_processes_on_startup(self) -> None:
+        """Clean up any orphaned uvicorn processes on startup"""
+        try:
+            killed_count = ProcessManager.cleanup_orphaned_processes(
+                name_pattern="uvicorn",
+                port_range=range(8000, 9000)  # Common range for syft-serve
+            )
+            if killed_count > 0:
+                print(f"🧹 Cleaned up {killed_count} orphaned server process(es)")
+        except Exception as e:
+            # Don't fail startup if cleanup fails
+            print(f"⚠️  Failed to clean up orphaned processes: {e}")
+
     def create_server(
         self,
         name: str,
@@ -134,6 +153,8 @@ class ServerManager:
         dependencies: Optional[List[str]] = None,
         force: bool = False,
         expiration_seconds: int = 86400,
+        verify_startup: bool = True,
+        startup_timeout: float = 10.0,
     ) -> ServerHandle:
         """
         Create a new server with a unique name
@@ -144,6 +165,8 @@ class ServerManager:
             dependencies: Optional list of Python packages to install
             force: If True, destroy existing server with same name
             expiration_seconds: Server auto-expires after this many seconds (default: 86400 = 24 hours, -1 = never)
+            verify_startup: Whether to verify server health after starting (default: True)
+            startup_timeout: Maximum time to wait for server to be healthy (default: 10.0 seconds)
 
         Returns:
             ServerHandle for the created server
@@ -188,8 +211,24 @@ class ServerManager:
             expiration_seconds=expiration_seconds,
         )
 
-        # Wait for server to be ready
-        self._wait_for_server_ready(server)
+        # Verify startup if requested
+        if verify_startup:
+            health_config = HealthCheckConfig(startup_timeout=startup_timeout)
+            self._health_checker.config = health_config
+            
+            health_result = self._health_checker.verify_startup(server, verbose=True)
+            if not health_result.healthy:
+                # Cleanup failed server
+                try:
+                    ProcessManager.kill_process_tree(pid)
+                except:
+                    pass
+                raise ServerStartupError(
+                    f"Server {name} failed health check: {health_result.details.get('error', 'Unknown error')}"
+                )
+        else:
+            # Use old wait method for backward compatibility
+            self._wait_for_server_ready(server)
 
         # Register server
         self._servers[name] = server
@@ -293,16 +332,43 @@ class ServerManager:
                 results["success"] = False
 
         # Then find and terminate any orphaned processes
+        # Method 1: Use existing process discovery
         from ._process_discovery import terminate_all_syft_serve_processes
-
+        
         orphan_result = terminate_all_syft_serve_processes(force=force)
         results["orphaned_discovered"] = orphan_result["discovered"]
         results["orphaned_terminated"] = orphan_result["terminated"]
         results["orphaned_failed"] = orphan_result["failed"]
 
-        if orphan_result["failed"]:
+        # Method 2: Use ProcessManager to find ANY remaining uvicorn processes
+        print("🔍 Searching for any remaining uvicorn processes...")
+        remaining_processes = ProcessManager.find_uvicorn_processes()
+        
+        for proc_info in remaining_processes:
+            try:
+                if ProcessManager.kill_process_tree(proc_info.pid, timeout=5.0):
+                    results["orphaned_terminated"] += 1
+                else:
+                    results["orphaned_failed"].append(proc_info.pid)
+            except:
+                results["orphaned_failed"].append(proc_info.pid)
+                
+        results["orphaned_discovered"] += len(remaining_processes)
+
+        # Method 3: Check our common port range for any listeners
+        for port in range(8000, 9000):
+            port_processes = ProcessManager.find_processes_by_port(port)
+            for proc_info in port_processes:
+                if proc_info.pid not in results["orphaned_failed"]:
+                    try:
+                        ProcessManager.kill_process_tree(proc_info.pid)
+                        results["orphaned_terminated"] += 1
+                    except:
+                        results["orphaned_failed"].append(proc_info.pid)
+
+        if results["orphaned_failed"]:
             results["success"] = False
-            print(f"Failed to terminate orphaned PIDs: {orphan_result['failed']}")
+            print(f"Failed to terminate orphaned PIDs: {results['orphaned_failed']}")
 
         # Print summary
         if results["tracked_failed"]:

@@ -2,6 +2,7 @@
 Minimal configuration for SyftServe - only what's actually used
 """
 
+import os
 from pathlib import Path
 from typing import Tuple
 from dataclasses import dataclass, field
@@ -21,7 +22,7 @@ class ServerConfig:
     log_dir: Path = field(default_factory=lambda: Path.home() / ".syft_logs")
 
     # Process management
-    startup_timeout: float = 10.0  # seconds
+    startup_timeout: float = 30.0  # seconds (increased from 10.0 for complex services)
     health_check_interval: float = 1.0  # seconds
 
     def __post_init__(self) -> None:
@@ -32,4 +33,13 @@ class ServerConfig:
 
 def get_config() -> ServerConfig:
     """Get the server configuration"""
-    return ServerConfig()
+    config = ServerConfig()
+    
+    # Allow environment variable override for startup timeout
+    if timeout_env := os.environ.get('SYFT_SERVE_STARTUP_TIMEOUT'):
+        try:
+            config.startup_timeout = float(timeout_env)
+        except ValueError:
+            pass  # Keep default if invalid
+    
+    return config

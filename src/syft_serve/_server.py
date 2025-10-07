@@ -265,6 +265,10 @@ class Server:
         recent_stdout = self.stdout.tail(3)
         recent_stderr = self.stderr.tail(3)
 
+        # Generate unique IDs for this server instance
+        import uuid
+        instance_id = str(uuid.uuid4())[:8]
+        
         logs_section = ""
         if recent_stdout or recent_stderr:
             stdout_html = ""
@@ -290,17 +294,90 @@ class Server:
             else:
                 stderr_html = "<em style='color: #888;'>No recent errors</em>"
 
+            log_text_color = "#9ca3af" if is_dark_mode else "#374151"
+            error_text_color = "#ff6b6b" if is_dark_mode else "#d73a49"
+
             logs_section = f"""
             <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <div style="padding: 8px; background: {log_bg}; border-radius: 3px; border: 1px solid {border_color};">
                     <div style="color: {label_color}; font-size: 11px; margin-bottom: 5px;">Recent logs:</div>
-                    <div style="font-size: 11px; color: {text_color};">{stdout_html}</div>
+                    <div id="stdout-{instance_id}" style="font-size: 11px; color: {text_color}; height: 100px; overflow-y: auto;">{stdout_html}</div>
                 </div>
                 <div style="padding: 8px; background: {error_bg}; border-radius: 3px; border: 1px solid {border_color};">
                     <div style="color: {label_color}; font-size: 11px; margin-bottom: 5px;">Recent errors:</div>
-                    <div style="font-size: 11px;">{stderr_html}</div>
+                    <div id="stderr-{instance_id}" style="font-size: 11px; height: 100px; overflow-y: auto;">{stderr_html}</div>
                 </div>
             </div>
+            
+            <script>
+            (function() {{
+                const port = {self.port};
+                const instanceId = '{instance_id}';
+                const stdoutDiv = document.getElementById('stdout-' + instanceId);
+                const stderrDiv = document.getElementById('stderr-' + instanceId);
+                
+                // Clean up any existing interval for this instance
+                const intervalKey = 'syftServerInterval_' + port + '_' + instanceId;
+                if (window[intervalKey]) {{
+                    clearInterval(window[intervalKey]);
+                }}
+                
+                // Handle Google Colab proxy
+                let baseUrl = 'http://localhost:' + port;
+                if (window.location.hostname.includes('googleusercontent.com')) {{
+                    baseUrl = window.location.origin + '/proxy/' + port;
+                }}
+                
+                let errorCount = 0;
+                
+                async function updateLogs() {{
+                    try {{
+                        // Fetch stdout
+                        const stdoutResponse = await fetch(baseUrl + '/logs/stdout?lines=20');
+                        if (stdoutResponse.ok) {{
+                            const stdoutData = await stdoutResponse.json();
+                            if (stdoutData.lines && stdoutData.lines.length > 0) {{
+                                stdoutDiv.innerHTML = stdoutData.lines
+                                    .map(line => '<span style="color: {log_text_color}; font-family: monospace;">' + line.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>')
+                                    .join('<br>');
+                                stdoutDiv.scrollTop = stdoutDiv.scrollHeight;
+                            }} else {{
+                                stdoutDiv.innerHTML = '<em style="color: #888;">No recent output</em>';
+                            }}
+                            errorCount = 0;
+                        }}
+                        
+                        // Fetch stderr
+                        const stderrResponse = await fetch(baseUrl + '/logs/stderr?lines=20');
+                        if (stderrResponse.ok) {{
+                            const stderrData = await stderrResponse.json();
+                            if (stderrData.lines && stderrData.lines.length > 0) {{
+                                stderrDiv.innerHTML = stderrData.lines
+                                    .map(line => '<span style="color: {error_text_color}; font-family: monospace;">' + line.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>')
+                                    .join('<br>');
+                                stderrDiv.scrollTop = stderrDiv.scrollHeight;
+                            }} else {{
+                                stderrDiv.innerHTML = '<em style="color: #888;">No recent errors</em>';
+                            }}
+                        }}
+                        
+                    }} catch (error) {{
+                        errorCount++;
+                        if (errorCount > 3) {{
+                            clearInterval(window[intervalKey]);
+                            stdoutDiv.innerHTML = '<em style="color: #888;">Server disconnected</em>';
+                            stderrDiv.innerHTML = '<em style="color: #888;">Server disconnected</em>';
+                        }}
+                    }}
+                }}
+                
+                // Initial update
+                updateLogs();
+                
+                // Set up polling
+                window[intervalKey] = setInterval(updateLogs, 1000);
+            }})();
+            </script>
             """
 
         return f"""

@@ -40,11 +40,6 @@ class ServerManager:
         self._envs_dir = self._config.log_dir / "server_envs"
         self._envs_dir.mkdir(parents=True, exist_ok=True)
         
-        # Clean up dead environments on startup
-        self._cleanup_dead_environments()
-        
-        # Clean up orphaned processes on startup
-        self._cleanup_orphaned_processes_on_startup()
 
     def list_servers(self) -> List[ServerHandle]:
         """List all managed servers - always discovers from scratch"""
@@ -135,20 +130,6 @@ class ServerManager:
         
         return discovered_servers
 
-    def _cleanup_orphaned_processes_on_startup(self) -> None:
-        """Clean up any orphaned uvicorn processes on startup"""
-        try:
-            # Only do name-based cleanup on startup to avoid hanging on port checks
-            killed_count = ProcessManager.cleanup_orphaned_processes(
-                name_pattern="uvicorn",
-                port_range=None  # Skip port checks to avoid hanging
-            )
-            if killed_count > 0:
-                print(f"🧹 Cleaned up {killed_count} orphaned server process(es)")
-        except Exception as e:
-            # Don't fail startup if cleanup fails
-            print(f"⚠️  Failed to clean up orphaned processes: {e}")
-
     def create_server(
         self,
         name: str,
@@ -219,7 +200,7 @@ class ServerManager:
             health_config = HealthCheckConfig(startup_timeout=startup_timeout)
             self._health_checker.config = health_config
             
-            health_result = self._health_checker.verify_startup(server, verbose=True)
+            health_result = self._health_checker.verify_startup(server, verbose=verify_startup)
             if not health_result.healthy:
                 # Cleanup failed server
                 try:
@@ -269,17 +250,18 @@ class ServerManager:
             time.sleep(0.5)
             if server.status == "running":
                 if force:
-                    print(f"Normal termination failed for {name}, using force terminate...")
+                    # Silently use force terminate - don't print unless verbose
                     server.force_terminate()
                 else:
                     raise Exception(f"Failed to terminate server {name}")
         except Exception as e:
             if force:
-                print(f"Error during termination: {e}. Using force terminate...")
+                # Silently try force terminate - no error messages
                 try:
                     server.force_terminate()
                 except:
-                    print(f"Warning: Force terminate also failed for {name}")
+                    # Silently fail
+                    pass
             else:
                 raise
 
@@ -289,7 +271,8 @@ class ServerManager:
             try:
                 shutil.rmtree(server_dir)
             except:
-                print(f"Warning: Failed to clean up environment directory for {name}")
+                # Silently fail cleanup
+                pass
 
         # Remove from registry
         del self._servers[name]
@@ -330,7 +313,7 @@ class ServerManager:
                 self.terminate_server(name, force=force)
                 results["tracked_terminated"] += 1
             except Exception as e:
-                print(f"Warning: Failed to terminate tracked server {name}: {e}")
+                # Silently fail - only show in verbose mode
                 results["tracked_failed"].append(name)
                 results["success"] = False
 
@@ -343,46 +326,37 @@ class ServerManager:
         results["orphaned_terminated"] = orphan_result["terminated"]
         results["orphaned_failed"] = orphan_result["failed"]
 
-        # Method 2: Use ProcessManager to find ANY remaining uvicorn processes
-        print("🔍 Searching for any remaining uvicorn processes...")
-        remaining_processes = ProcessManager.find_uvicorn_processes()
+        # # Method 2: Use ProcessManager to find ANY remaining uvicorn processes
+        # print("🔍 Searching for any remaining uvicorn processes...")
+        # remaining_processes = ProcessManager.find_uvicorn_processes()
         
-        for proc_info in remaining_processes:
-            try:
-                if ProcessManager.kill_process_tree(proc_info.pid, timeout=5.0):
-                    results["orphaned_terminated"] += 1
-                else:
-                    results["orphaned_failed"].append(proc_info.pid)
-            except:
-                results["orphaned_failed"].append(proc_info.pid)
+        # for proc_info in remaining_processes:
+        #     try:
+        #         if ProcessManager.kill_process_tree(proc_info.pid, timeout=5.0):
+        #             results["orphaned_terminated"] += 1
+        #         else:
+        #             results["orphaned_failed"].append(proc_info.pid)
+        #     except:
+        #         results["orphaned_failed"].append(proc_info.pid)
                 
-        results["orphaned_discovered"] += len(remaining_processes)
+        # results["orphaned_discovered"] += len(remaining_processes)
 
-        # Method 3: Check our common port range for any listeners
-        for port in range(8000, 9000):
-            port_processes = ProcessManager.find_processes_by_port(port)
-            for proc_info in port_processes:
-                if proc_info.pid not in results["orphaned_failed"]:
-                    try:
-                        ProcessManager.kill_process_tree(proc_info.pid)
-                        results["orphaned_terminated"] += 1
-                    except:
-                        results["orphaned_failed"].append(proc_info.pid)
+        # # Method 3: Check our common port range for any listeners
+        # for port in range(8000, 9000):
+        #     port_processes = ProcessManager.find_processes_by_port(port)
+        #     for proc_info in port_processes:
+        #         if proc_info.pid not in results["orphaned_failed"]:
+        #             try:
+        #                 ProcessManager.kill_process_tree(proc_info.pid)
+        #                 results["orphaned_terminated"] += 1
+        #             except:
+        #                 results["orphaned_failed"].append(proc_info.pid)
 
         if results["orphaned_failed"]:
             results["success"] = False
-            print(f"Failed to terminate orphaned PIDs: {results['orphaned_failed']}")
+            # Don't print failure messages - keep them internal
 
-        # Print summary
-        if results["tracked_failed"]:
-            print(
-                f"Failed to terminate {len(results['tracked_failed'])} tracked server(s): {', '.join(results['tracked_failed'])}"
-            )
-
-        if results["orphaned_discovered"] > 0:
-            print(
-                f"Found {results['orphaned_discovered']} orphaned process(es), terminated {results['orphaned_terminated']}"
-            )
+        # Don't print summaries - keep termination quiet
 
         return results
 
@@ -572,24 +546,6 @@ package = false
 
         raise ServerStartupError(f"Server {server.name} did not become ready within {timeout}s")
 
-    def _cleanup_dead_servers(self) -> None:
-        """Remove dead, expired, and stopped servers from registry"""
-        dead_servers = []
-
-        for name, server in self._servers.items():
-            status = server.status
-            if status in ["stopped", "expired", "error"]:
-                dead_servers.append(name)
-            elif hasattr(server, "check_and_self_destruct") and server.check_and_self_destruct():
-                # Server expired and self-destructed
-                dead_servers.append(name)
-
-        for name in dead_servers:
-            del self._servers[name]
-
-        if dead_servers:
-            self._save_persistent_servers()
-
     def _load_persistent_servers(self) -> None:
         """Load server registry from persistence file"""
         if not self._config.persistence_file.exists():
@@ -616,7 +572,8 @@ package = false
                     pass
 
         except Exception as e:
-            print(f"Warning: Failed to load persistent servers: {e}")
+            # Silently fail loading persistent servers
+            pass
 
     def _save_persistent_servers(self) -> None:
         """Save server registry to persistence file atomically"""
@@ -654,7 +611,8 @@ package = false
                 raise
 
         except Exception as e:
-            print(f"Warning: Failed to save persistent servers: {e}")
+            # Silently fail saving persistent servers
+            pass
 
     def _cleanup_dead_environments(self) -> None:
         """Clean up environments for dead servers"""

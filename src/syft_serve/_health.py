@@ -55,7 +55,7 @@ class HealthChecker:
         
         # Step 1: Wait for port to be available
         if verbose:
-            print(f"⏳ Waiting for server '{server.name}' to bind to port {server.port}...")
+            print(f"\r⏳ Waiting for server '{server.name}' to bind to port {server.port}...", end='', flush=True)
         
         # Get host - handle both ServerHandle and Server objects
         host = getattr(server, 'host', 'localhost')
@@ -72,7 +72,7 @@ class HealthChecker:
         for attempt, delay in enumerate(self.config.retry_delays):
             if attempt > 0:
                 if verbose:
-                    print(f"⏳ Waiting {delay}s before retry {attempt+1}/{len(self.config.retry_delays)}...")
+                    print(f"\r⏳ Retrying ({attempt+1}/{len(self.config.retry_delays)})...", end='', flush=True)
                 time.sleep(delay)
             
             # Try health endpoint
@@ -80,13 +80,13 @@ class HealthChecker:
             if result.healthy:
                 if verbose:
                     elapsed = time.time() - start_time
-                    print(f"✅ Server healthy after {elapsed:.1f}s")
+                    print(f"\r✅ Server healthy after {elapsed:.1f}s")
                 return result
             
             # If health endpoint doesn't exist, try other endpoints
             if result.details.get('status_code') == 404 and self.config.test_all_endpoints:
-                if verbose:
-                    print(f"ℹ️  Health endpoint not found, testing configured endpoints...")
+                # Don't print this message - it's too verbose
+                pass
                 
                 # Test each configured endpoint
                 working_endpoints = []
@@ -104,7 +104,8 @@ class HealthChecker:
                 
                 if working_endpoints:
                     if verbose:
-                        print(f"✅ Found {len(working_endpoints)} working endpoint(s)")
+                        elapsed = time.time() - start_time
+                        print(f"\r✅ Server healthy after {elapsed:.1f}s")
                     return HealthCheckResult(
                         healthy=True,
                         details={

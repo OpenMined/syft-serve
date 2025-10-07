@@ -115,7 +115,7 @@ def terminate_all_syft_serve_processes(force: bool = True) -> Dict[str, Any]:
                 result["failed"].append(pid)
 
         except Exception as e:
-            print(f"Failed to terminate PID {pid}: {e}")
+            # Silently add to failed list
             result["failed"].append(pid)
 
     return result

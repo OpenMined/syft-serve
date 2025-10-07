@@ -69,16 +69,34 @@ class ProcessManager:
         processes = []
         
         try:
-            for conn in psutil.net_connections(kind='inet'):
-                if conn.laddr.port == port and conn.status == 'LISTEN':
-                    try:
-                        proc = psutil.Process(conn.pid)
-                        info = ProcessInfo.from_psutil(proc)
-                        if info:
-                            info.port = port
-                            processes.append(info)
-                    except (psutil.NoSuchProcess, psutil.AccessDenied):
-                        continue
+            # This can hang or fail with permission issues on some systems
+            # Set a short internal timeout
+            import signal
+            
+            def timeout_handler(signum, frame):
+                raise TimeoutError("Port check timed out")
+            
+            # Set 2 second timeout for this operation
+            old_handler = signal.signal(signal.SIGALRM, timeout_handler) if hasattr(signal, 'SIGALRM') else None
+            if old_handler is not None:
+                signal.alarm(2)
+            
+            try:
+                for conn in psutil.net_connections(kind='inet'):
+                    if conn.laddr.port == port and conn.status == 'LISTEN':
+                        try:
+                            proc = psutil.Process(conn.pid)
+                            info = ProcessInfo.from_psutil(proc)
+                            if info:
+                                info.port = port
+                                processes.append(info)
+                        except (psutil.NoSuchProcess, psutil.AccessDenied):
+                            continue
+            finally:
+                # Cancel alarm
+                if old_handler is not None:
+                    signal.alarm(0)
+                    signal.signal(signal.SIGALRM, old_handler)
         except Exception:
             # Fallback to lsof/netstat
             return ProcessManager._find_processes_by_port_fallback(port)
@@ -268,19 +286,23 @@ class ProcessManager:
         try:
             # Try lsof first (macOS/Linux)
             cmd = f"lsof -i :{port} -sTCP:LISTEN -t"
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=1.0)
             
-            for pid_str in result.stdout.strip().split('\n'):
-                if pid_str:
-                    pid = int(pid_str)
-                    processes.append(ProcessInfo(
-                        pid=pid,
-                        name='unknown',
-                        cmdline=[],
-                        create_time=0,
-                        status='running',
-                        port=port
-                    ))
+            if result.stdout:
+                for pid_str in result.stdout.strip().split('\n'):
+                    if pid_str:
+                        pid = int(pid_str)
+                        processes.append(ProcessInfo(
+                            pid=pid,
+                            name='unknown',
+                            cmdline=[],
+                            create_time=0,
+                            status='running',
+                            port=port
+                        ))
+        except subprocess.TimeoutExpired:
+            # Don't wait for lsof if it's slow
+            pass
         except Exception:
             pass
         return processes

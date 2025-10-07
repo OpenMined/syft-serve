@@ -136,9 +136,10 @@ class ServerManager:
     def _cleanup_orphaned_processes_on_startup(self) -> None:
         """Clean up any orphaned uvicorn processes on startup"""
         try:
+            # Only do name-based cleanup on startup to avoid hanging on port checks
             killed_count = ProcessManager.cleanup_orphaned_processes(
                 name_pattern="uvicorn",
-                port_range=range(8000, 9000)  # Common range for syft-serve
+                port_range=None  # Skip port checks to avoid hanging
             )
             if killed_count > 0:
                 print(f"🧹 Cleaned up {killed_count} orphaned server process(es)")

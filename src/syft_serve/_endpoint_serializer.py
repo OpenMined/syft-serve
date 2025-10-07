@@ -199,6 +199,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Configure custom access log format to exclude /logs/* endpoints
+import logging
+from uvicorn.logging import AccessFormatter
+
+class FilteredAccessFormatter(AccessFormatter):
+    def format(self, record):
+        # Skip logging for /logs/ endpoints
+        if hasattr(record, 'scope') and record.scope.get('path', '').startswith('/logs/'):
+            # Return empty string to suppress the log
+            return ''
+        return super().format(record)
+
+# Configure the access logger
+access_logger = logging.getLogger("uvicorn.access")
+if access_logger.handlers:
+    # Update existing handler
+    for handler in access_logger.handlers:
+        handler.setFormatter(FilteredAccessFormatter())
+
+# Alternative approach: Add a custom logging filter
+class LogsEndpointFilter(logging.Filter):
+    def filter(self, record):
+        # Check if this is an access log record with request info
+        if hasattr(record, 'args') and record.args:
+            # The request info is typically in args
+            request_line = str(record.args[2]) if len(record.args) > 2 else ""
+            if "/logs/" in request_line:
+                return False  # Don't log this record
+        return True
+
+# Add the filter to uvicorn access logger
+logging.getLogger("uvicorn.access").addFilter(LogsEndpointFilter())
+
 # Server expiration management
 SERVER_START_TIME = time.time()
 EXPIRATION_SECONDS = {expiration_seconds}

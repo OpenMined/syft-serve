@@ -40,7 +40,7 @@ class HealthChecker:
     def __init__(self, config: Optional[HealthCheckConfig] = None):
         self.config = config or HealthCheckConfig()
     
-    def verify_startup(self, server: 'Server', verbose: bool = True) -> HealthCheckResult:
+    def verify_startup(self, server: 'Server', verbose: bool = False) -> HealthCheckResult:
         """
         Verify that a server started correctly.
         

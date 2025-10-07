@@ -139,6 +139,7 @@ class ServerManager:
         expiration_seconds: int = 86400,
         verify_startup: bool = True,
         startup_timeout: float = 10.0,
+        verbose: bool = False,
     ) -> ServerHandle:
         """
         Create a new server with a unique name
@@ -200,7 +201,7 @@ class ServerManager:
             health_config = HealthCheckConfig(startup_timeout=startup_timeout)
             self._health_checker.config = health_config
             
-            health_result = self._health_checker.verify_startup(server, verbose=verify_startup)
+            health_result = self._health_checker.verify_startup(server, verbose=verbose)
             if not health_result.healthy:
                 # Cleanup failed server
                 try:

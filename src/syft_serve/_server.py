@@ -337,10 +337,17 @@ class Server:
                         if (stdoutResponse.ok) {{
                             const stdoutData = await stdoutResponse.json();
                             if (stdoutData.lines && stdoutData.lines.length > 0) {{
+                                // Check if we're at the bottom before updating
+                                const wasAtBottom = stdoutDiv.scrollHeight - stdoutDiv.scrollTop <= stdoutDiv.clientHeight + 5;
+                                
                                 stdoutDiv.innerHTML = stdoutData.lines
                                     .map(line => '<span style="color: {log_text_color}; font-family: monospace;">' + line.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>')
                                     .join('<br>');
-                                stdoutDiv.scrollTop = stdoutDiv.scrollHeight;
+                                
+                                // Only auto-scroll if we were already at the bottom
+                                if (wasAtBottom) {{
+                                    stdoutDiv.scrollTop = stdoutDiv.scrollHeight;
+                                }}
                             }} else {{
                                 stdoutDiv.innerHTML = '<em style="color: #888;">No recent output</em>';
                             }}
@@ -352,10 +359,17 @@ class Server:
                         if (stderrResponse.ok) {{
                             const stderrData = await stderrResponse.json();
                             if (stderrData.lines && stderrData.lines.length > 0) {{
+                                // Check if we're at the bottom before updating
+                                const wasAtBottom = stderrDiv.scrollHeight - stderrDiv.scrollTop <= stderrDiv.clientHeight + 5;
+                                
                                 stderrDiv.innerHTML = stderrData.lines
                                     .map(line => '<span style="color: {error_text_color}; font-family: monospace;">' + line.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>')
                                     .join('<br>');
-                                stderrDiv.scrollTop = stderrDiv.scrollHeight;
+                                
+                                // Only auto-scroll if we were already at the bottom
+                                if (wasAtBottom) {{
+                                    stderrDiv.scrollTop = stderrDiv.scrollHeight;
+                                }}
                             }} else {{
                                 stderrDiv.innerHTML = '<em style="color: #888;">No recent errors</em>';
                             }}

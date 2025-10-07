@@ -3,6 +3,8 @@ Simplified ServerManager - only what's needed for tutorial
 """
 
 import json
+import os
+import platform
 import shutil
 import subprocess  # nosec B404
 import time
@@ -536,15 +538,24 @@ package = false
             cwd = str(server_dir) if server_dir else None
 
             with open(stdout_log, "w") as out, open(stderr_log, "w") as err:
-                # Use start_new_session=True to detach from parent process group
-                process = subprocess.Popen(  # nosec B603
-                    cmd,
-                    stdout=out,
-                    stderr=err,
-                    text=True,
-                    cwd=cwd,
-                    start_new_session=True,  # Creates new process group
-                )
+                # Enhanced process independence - completely detach from parent
+                kwargs = {
+                    "stdout": out,
+                    "stderr": err,
+                    "text": True,
+                    "cwd": cwd,
+                    "start_new_session": True,  # Creates new process group
+                    "close_fds": True,  # Close all parent file descriptors
+                }
+                
+                # Unix-specific: ensure session leader (only if not already using start_new_session)
+                # Note: start_new_session=True already handles session creation, so we don't need preexec_fn
+                    
+                # Windows-specific: create new process group
+                if platform.system() == "Windows":
+                    kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+                    
+                process = subprocess.Popen(cmd, **kwargs)  # nosec B603
             return process.pid
         except Exception as e:
             raise ServerStartupError(f"Failed to start server {name}: {e}")

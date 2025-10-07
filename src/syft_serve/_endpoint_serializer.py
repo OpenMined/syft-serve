@@ -286,6 +286,33 @@ def get_expiration_status():
         "status": "expired" if remaining <= 0 else "active"
     }}
 
+# Log endpoints
+@app.get("/logs/{{stream}}")
+async def get_logs(stream: str, lines: int = 50):
+    """Get last N lines from stdout or stderr logs"""
+    from fastapi import HTTPException
+    
+    if stream not in ["stdout", "stderr"]:
+        raise HTTPException(status_code=404, detail="Stream must be stdout or stderr")
+    
+    # Get log file path - logs are in same directory as the app
+    log_dir = Path(__file__).parent
+    log_file = log_dir / f"{{'{name}'}}_{{stream}}.log"
+    
+    if not log_file.exists():
+        return {{"lines": []}}
+    
+    try:
+        with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
+            # Read all lines and get the last N
+            all_lines = f.readlines()
+            # Ensure lines is within reasonable bounds
+            lines = max(1, min(lines, 1000))
+            last_lines = all_lines[-lines:] if all_lines else []
+            return {{"lines": last_lines, "total_lines": len(all_lines)}}
+    except Exception as e:
+        return {{"lines": [], "error": str(e)}}
+
 # User-defined endpoint functions
 '''
 
